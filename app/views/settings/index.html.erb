@@ -1,0 +1,75 @@
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">Parammêtre du calcule</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Parammétre</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                        </div>
+                            
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Gain en solde (mensuel) </th>
+                                        <th>Volume d'heures quotidien</th>
+                                        <th>illigibilité de demande de congé</th>
+                                        <th>Nombre de ligne par page (pagination)</th>
+                                        <th>illigibilité d'annulation de congé</th>
+                                        <th style="width: 125px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>                     
+                                    <tr>                                                    
+                                        <td><%= @setting.month_balance %></td>
+                                        <td><%= @setting.day_work_hour %></td> 
+                                        <td><%= @setting.informing_before_duration %></td>   
+                                        <td><%= @setting.number_items_of_page %></td> 
+                                        <td><%= @setting.cancel_after_duration %></td>
+                                        <td>
+                                            <%= link_to edit_setting_path(@setting), remote: true, class: "action-icon" do %>
+                                                    <i class="mdi mdi-border-color"></i>
+                                            <% end %>
+                                        </td>                                                                                  
+                                    </tr>                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+
+        <div class="row">
+            <div class="col-12 ">
+                <%#= @offs %>
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div>
+</div> <!-- content -->
+
+
+<div id='remote-container'></div>
+
+

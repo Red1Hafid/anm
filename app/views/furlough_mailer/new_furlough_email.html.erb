@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Bonjour!</p>
+
+    <p>Le collaborateur <%= @furlough.user.email %> à demandé un congé " <%= @furlough.furlough_type.name %> " à partir de <%= @furlough.start %> jusqu'a <%= @furlough.end %></p>
+
+     <a href="<%= furlough_url(@furlough) %>">Consulter le congé</a>
+                                                        
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!-- Modal -->
+<div class="modal fade" id="export_additional_hour" role="dialog">
+    <%= form_tag export_additional_hours_path(format: :xlsx), :method => 'get' do %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h4 class="modal-title" id="myLargeModalLabel">Filtre du rapport</h4>
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%= label_tag "Period heures sup" %>
+                        <%= select_tag :period_additional_hour, options_for_select(@additional_hours_periods), class:"form-control" %>
+                    </div> 
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <%= label_tag "Type d'absences" %>
+                        <%= select_tag :type_additional_hours, options_for_select(['Tous', 'HSJFT', 'HSJO']), class:"form-control" %>
+                    </div> 
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-raised btn-success"> Rapport</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+ 
+
+
+

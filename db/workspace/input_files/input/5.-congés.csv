@@ -1,0 +1,7 @@
+"ID (matricule)","Nom ","Prénom","Référence du congé","Type de congé","Code congé","Date de début","Heure de début","Date de fin","Heure de fin","Statut","Signature rh","Signature gestionnaire","Date du refus","Date d'annulation","Raison"
+"C1","Belkoubi","Kenza","cg#1","Mariage (Collab) - CEFMC","CEFMC","30-04-2022","8:00","25-05-2022","8:00","Nouveau","","","","",""
+"C3","Hafid","Redouane","cg#2","Congé sans solde - CSS","CSS","25-04-2022","14:00","30-05-2022","8:00","En cours","C1","C2","","",""
+"C4","Adzimah","Senyo","cg#3","Mariage (Collab) - CEFMC","CEFMC","10-09-2022","14:00","30-09-2022","8:00","Soumis","","","","",""
+"C4","Adzimah","Senyo","cg#4","Congé annuel - CPA","CPA","30-10-2022","8:00","25-11-2022","14:00","Approuvé","C1","C2","","",""
+"C2","Omrana","Hajar","cg#5","Maternité - CEFMA","CEFMA","31-10-2022","8:00","26-11-2022","14:00","Annulé","C1","","","01-09-2022","raison d'annulation"
+"C6","Bouichou","Mohamed","cg#6","Congé annuel - CPA","CPA","31-08-2022","8:00","01-09-2022","8:00","Refusé","","","01-09-2022","","raison de refus"

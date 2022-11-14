@@ -1,0 +1,83 @@
+<% provide(:title, 'journals') %>
+
+<div class="content">
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">Journals</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Journalisations</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="inbox-widget" >
+                                    <% @journals.each do |journal| %>
+                                        <% if journal.the_model == 'user' %>
+                                            <% the_fa = 'user' %>
+                                            <% the_class = 'info' %>
+                                        <% elsif journal.the_model == 'furlough'  %>
+                                            <% the_fa = 'calendar' %>
+                                            <% the_class = 'danger' %>
+                                        <% elsif journal.the_model == 'off'  %>                                         
+                                            <% the_fa = 'calendar-day' %>
+                                            <% the_class = 'dark' %>
+                                        <% elsif journal.the_model == 'type_furlough' %>                                          
+                                            <% the_fa = 'calendar-week' %>
+                                            <% the_class = 'purple' %>
+                                        <% elsif journal.the_model == 'fonctionalManagerExtern' %>
+                                            <% the_fa = 'user' %>
+                                            <% the_class = 'pink' %>
+                                        <% elsif journal.the_model == 'setting' %>
+                                            <% the_fa = 'book' %>
+                                            <% the_class = 'warning' %>
+                                        <% end %>
+
+                                        <div class="inbox-item row">
+                                            <div class="col-1 text-center">
+                                                <div class="inbox-item-img">
+                                                    <i class="fa fa-<%= the_fa %> text-<%= the_class %>"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <p class="inbox-item-author text-<%= the_class %>"></p>
+                                                <p class="inbox-item-text"><%= journal.content %></p>
+                                                
+                                            </div>
+                                            <div class="col-3 text-right">
+                                                <p class="text-muted text-right"><%= time_ago_in_words(journal.created_at) %></p>
+                                            </div>
+                                        </div>    
+                                    <% end %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- end col-->
+        </div>
+        <!-- end row -->
+        <div class="row">
+            <div class="col-12 ">
+                <%= paginate @journals %>
+            </div> <!-- end col-->
+        </div>
+        
+    </div> <!-- container -->
+
+</div> <!-- content -->

@@ -1,0 +1,198 @@
+<% provide(:title, 'furloughs-type') %>
+
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">gestion des type de congés</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Liste des type de congés</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <%= form_tag import_furlough_types_path, multipart: true do %>
+                                    <%= file_field_tag :file, required: true %>
+                                    <%= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
+                                <% end %>
+                            </div> 
+                            
+                            <div class="col-lg-4">
+                                <%= form_tag furlough_types_path, :method => 'get',  class: "form-inline" do %>
+                                    <div class="form-group">
+                                        <% if params[:search].present? %>
+                                            <%= text_field_tag :search,nil, class:"form-control", value:"#{params[:search]}" %>
+                                        <% else %>
+                                            <%= text_field_tag :search,nil, class:"form-control", placeholder:"Trouvez une commande ... " %>
+                                        <% end %>
+                                        <button type="submit" class="btn btn-warning waves-effect waves-light ml-1"><i class="mdi mdi-magnify mr-1"></i> Cherche!</button>
+                                    </div>
+                                <% end %>
+                            </div> 
+
+                            <div class="col-lg-2">  
+                                <%= link_to '#new_furlough_type', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_furlough_type'  do %>
+                                    <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                                <% end %>    
+                            </div>
+                        </div>
+
+                        
+                        <div class="table-responsive">
+                            <table data-toggle="table"
+                                    data-show-columns="false"
+                                    data-page-list="[5, 10, 20]"
+                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                    data-buttons-class="xs btn-light"
+                                    data-pagination="true" class="table-borderless">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th data-field="name">Type de congé </th>
+                                        <th data-field="code">Code </th>
+                                        <th data-field="max_duration">Durée maximale du congé </th>
+                                        <th data-field="fixed_duration">Durée fixe </th>
+                                        <th data-field="informing_before">Contraint (48H) </th>
+                                        <th data-field="is_payer">Payer?</th>
+                                        <th data-field="is_actif">Actif?</th>
+                                        <th data-field="nbr_days_block">Blockage aprés n jours?</th>
+                                        <th data-field="discontinute">Discontinuté</th>
+                                        <th data-field="discontinuity_period">Période discontinuté</th>
+                                        <th style="width: 125px;">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <% @furlough_types.each do |furlough_type| %>
+                                        <tr>  
+                                            <td><%= furlough_type.name %></td>
+                                            <td><%= furlough_type.code %></td>
+                                            <td><%= furlough_type.max_duration %></td>
+                                            <td><%= furlough_type.fixed_duration %></td>
+                                            <td><%= furlough_type.informing_before %></td>
+                                            <td><%= furlough_type.is_payer %></td> 
+                                            <td><% if furlough_type.is_actif == true %>
+                                                    <div class="badge font-14 badge badge-success p-1">Actif</div></td>
+                                                <% else %>
+                                                    <div class="badge font-14 badge badge-danger p-1">Inactif</div></td>
+                                                <% end %>
+                                            </td>
+                                            <td><%= furlough_type.nbr_days_block %></td>
+                                            <td><%= furlough_type.discontinuity %></td>
+                                            <td><%= furlough_type.discontinuity_period %></td>
+                                            <td>
+                                                <%= link_to furlough_type_path(furlough_type), remote: true, title: "Voir", class: "action-icon" do %>
+                                                    <i class="mdi mdi-eye"></i>
+                                                <% end %>
+                                                <%= link_to edit_furlough_type_path(furlough_type), remote: true, title: "Modifier", class: "action-icon" do %>
+                                                    <i class="mdi mdi-border-color"></i>
+                                                <% end %>  
+                                                <% if furlough_type.is_actif == false %>
+                                                    <%= link_to enable_furlough_type_path(furlough_type), data: { confirm: 'Etes vous sur?', title: 'Confirm action', commit: 'YES', cancel: 'NO' }, title: "Activer", class: "action-icon" do %>
+                                                       <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                                    <% end %> 
+                                                <% else %>
+                                                    <%= link_to disable_furlough_type_path(furlough_type), data: { confirm: 'Etes vous sur?', title: 'Confirm action', commit: 'YES', cancel: 'NO' }, title: "Activer", class: "action-icon" do %>
+                                                        <i class="mdi mdi-close-octagon"></i>                                                      
+                                                    <% end %> 
+                                                <% end %>
+                                                <%= link_to furlough_type, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                                    <i class="mdi mdi-delete"></i>
+                                                <% end %>                                           
+                                            </td>                                            
+                                        </tr> 
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+
+    <div id='remote-container'></div>
+</div> <!-- content -->
+
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="new_furlough_type" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Définition d'un type congé</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <%= simple_form_for(FurloughType.new, as: :furlough_type, method: :post, html: { class: "form-horizontal" }) do |f| %>
+                
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.input :name, label: 'Type de congé', placeholder: "Entrer le type de congé", class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :code, label: 'Code de congé', placeholder: "Entrer le code de type de congé", class: 'form-control' %>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group mb-3">
+                            <%= f.input :max_duration, label: 'Durée max du congé', class: 'form-control' %>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :fixed_duration, label: 'Durée fixe?', class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :informing_before, label: 'Demande à soumettre 48H avant?', class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :is_payer, label: 'Congé payer?', class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :nbr_days_block, label: 'Nombre jours (blockage)?', class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :discontinuity, label: 'Discontinuté?', input_html: { id: 'discontinuity', onchange:'yesnoCheck();'}, class: 'form-control' %>
+                    </div>
+                    <div class="col-3">
+                        <div id="ifYes" class="form-group mb-3" style="display: none;">
+                            <%= f.input :discontinuity_period, label: 'Période discontinuté', class: 'form-control' %>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+
+     function yesnoCheck(that) {
+        if (document.getElementById("discontinuity").checked == 1) {
+            document.getElementById("ifYes").style.display = "block";
+        } else {
+            document.getElementById("ifYes").style.display = "none";
+        }
+    }
+</script>
+
+

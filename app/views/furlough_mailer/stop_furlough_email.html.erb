@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Bonjour!</p>
+
+    <p>Le congé avec la référence <%= @furlough.reference_furlough %> à été arrêté a cause de  " <%= @furlough.stop_comment %> ."</p>
+
+     <a href="<%= furlough_url(@furlough) %>">Consulter le congé</a>
+                                                        
+  </body>
+</html>

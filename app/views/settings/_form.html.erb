@@ -1,0 +1,68 @@
+<!-- Modal -->
+<div class="modal fade" id="edit_setting" role="dialog">
+    <%= simple_form_for @setting do |f| %>
+      <div class="modal-dialog modal-top">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Parammétre du calcule</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                         <div class="modal-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group col-md-12 legend">
+                                        <%= f.input :month_balance, html5: true, label: 'Valleur ajouté mensuelle' %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group col-md-12 legend">
+                                        <%= f.input :day_work_hour, html5: true, label: "Nombre d'heur quotidiénne" %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group col-md-12 legend">
+                                        <%= f.input :informing_before_duration, html5: true, label: "Duré de déclaration de congé" %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group col-md-12 legend">
+                                        <%= f.input :number_items_of_page, html5: true, label: "Nombre des éléments (pagination)" %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group col-md-12 legend">
+                                        <%= f.input :cancel_after_duration, html5: true, label: "Duré que l'annulation est authorisé" %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <%= f.button :submit, 'Valider', class: 'btn btn-raised btn-success' %>
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>

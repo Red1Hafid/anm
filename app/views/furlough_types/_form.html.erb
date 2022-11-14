@@ -1,0 +1,68 @@
+<!-- Modal -->
+<div class="modal fade" id="edit_furlough_type" role="dialog">
+    <%= simple_form_for @furlough_type do |f| %>
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Modification de type congé</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <%= f.input :name, label: 'Type de congé', placeholder: "Entrer le type de congé", class: 'form-control' %>
+                        </div>
+                        <div class="form-group mb-3">
+                            <%= f.input :code, label: 'Code de congé', placeholder: "Entrer le code de type de congé", class: 'form-control' %>
+                        </div>
+                        <div class="form-group">
+                            <%= f.input :max_duration, label: 'Duré max du congé', placeholder: "Entrer la duré max du congé", class: 'form-control' %>
+                        </div>
+                        <div class="form-group">
+                             <%= f.input :fixed_duration, label: 'durée fixe?', class: 'form-control' %>
+                        </div>
+                        <div class="form-group">
+                            <%= f.input :informing_before, label: 'Avec une demande?', class: 'form-control' %>
+                        </div>
+                        <div class="form-group">
+                            <%= f.input :is_payer, label: 'Congé payer?', class: 'form-control' %>
+                        </div>
+                        <div class="form-group mb-3">
+                            <%= f.input :nbr_days_block, label: 'Nombre jours (blockage)?', class: 'form-control' %>
+                        </div>
+                        <div class="form-group mb-3">
+                            <%= f.input :discontinuity, label: 'Discontinuté?', input_html: { id: 'discontinuity', onchange:'yesnoCheck();'}, class: 'form-control' %>
+                        </div>
+                        <% if @furlough_type.discontinuity == true %>
+                          <div id="ifYes" class="form-group mb-3" style="display: block;">
+                            <%= f.input :discontinuity_period, label: 'Période discontinuté', class: 'form-control' %>
+                          </div>
+                        <% else %>
+                          <div id="ifYes" class="form-group mb-3" style="display: none;">
+                            <%= f.input :discontinuity_period, label: 'Période discontinuté', class: 'form-control' %>
+                          </div>
+                        <% end %>               
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <%= f.button :submit, 'Valider', class: 'btn btn-raised btn-success' %>
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+
+<script>
+
+     function yesnoCheck(that) {
+        console.log(document.getElementById("discontinuity").value);
+        if (document.getElementById("discontinuity").checked == 1) {
+            document.getElementById("ifYes").style.display = "block";
+        } else {
+            document.getElementById("ifYes").style.display = "none";
+        }
+    }
+</script>

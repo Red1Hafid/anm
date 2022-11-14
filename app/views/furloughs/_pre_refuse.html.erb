@@ -1,0 +1,28 @@
+<!-- Modal -->
+<div class="modal fade" id="refuse_furlough" role="dialog">
+    <%= simple_form_for(@furlough, as: :furlough, method: :post, url: refuse_path) do |f| %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h4 class="modal-title" id="myLargeModalLabel">Refuser ce congé</h4>
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12 legend">
+                        <%= f.input :refus_date, value: Date.today, as: :date, html5: true, label: 'Date de refus', required: true, hint: "La date de refus doit être mentionné" %>
+                    </div>
+                    <div class="form-group col-md-12 legend">
+                        <%= f.input :refuse_comment, label: 'Raison de refus', required: true, hint: "La raison de refus doit être informé" %>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <%= f.button :submit, 'Refuser', data: { confirm: 'Etes vous sur?' }, class: 'btn btn-raised btn-success' %>
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+

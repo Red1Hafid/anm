@@ -1,0 +1,35 @@
+<!-- Modal -->
+<div class="modal fade" id="stop_furlough" role="dialog">
+    <%= simple_form_for(@furlough, as: :furlough, method: :post, url: stop_path, html: { class: "form-horizontal" }) do |f| %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h4 class="modal-title" id="myLargeModalLabel">Arrêter ce congé</h4>
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+               
+                <div class="form-group mb-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <%= f.input :stop_date, label: "Date d'arrêt", value:  DateTime.strptime("1448607600",'%s'), as: :date, html5: true, input_html: { id: 'end_date', onchange:'reloadDuration();' }, required: true, hint: "La date d'arrêt est obligatoire" , class: 'form-control' %>
+                        </div>
+                        <div class="col-4">
+                            <%= f.input :hour_stop, label: "Heure d'arrêt", as: :select, collection: (['8:00','14:00']), :selected => '8:00', html5: true, required: true, hint: "L'heure d'arrêt est obligatoire" , class: 'form-control' %>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <%= f.input :stop_comment, label: "Raison d'arrêt", required: true, hint: "La raison de l'arrêt du congé doit être renseigné" %>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <%= f.button :submit, 'Arrêter', data: { confirm: 'Etes vous sur?' }, class: 'btn btn-raised btn-success' %>
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+

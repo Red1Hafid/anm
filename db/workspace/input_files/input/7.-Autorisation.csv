@@ -1,0 +1,4 @@
+"ID (matricule)","Nom ","Prénom","Département","Fonction","Date de sortie","Heure de sortie","Heure de reprise","Motif","Statut","Type de récupération"
+"C1","Belkoubi","Kenza","Dep1","Responsable RH","19-09-2022","8:00","12:00","RAS","Nouveau","A récupérer sur la semaine "
+"C3","Hafid","Redouane","Dep2","Ingénieur conception développement","12-10-2022","10:00","11:00","Motif","Soumis","A récupérer sur la semaine "
+"C3","Hafid","Redouane","Dep3","Ingénieur conception développement","21-09-2022","10:00","11:00","Urgence","Validé","A retrancher de mon solde congé"

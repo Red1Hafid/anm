@@ -1,0 +1,53 @@
+<div class="modal fade" id="show_furlough_type" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Detail de type de congé</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="card-box">
+                    <h4 class="font-13 text-muted text-uppercase mb-2">Code :</h4>
+                    <p class="mb-3"><%= @furlough_type.code %></p>
+
+                    <h4 class="font-13 text-muted text-uppercase mb-2">Congé :</h4>
+                    <p class="mb-3"><%= @furlough_type.name %></p>
+
+                    <h4 class="font-13 text-muted text-uppercase mb-2">Durée maximale du congé :</h4>
+                    <p class="mb-3"><%= @furlough_type.max_duration %></p>
+
+                    <h4 class="font-13 text-muted text-uppercase mb-2">Durée fixe :</h4>
+                    <p class="mb-3"><%= @furlough_type.fixed_duration %></p>
+
+                    <h4 class="font-13 text-muted text-uppercase mb-2">Contraint (48H) :</h4>
+                    <p class="mb-3"><%= @furlough_type.informing_before %></p>
+
+                    <h4 class="font-13 text-muted text-uppercase mb-2">Payer?  :</h4>
+                    <p class="mb-3"><%= @furlough_type.is_payer %></p>
+
+                </div>    
+            </div>
+
+            <div class="modal-footer">
+            
+                <%= link_to edit_furlough_type_path(@furlough_type), remote: true, class: "btn btn-warning waves-effect waves-light" do %>
+                    <i class="mdi mdi-border-color"></i>
+                <% end %>
+
+                <%= link_to @furlough_type, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "btn btn-danger waves-effect waves-light" do %>
+                    <i class="mdi mdi-delete"></i>
+                <% end %>       
+            </div>
+      
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+
+            
+
+
+
+
+

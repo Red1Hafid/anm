@@ -1,0 +1,33 @@
+<!-- Modal -->
+<div class="modal fade" id="show_off" role="dialog">
+    <%= simple_form_for @off do |f| %>
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <%= @off.title %>
+                        </div>
+                        <div class="form-group">
+                            <%= @off.description %>
+                        </div>
+                        <div class="form-group">
+                            <%= @off.start %>
+                        </div>
+                        <div class="form-group">
+                            <%= @off.end %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>

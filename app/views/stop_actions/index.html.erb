@@ -1,0 +1,142 @@
+<% provide(:title, 'actions') %>
+
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">Actions</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Liste des actions d'arrêts</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                <div class="col-lg-6">
+                                    <%= form_tag import_stop_actions_path, multipart: true do %>
+                                        <%= file_field_tag :file, required: true %>
+                                        <%= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
+                                    <% end %>
+                                </div> 
+                            <% end %>
+                            
+                            <div class="col-lg-4">
+                                <%= form_tag stop_actions_path, :method => 'get',  class: "form-inline" do %>
+                                    <div class="form-group">
+                                        <% if params[:search].present? %>
+                                            <%= text_field_tag :search,nil, class:"form-control", value:"#{params[:search]}" %>
+                                        <% else %>
+                                            <%= text_field_tag :search,nil, class:"form-control", placeholder:"Trouvez une commande ... " %>
+                                        <% end %>
+                                        <button type="submit" class="btn btn-warning waves-effect waves-light ml-1"><i class="mdi mdi-magnify mr-1"></i> Chercher !</button>
+                                    </div>
+                                <% end %>
+                            </div> 
+
+                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                <div class="col-lg-2">  
+                                    <%= link_to '#new_stop_action', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_stop_action'  do %>
+                                        <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                                    <% end %>    
+                                </div>
+                            <% end %>
+                        </div>
+                            
+                        <div class="table-responsive">
+                            <table data-toggle="table"
+                                    data-show-columns="false"
+                                    data-page-list="[5, 10, 20]"
+                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                    data-buttons-class="xs btn-light"
+                                    data-pagination="true" class="table-borderless">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th data-field="code">Code</th>
+                                        <th data-field="actions">Actions</th>
+                                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                          <th style="width: 125px;">Actions</th>
+                                        <% end %>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <% @stop_actions.each do |stop_action| %>
+                                        <tr>  
+                                            <td><%= stop_action.code %></td>
+                                            <td><%= stop_action.name %></td>
+                                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                <td>
+                                                    <%= link_to stop_action_path(stop_action), remote: true, class: "action-icon" do %>
+                                                        <i class="mdi mdi-eye"></i>
+                                                    <% end %>
+
+                                                    <%= link_to edit_stop_action_path(stop_action), remote: true, class: "action-icon" do %>
+                                                        <i class="mdi mdi-border-color"></i>
+                                                    <% end %>
+
+                                                    <%= link_to stop_action, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                                                            <i class="mdi mdi-delete"></i>
+                                                    <% end %> 
+                                                </td> 
+                                            <% end %>                                        
+                                        </tr> 
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+    </div>
+    <div id='remote-container'></div>
+</div> <!-- content -->
+
+
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="new_stop_action" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Ajout d'une action d'arrêt</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <%= simple_form_for(StopAction.new, as: :stop_action, method: :post, html: { class: "form-horizontal" }) do |f| %>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.input :code, label: 'Code', placeholder: "Entrer le code d'action", class: 'form-control' %>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.input :name, label: 'Action', placeholder: "Entrer une action", class: 'form-control' %>
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+

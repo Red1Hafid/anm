@@ -1,0 +1,94 @@
+<% provide(:title, 'login') %>
+
+ <div class="account-pages mt-5 mb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-pattern">
+
+                    <div class="card-body p-4">
+                        
+                        <div class="text-center w-75 m-auto">
+                            <div class="auth-logo">
+                                <a href="<%= root_path %>" class="logo logo-dark text-center">
+                                    <span class="logo-lg">
+                                        <%= image_tag 'logo.png', height: "70", alt: "MDEO" %>
+                                    </span>
+                                </a>
+            
+                                <a href="<%= root_path %>" class="logo logo-light text-center">
+                                    <span class="logo-lg">
+                                        <%= image_tag 'logo.png', height: "70", alt: "MDEO" %>
+                                    </span>
+                                </a>
+                            </div>
+                            <p class="text-muted mb-4 mt-3">Entrez votre addresse email et votre mot de passe pour accéder à votre espace RH.</p>
+
+                             <div class="auth-logo">
+                               <%= flash[:alert] %>
+                            </div>
+                        </div>
+                        
+                        <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name),html: { class: "form-horizontal" }) do |f| %>
+
+                            <div class="form-group mb-3">
+                                <%= f.email_field :email, autofocus: true, autocomplete: 'email', class: 'form-control underline-input', placeholder: 'Entez Votre Email' %>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <div class="input-group input-group-merge">
+                                    <%= f.password_field :password, autocomplete: 'current-password', class: 'form-control underline-input', placeholder: 'Mot de passe ...' %>
+                                    <div class="input-group-append" data-password="false">
+                                        <div class="input-group-text">
+                                            <span class="password-eye"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <div class="custom-control custom-checkbox">
+                                    <% if devise_mapping.rememberable? %>
+                                        <%= f.check_box :remember_me, :input_html => { :class => 'custom-control-input' } %>
+                                        <%= f.label :'remember_me', :input_html => { :class => 'custom-control-label' } do %>
+                                           <%= resource.class.human_attribute_name('Se rappeler de moi') %>
+                                        <% end %>
+                                    <% end %>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-0 text-center">
+                                <button class="btn btn-primary btn-block" type="submit"> Se connecter </button>
+                            </div>
+
+                        <% end %>
+
+                        <br>
+
+                        <div class="col-12 text-center">
+                        
+                            <% if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+                               <%= link_to t("Mot de passe oublié?"), new_password_path(resource_name) %><br />
+                            <% end %>
+                        
+                        </div> <!-- end col -->
+
+                    </div> <!-- end card-body -->
+                 
+                </div>
+                <!-- end card -->
+
+                <div class="row mt-3">
+                    <div class="col-12 text-center mt-2 text-white">
+                        &copy; Copyright Alithya - <script>document.write(new Date().getFullYear())</script> 
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row -->
+
+            </div> <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container -->
+</div>
+<!-- end page -->

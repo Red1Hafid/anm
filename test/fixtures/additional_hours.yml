@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  number_week_in_month: 1
+  total_additional_hour_in_week: 1
+  user: one
+
+two:
+  number_week_in_month: 1
+  total_additional_hour_in_week: 1
+  user: two

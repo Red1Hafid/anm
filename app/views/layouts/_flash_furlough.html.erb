@@ -1,0 +1,45 @@
+<% if flash.present? %>
+  <% if devise_controller? %>
+    <div id='flash' style= "margin-left: auto; margin-right: auto; !important">
+      <script>
+        <% if flash[:success] %>
+          var $toastContent = $('<span><%= flash[:success] %></span>');
+          toastr.success($toastContent)
+        <% end %>
+        <% if !flash[:warning].nil? && flash[:warning].size != 0 %>
+          var $toastContent = $('<span><%= flash[:warning] %></span>');
+          toastr.warning($toastContent)
+        <% end %>
+        <% if !flash[:danger].nil? && flash[:danger].size != 0 %>
+          var $toastContent = $('<span><%= flash[:danger] %></span>');
+          toastr.error($toastContent)
+        <% end %>
+        <% if !flash[:info].nil? && flash[:info].size != 0 %>
+          var $toastContent = $('<span><%= flash[:info] %></span>');
+          toastr.info($toastContent)
+        <% end %>
+      </script>
+    </div>
+  <% else %>
+     <div id='flash'>
+      <script>
+        <% if flash[:success] %>
+          var $toastContent = $('<span><%= flash[:success] %></span>');
+          toastr.success($toastContent)
+        <% end %>
+        <% if !flash[:warning].nil? && flash[:warning].size != 0 %>
+          var $toastContent = $('<span><%= flash[:warning] %></span>');
+          toastr.warning($toastContent)
+        <% end %>
+        <% if !flash[:danger].nil? && flash[:danger].size != 0 %>
+          var $toastContent = $('<span><%= flash[:danger] %></span>');
+          toastr.error($toastContent)
+        <% end %>
+        <% if !flash[:info].nil? && flash[:info].size != 0 %>
+          var $toastContent = $('<span><%= flash[:info] %></span>');
+          toastr.info($toastContent)
+        <% end %>
+      </script>
+    </div>
+  <% end %>
+<% end %>

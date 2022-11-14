@@ -1,0 +1,40 @@
+<!-- Modal -->
+<div class="modal fade" id="export_absence" role="dialog">
+    <%= form_tag export_absences_path(format: :xlsx), :method => 'get' do %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h4 class="modal-title" id="myLargeModalLabel">Filtre du rapport</h4>
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <%= label_tag "Date d'absence" %>
+                        <%= date_field_tag :date_absence, class:"form-control" %>
+                    </div>
+                    <div class="col-6">
+                        <%= label_tag 'Opérateur Date' %>
+                        <%= select_tag :oppeateur_date, options_for_select(['Supérieure que','Inférieure que','Égale']), class:"form-control" %>
+                    </div> 
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <%= label_tag "Type d'absences" %>
+                        <%= select_tag :type_absences, options_for_select(['Tous', 'Absence Justifiée', 'Absence Injustifiée', 'Accident de travail']), class:"form-control" %>
+                    </div> 
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-raised btn-success"> Rapport</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+ 
+
+
+

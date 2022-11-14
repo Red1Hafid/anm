@@ -1,0 +1,7 @@
+"ID(ou Matricule)","Nom","Prénom","Téléphone","Adresse","Sexe","Situation familiale","Email professionnel","Email personnel","Date d'intégration","Intitulé de poste","Résponsabilité","Gestionnaire hiérarchique","Gestionnaire fonctionnel","Role","Statut","Date de désactivation","Raison de désactivation","Action","Motif"
+"C1","Belkoubi","Kenza","","","Femme","Mariée","kenza.belkoubi@alithya.com","","25-01-2021","Responsable rh","Gestionnaire hiérarchique,Gestionnaire fonctionnel","","","Rh","Actif","","","",""
+"C2","Omrana","Hajar","","","Femme","Mariée","hajar.omrana@alithya.com","","03-02-2021","Lead de pratiques","Gestionnaire hiérarchique","","G1","Collaborateur","Nouveau","","","",""
+"C3","Hafid","Redouane","0661432066","Av mohamed V, Res 47C, No 1, Sala Al jadida","Homme","Marié","redouane.hafid@alithya.com","redouaanehafid@gmail.com","03-02-2021","Ingénieur conception développement","","C2","C4","Collaborateur","Actif","","","",""
+"C4","Senyo","Adzimah","","","Homme","Autre","senyo.adzimah@alithya.com","","03-02-2021","Chargé projet","Gestionnaire fonctionnel","C2","","Collaborateur","Suspendu","","","",""
+"C5","Farsi","Nihad","","","Femme","Célibataire","nihad.farsi@alithya.com","","25-04-2022","Talent acquisition","","C1","C1","Collaborateur","Désactivé","02-05-2022","raison de déssactivation","Démission","Tad"
+"C6","Bouichou","Mohamed","","","Homme","Autre","mohamed.bouichou@alithya.com","","2022-01-01","Ingénieur conception développement","","C2","C4","Collaborateur","Actif","","","",""

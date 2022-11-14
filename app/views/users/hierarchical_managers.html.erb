@@ -1,0 +1,175 @@
+<% provide(:title, 'users') %>
+
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">gestion des utilisateurs</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Liste des utilisateurs</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+          <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <%= form_tag import_users_path, multipart: true do %>
+                                    <%= file_field_tag :file %>
+                                    <%= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
+                                <% end %>
+                            </div> 
+                            
+                            <div class="col-lg-4">
+                                <%= form_tag users_path, :method => 'get',  class: "form-inline" do %>
+                                    <div class="form-group">
+                                        <% if params[:search].present? %>
+                                            <%= text_field_tag :search,nil, class:"form-control", value:"#{params[:search]}" %>
+                                        <% else %>
+                                            <%= text_field_tag :search,nil, class:"form-control", placeholder:"Trouvez une commande ... " %>
+                                        <% end %>
+                                        <button type="submit" class="btn btn-warning waves-effect waves-light ml-1"><i class="mdi mdi-magnify mr-1"></i> Cherche!</button>
+                                    </div>
+                                <% end %>
+                            </div> 
+
+                            <div class="col-lg-2">  
+                                <%= link_to '#new_utilisateur', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_utilisateur'  do %>
+                                    <i class="mdi mdi-basket mr-1"> Nouveau</i>
+                                <% end %>    
+                            </div>
+                        </div>    
+
+                        <div class="table-responsive">
+                            <table data-toggle="table"
+                                    data-show-columns="false"
+                                    data-page-list="[5, 10, 20]"
+                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                    data-buttons-class="xs btn-light"
+                                    data-pagination="true" class="table-borderless">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th data-field="">Nom complet</th>
+                                        <th data-field="email">Email</th>
+                                        <th data-field="role">Role</th>
+                                        <th data-field="started_at_date">Date d'intégration</th>
+                                        <th data-field="status">Statut</th>
+                                        <th style="width: 125px;">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <% @managers.each do |user| %>
+                                        <tr>                                          
+                                            <td> <%= user.first_name %> <%= user.last_name %>
+                                            </td>
+                                            <td><%= user.email %></td>
+                                            <td><%= user.role.title %></td>
+                                            <td><%= user.started_at %></td>
+                                            <td><% if user.created? %>
+                                                  <div class="badge font-14 badge badge-info p-1">Nouveau</div>
+                                                <% elsif user.actif? %> 
+                                                  <div class="badge font-14 badge badge-success p-1">Actif</div> 
+                                                <% else %>
+                                                   <div class="badge font-14 badge badge-warning p-1"> Désactivé</div>
+                                                <% end %>
+                                            </td>
+                                            <td>
+                                                <%= link_to user_path(user), remote: true, title: "Voir", class: "action-icon" do %>
+                                                     <i class="mdi mdi-eye"></i>
+                                                <% end %>
+                                                <%= link_to edit_user_path(user), remote: true, title: "Modifier", class: "action-icon" do %>
+                                                     <i class="mdi mdi-border-color"></i>
+                                                <% end %> 
+                                                <% if user.actif? %>
+                                                   <%= link_to pre_disable_path(user), remote: true, title: "Désactiver", class: "action-icon" do %>
+                                                      <i class="mdi mdi-close-octagon"></i>
+                                                   <% end %> 
+                                                <% elsif user.desabled? %>
+                                                   <%= link_to enable_path(user), data: { confirm: 'Etes vous sur?', title: 'Confirm action', commit: 'YES', cancel: 'NO' }, title: "Activer", class: "action-icon" do %>
+                                                     <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                                   <% end %> 
+                                                <% end %>
+                                                
+                                                <%= link_to user, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                                    <i class="mdi mdi-delete"></i>
+                                                <% end %>  
+                                            </td>                                            
+                                        </tr> 
+                                    <% end %> 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+    </div>
+</div> <!-- content -->
+
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="new_utilisateur" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Ajout d'un Gestionnaire hierarchique</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <%= simple_form_for(User.new, as: :user, method: :post, html: { class: "form-horizontal" }) do |f| %>
+                
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.input :first_name, label: 'Prénom', class: 'form-control', placeholder: "Entrer le prénom" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :last_name, label: 'Nom', class: 'form-control', placeholder: "Entrer le nom" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :email, label: 'Email professionnel', class: 'form-control', placeholder: "Email professionnel" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :started_at, value: Date.today, as: :date, html5: true, class: 'form-control' %>
+                    </div>   
+                    <div class="form-group mb-3">
+                        <% if current_user.role.title == "Alithya" %>
+                          <%= f.association :role, label: 'Prévillège', label_method: :title, value_method: :id, class: 'form-control', include_blank: false %>
+                        <% elsif current_user.role.title == "Rh" %>
+                          <%= f.association :role, label: 'Prévillège', label_method: :title, collection: Role.where.not(title: ["Alithya", "Rh"]), value_method: :id, class: 'form-control', include_blank: false %>
+                        <% end %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :gender, as: :radio_buttons, label: 'Sex', collection: [['0', 'Femme'], ['1', 'Homme']], label_method: :second, value_method: :first %>  
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <%= f.input :family_status, label: 'Situation familiale', collection: ["Celibataire", "Marié(e)", "Autre.."], class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :job_title, label: 'Fonction', placeholder: "Fonction", class: 'form-control' %>
+                    </div>                  
+                </div>
+            
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id='remote-container'></div>

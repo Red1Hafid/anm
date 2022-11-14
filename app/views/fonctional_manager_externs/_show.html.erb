@@ -1,0 +1,53 @@
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="show_fonctional_manager_extern" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Detail du gestionnaire fonctionnel</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+                            
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="card-box">
+                        <div class="media mb-3">
+                            <div class="media-body">
+                                <h4 class="text-muted"><i class="mdi mdi-office-building"></i> <%= @fonctional_manager_extern.job_title %></h4>
+                            </div>
+                        </div>
+                        
+                        <div class="">
+                            <h4 class="font-13 text-muted text-uppercase mb-1">Matricule :</h4>
+                            <p class="mb-3"><%= @fonctional_manager_extern.id_external_manager %></p>
+                        </div>
+
+                        <div class="">
+                            <h4 class="font-13 text-muted text-uppercase mb-1">Nom :</h4>
+                            <p class="mb-3"><%= @fonctional_manager_extern.last_name %></p>
+                        </div>
+
+                        <div class="">
+                            <h4 class="font-13 text-muted text-uppercase mb-1">Prénom  :</h4>
+                            <p class="mb-3"><%= @fonctional_manager_extern.first_name %></p>
+                        </div>
+
+                        <div class="">
+                            <h4 class="font-13 text-muted text-uppercase mb-1">Email professtionnel :</h4>
+                            <p class="mb-3"><%= @fonctional_manager_extern.email %></p>
+                        </div>
+
+                        <div class="">
+                            <h4 class="font-13 text-muted text-uppercase mb-1">Téléphone : </h4>
+                            <p class="mb-3"><%= @fonctional_manager_extern.phone_number %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning waves-effect waves-light" data-dismiss="modal">Fermer</button>
+            </div>
+          
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,270 @@
+ <!-- Topbar Start -->
+<div class="navbar-custom">
+  <div class="container-fluid">
+    <ul class="list-unstyled topnav-menu float-right mb-0">
+      <li class="dropdown notification-list topbar-dropdown">
+        <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+          <% if current_user.avatar.attached? %>
+              <%= image_tag current_user.avatar, class: "rounded-circle" %>
+          <% else %>
+              <%= image_tag 'avatar-profile.png', class: "rounded-circle" %>
+          <% end %>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+          <!-- item-->
+          <div class="dropdown-header noti-title">
+             <%if current_user.gender == "1" %>  
+                <h5 class="text-overflow m-0"> Mr. <strong><%= current_user.first_name %> <%= current_user.last_name %> </strong>  </h5>
+             <%else %> 
+                <h5 class="text-overflow m-0"> Mme. <strong><%= current_user.first_name %> <%= current_user.last_name %> </strong>  </h5>
+             <%end %>
+          </div>
+          <!-- item-->
+          <%= link_to  edit_user_registration_path(current_user), class: "dropdown-item notify-item" do %>
+            <i class="fe-user"></i>
+            <span>Mon profil</span>
+          <% end %>
+
+          <% if ['Rh'].include? current_user.role.title %>
+            <%= link_to furloughs_administration_path, class: "dropdown-item notify-item" do %>
+              <i class="fe-calendar"></i>
+              <span>Mes congés</span>
+            <% end %>
+
+            <%= link_to additional_hours_administration_path, class: "dropdown-item notify-item" do %>
+              <i class="fe-calendar"></i>
+              <span>Mes Heures sup.</span>
+            <% end %>
+          <% end %>
+
+          <% if ['Rh'].include? current_user.role.title %>
+            <%= link_to authorizations_administration_path, class: "dropdown-item notify-item" do %>
+              <i class="fe-calendar"></i>
+              <span>Mes autorisations</span>
+            <% end %>
+          <% end %>
+          
+          <%= link_to destroy_user_session_path, method: :get, class: "dropdown-item notify-item" do %>
+            <i class="fe-log-out"></i>
+            <span>Se deconnecter</span>
+          <% end %>  
+        </div>
+      </li>
+    <!--  <li class="dropdown notification-list">
+        <a href="javascript:void(0);" class="nav-link right-bar-toggle waves-effect waves-light">
+          <i class="fe-settings noti-icon"></i>
+        </a>
+      </li>
+      -->
+    </ul>
+    <!-- LOGO -->
+    <div class="logo-box">
+      <%= link_to root_path, class: "logo logo-dark text-center" do %>
+        <span class="logo-sm">
+          <%= image_tag 'logo.png', height: "40", alt: "Super Admin" %>
+        </span>
+        <span class="logo-lg">
+          <%= image_tag 'logo.png', height: "40", alt: "Super Admin" %>
+        </span>
+      <% end %>
+      <%= link_to root_path, class: "logo logo-light text-center" do %>
+        <span class="logo-sm text-center">
+          <h3 style="color:grey;margin-top: 10%;">Alithya
+            <h3>
+            </span>
+            <span class="logo-lg text-center">
+              <h3 style="color:grey;margin-top: 10%;">Alithya
+                <h3>
+                </span>
+      <% end %>
+    </div>
+      <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
+        <li>
+          <button class="button-menu-mobile waves-effect waves-light">
+            <i class="fe-menu"></i>
+          </button>
+        </li>
+        <li>
+          <!-- Mobile menu toggle (Horizontal Layout)-->
+          <a class="navbar-toggle nav-link" data-toggle="collapse" data-target="#topnav-menu-content">
+            <div class="lines">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </a>
+          <!-- End mobile menu toggle-->
+        </li>
+        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+          <li class="dropdown d-none d-xl-block">
+            <%= link_to 'Nouveau collaborateur', new_user_path, :class => "nav-link waves-effect waves-light" %>
+          </li>
+
+          <li class="dropdown d-none d-xl-block">
+            <%= link_to 'Nouvelle demande de congé', new_furlough_path, :class => "nav-link waves-effect waves-light" %>
+          </li>
+        <% else %>
+          <li class="dropdown d-none d-xl-block">
+            <%= link_to 'Demander un congé', new_furlough_path, :class => "nav-link waves-effect waves-light" %>
+          </li>
+        <% end %>
+      </ul>
+      <div class="clearfix"></div>
+  </div>
+</div>
+<!-- end Topbar -->
+<!-- ========== Left Sidebar Start ========== -->
+<div class="left-side-menu">
+  <div class="h-100" data-simplebar>
+    <!--- Sidemenu -->
+    <div id="sidebar-menu">
+      <ul id="side-menu">
+        <li>
+          <%= link_to root_path, class: "dropdown-item notify-item" do %>
+            <i data-feather="home"></i>
+            <span>Acceuil</span>
+          <% end %>
+        </li>
+        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+          <li>
+            <%= link_to users_path, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
+              <i data-feather="users"></i>
+              <span>Gestion des collaborateurs</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to furloughs_path, class: "dropdown-item notify-item" do %>
+              <i data-feather="calendar"></i>
+              <span>Gestion des congés</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to additional_hours_path, class: "dropdown-item notify-item" do %>
+              <i data-feather="watch"></i>
+              <span>Gestion des heures sup</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to autorizations_path, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
+              <i data-feather="watch"></i>
+              <span>Gestion des autorisations</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to absences_path, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
+              <i data-feather="watch"></i>
+              <span>Gestion des absences</span>
+            <% end %>
+          </li>
+          <li>
+            <a href="#sidebarProjects" data-toggle="collapse">
+              <i data-feather="settings"></i>
+              <span> Paramètres </span>
+              <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="sidebarProjects">
+              <ul class="nav-second-level">
+                <li>
+                  <%= link_to "Jours fériés", offs_path %>
+                </li>
+                <li>
+                  <%= link_to "Types de congés", furlough_types_path %>
+                </li>
+                <li>
+                  <%= link_to "Types d'absences", absence_types_path %>
+                </li>
+                <li>
+                  <%= link_to "Géstionnaires fonctionnels externe", fonctional_manager_externs_path %>
+                </li>
+                <li>
+                  <%= link_to "Variables système", settings_path %>
+                </li>
+                <li>
+                  <%= link_to "Actions de départ", stop_actions_path %>
+                </li>
+                <li>
+                  <%= link_to "Motifs de départ", grounds_path %>
+                </li>
+                <% if current_user.role.title == 'Super Admin' %>
+                  <li>
+                    <%= link_to "Initialisation de la base de donnée", start_load_path, data: { confirm: "Etes vous sur de faire l'import?" } %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <%= link_to journals_path, class: "dropdown-item notify-item" do %>
+              <i data-feather="file"></i>
+              <span>Journal</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to sidekiq_path, target: :_blank, class: "dropdown-item notify-item" do %>
+              <i data-feather="eye"></i>
+              <span>Supervision</span>
+            <% end %>
+          </li>
+        <% else %>
+          <li>
+            <% if['Collaborateur'].include? current_user.role.title %>
+              <% if !current_user.manager_titles.nil? %>
+                <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
+                  <%= link_to autorizations_path, class: "dropdown-item notify-item" do %>
+                    <i class="fe-calendar"></i>
+                    <span>Gestion des autorisations</span>
+                  <% end %>
+
+                  <%= link_to authorizations_administration_path, class: "dropdown-item notify-item" do %>
+                    <i data-feather="watch"></i>
+                    <span>Mes autorisations</span>
+                  <% end %>
+                <% else %>
+                  <%= link_to autorizations_path, class: "dropdown-item notify-item" do %>
+                    <i data-feather="watch"></i>
+                    <span>Mes autorisations</span>
+                  <% end %>
+                <% end %>
+              <% else %>
+                <%= link_to autorizations_path, class: "dropdown-item notify-item" do %>
+                    <i data-feather="watch"></i>
+                    <span>Mes autorisations</span>
+                <% end %>
+              <% end %>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to furloughs_path, class: "dropdown-item notify-item" do %>
+              <i data-feather="calendar"></i>
+              <span>Mes congés</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to additional_hours_path, class: "dropdown-item notify-item" do %>
+              <i data-feather="watch"></i>
+              <span>Mes heures sup</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to absences_path, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
+              <i data-feather="watch"></i>
+              <span>Gestion des absences</span>
+            <% end %>
+          </li> 
+          <li>
+            <%= link_to offs_path, class: "dropdown-item notify-item" do %>
+              <i data-feather="book"></i>
+              <span>Jours fériés</span>
+            <% end %>
+          </li>
+        <% end %>
+      
+      </ul>
+    </div>
+    <!-- End Sidebar -->
+    <div class="clearfix"></div>
+  </div>
+  <!-- Sidebar -left -->
+</div>
+<!-- Left Sidebar End -->
+

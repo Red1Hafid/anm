@@ -1,0 +1,10 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Congés") do |sheet|
+  # Create the header row
+  sheet.add_row ["Congé", "description", "Date de début", "Heure de début", "Date de fin", "Heur de fin", "Collaborateur", "Statut de congé"]
+  # Create entries for each item
+  @furloughs.each do |furlough|
+    sheet.add_row [furlough.furlough_type.name, furlough.description, furlough.start, furlough.hour_start, furlough.end, furlough.hour_end, furlough.user.email, furlough.status]
+  end
+end

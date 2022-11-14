@@ -1,0 +1,31 @@
+<!-- Modal -->
+<div class="modal fade" id="show_additional_hour" role="dialog">
+    <%= simple_form_for @additional_hour do |f| %>
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Détail de la période <%= @additional_hour.period %></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            Collaborateur : <%= @additional_hour.user.first_name %> <%= @additional_hour.user.last_name %>
+                        </div>
+                        <div class="form-group">
+                            Période : <%= @additional_hour.period %>
+                        </div>
+                        <div class="form-group">
+                           Total des heures sup : <%= @additional_hour.total_additional_hour_in_week %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>

@@ -1,0 +1,10 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Analysis") do |sheet|
+  # Create the header row
+  sheet.add_row ["Collaborateur", "Jours travaillés (Période séléctionnée)", "Jours fériés consommés (Période séléctionnée)", "Gains en solde / J (Période séléctionnée)", "Tous les jours fériés consommé", "Solde réel / J"]
+  # Create entries for each item
+  @analysis.each do |a|
+    sheet.add_row [a[0] + " " + a[1], a[3], a[4], a[5], a[7], a[8]]
+  end
+end

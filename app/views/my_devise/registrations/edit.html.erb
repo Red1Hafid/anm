@@ -1,0 +1,256 @@
+ <div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="header-title mb-3"> Editer mon profil</h4>
+
+            <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+                    <div id="basicwizard">
+                        <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
+                            <li class="nav-item">
+                                <% if resource.is_started_at_confirmed == false %>
+                                    <a href="#basictab2"  data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 active">
+                                        <button hidden="hidden" onclick="edit()"  class="btn btn-secondary">Annuler</button>
+                                        <i class="mdi mdi-account-circle mr-1"></i>
+                                        <span class="d-none d-sm-inline">Compte</span>
+                                    </a>
+                                <% else %>
+                                    <a href="#basictab2"  data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                        <button hidden="hidden" onclick="edit()"  class="btn btn-secondary">Annuler</button>
+                                        <i class="mdi mdi-account-circle mr-1"></i>
+                                        <span class="d-none d-sm-inline">Compte</span>
+                                    </a>
+                                <% end %>
+                            </li>
+                            <li class="nav-item">
+                                <% if resource.is_started_at_confirmed == false %>
+                                    <a href="#basictab3" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                        <i class="mdi mdi-face-profile mr-1"></i>
+                                        <span class="d-none d-sm-inline">Informations personnelles</span>
+                                    </a>
+                                <% else %>
+                                    <a href="#basictab3" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 active">
+                                        <i class="mdi mdi-face-profile mr-1"></i>
+                                        <span class="d-none d-sm-inline">Informations personnelles</span>
+                                    </a>
+                                <% end %>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#basictab1" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2"> 
+                                    <i class="mdi mdi-lock mr-1"></i>
+                                    <span class="d-none d-sm-inline">Mot de passe</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#basictab0"  data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                    <i class="mdi mdi-lock mr-1"></i>
+                                    <span class="d-none d-sm-inline">Valider la modification</span>
+                                </a>
+                            </li>     
+                        </ul>
+
+                        <div class="tab-content b-0 mb-0 pt-0">
+                            <div class="tab-pane" id="basictab0">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group row mb-4">
+                                            <label class="col-md-4 col-form-label" for="password"> Entrer le mot de passe actuelle pour valider la modification *</label>
+                                            <div class="col-md-8">
+                                                <%= f.password_field :current_password, id:"password" , class: "form-control", placeholder: "Mot de passe actuel", required: true %>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-4">
+                                            <div class="col-4"></div>
+                                            <div class="col-4">
+                                                <button class="btn btn-primary"  id="btn_save" type="submit"  >Enregistrer</button>
+                                                <button  onclick="cancel()" class="btn btn-secondary" id="btn_cancel">Annuler</button>
+                                            </div>  
+                                            <div class="col-4"></div>
+                                        </div>
+                                    </div> <!-- end col -->    
+                                </div> <!-- end row -->
+                            </div>
+
+                            <div class="tab-pane" id="basictab1">
+                                <div class="row">
+                                    
+                                    <div class="col-12">
+                                        <div class="form-group row mb-4">
+                                            <label class="col-md-4 col-form-label" for="password"> Nouveau Mot de passe *</label>
+                                            <div class="col-md-8">
+                                                        <%= f.password_field :password, id:"password" , class: "form-control", placeholder: "Nouveau Mot de passe" %>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group row mb-4">
+                                            <label class="col-md-4 col-form-label" for="confirm">Confirmation Mot de passe *</label>
+                                            <div class="col-md-8">
+                                                    <%= f.password_field :password_confirmation, id:"password" , class: "form-control", placeholder: "Confirmation du Mot de passe" %>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-3">
+                                            <h4><span class="badge badge-soft-danger badge-pill ml-1">Note: Pour changer votre mot de passe if faut confirmer le mot de passe actuelle sur le dernier onglet "valider la modification"</span></h4>
+                                        </div>
+                                    </div> <!-- end col -->    
+                                </div> <!-- end row -->
+                            </div>
+
+                        <% if resource.is_started_at_confirmed == false %>
+                            <div class="tab-pane active" id="basictab2">
+                        <% else %>
+                            <div class="tab-pane" id="basictab2">
+                        <% end %>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-4 col-form-label" for="name"> Matricule</label>
+                                            <div class="col-md-8">
+                                                    <%= f.text_field :matricule, class: "form-control", placeholder: "Matricule", :disabled => true %>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-4 col-form-label" for="name"> Prénom</label>
+                                            <div class="col-md-8">
+                                                    <%= f.text_field :first_name, class: "form-control", placeholder: "Prénom", :disabled => true %>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-4 col-form-label" for="surname"> Nom</label>
+                                            <div class="col-md-8">
+                                                <%= f.text_field :last_name, class: "form-control", placeholder: "Nom", :disabled => true %>
+                                            </div>
+                                        </div>
+                
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-4 col-form-label" for="email">Email</label>
+                                            <div class="col-md-8">
+                                                    <%= f.text_field :email, class: "form-control", placeholder: "Email", :disabled => true %>
+                                            </div>
+                                        </div>
+                                            <div class="form-group row mb-3">
+                                            <label class="col-md-4 col-form-label" for="email">Fonction</label>
+                                            <div class="col-md-8">
+                                                    <%= f.text_field :job_title, class: "form-control", placeholder: "Fonction", :disabled => true %>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-4 col-form-label" for="email">Date de l'intégration</label>
+                                            <div class="col-md-2">
+                                                    <%= f.text_field :started_at, class: "form-control", placeholder: "Date", :disabled => true %>
+                                            </div>
+                                        </div>
+
+                                        <% if resource.is_started_at_confirmed == false %>
+                                            <div class="form-group row mb-3" style= "background-color: LightBlue ; !important">
+                                                <ul>
+                                                    <br>
+                                                    <li>La confirmation de la date d'intégration est très importante pour le system !</li>
+                                                    <li>Pourriez-vous confirmer votre date d'intégration on clique sur le checkbox s'il est correct et entrer votre mots de passe sur la derniere section "Valider la modification" !</li>
+                                                    <li><%= f.input :is_started_at_confirmed, label: "Cliquer ici s'il est correct", class: "form-control" %></li>
+                                                </ul>  
+                                            </div>
+                                        <% end %>
+
+                                      
+                                         
+                                        <% if !resource.line_manager_id.nil? %>
+                                            <div class="form-group row mb-3">
+                                                <label class="col-md-4 col-form-label" for="email">Gestionnaire Hiéarchique</label>
+                                                <div class="col-md-8">
+                                                <label class="form-control"> <%= User.full_name(resource.line_manager_id)%></label>   
+                                                </div>
+                                            </div>
+                                        <% end %>
+                                        <% if !resource.fonctionnal_manager_id.nil? %>
+                                            <div class="form-group row mb-3">
+                                                <label class="col-md-4 col-form-label" for="email">Gestionnaire Fonctionnel</label>
+                                                <div class="col-md-8">
+                                                <label class="form-control fonctional"> <%= FonctionalManager.full_name(resource.fonctionnal_manager_id)%></label>   
+                                                </div>
+                                            </div>
+                                        <% end %>
+
+                                        <% if resource.is_started_at_confirmed == false %>
+                                            <div class="form-group row mb-3">
+                                                <h4><span class="badge badge-soft-danger badge-pill ml-1">Note: Pour chaque modification il faut confirmer votre mot de passe sur le dernier onglet "valider la modification"</span></h4>
+                                            </div>
+                                        <% end %>
+                                    </div> <!-- end col -->
+                            
+                                        
+                                </div> <!-- end row -->
+                            </div>
+
+                        <% if resource.is_started_at_confirmed == false %>
+                            <div class="tab-pane" id="basictab3">
+                        <% else %>
+                            <div class="tab-pane active" id="basictab3">
+                        <% end %>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group row mb-4">
+                                            <label class="col-md-4 col-form-label" for="name"> Email Personnel</label>
+                                            <div class="col-md-8">
+                                                    <%= f.text_field :personnal_email, class: "form-control", placeholder: "Email personnel"%>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-4 col-form-label" for="surname"> Numéro de téléphone</label>
+                                            <div class="col-md-8">
+                                                    <%= f.text_field :phone_number, class: "form-control", placeholder: "Numero de téléphone mobile"%>
+                                            </div>
+                                        </div>
+                
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-4 col-form-label" for="email">Numéro du fixe</label>
+                                            <div class="col-md-8">
+                                                    <%= f.text_field :phone_number_fix, class: "form-control", placeholder: "Numero de téléphone fixe" %>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-4 col-form-label" for="email">Adresse</label>
+                                            <div class="col-md-8">
+                                                    <%= f.text_area :home_adress, class: "form-control", placeholder: "Adresse" %>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-3">
+                                            <label class="col-md-4 col-form-label" for="surname"> Photo</label>
+                                            <%= f.file_field :avatar, label: 'Photo' %>
+                                        </div>
+
+                                        <div class="form-group row mb-3">
+                                            <h4><span class="badge badge-soft-danger badge-pill ml-1">Note: Pour chaque modification il faut confirmer votre mot de passe sur le dernier onglet "valider la modification"</span></h4>
+                                        </div>
+                                            
+                                    </div> <!-- end col -->
+                                </div> 
+                                <!-- end row -->
+                            </div>
+                        </div> <!-- tab-content -->
+                    </div> <!-- end #basicwizard-->
+                <%end%>
+            </div> <!-- end card-body -->
+        </div> <!-- end card-->
+    </div> <!-- end col -->
+</div> 
+
+<script>
+    function edit() {
+            
+        var btn_save= document.getElementById("btn_save");
+        btn_save.style.display = "block";
+        var btn_cancel= document.getElementById("btn_cancel");
+        btn_cancel.style.display = "none";
+
+    }
+
+    function cancel() {
+        window.location.href = "<%= conges_path %>"
+     }
+
+</script>

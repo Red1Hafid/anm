@@ -1,0 +1,131 @@
+<% provide(:title, 'absence-types') %>
+
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">gestion des types d'absences</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Liste des types d'absences</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <%#= form_tag import_furlough_types_path, multipart: true do %>
+                                    <%#= file_field_tag :file, required: true %>
+                                    <%#= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
+                                <%# end %>
+                            </div> 
+                            
+                            <div class="col-lg-4">
+                                <%#= form_tag furlough_types_path, :method => 'get',  class: "form-inline" do %>
+                                    <div class="form-group">
+                                        <%# if params[:search].present? %>
+                                            <%#= text_field_tag :search,nil, class:"form-control", value:"#{params[:search]}" %>
+                                        <%# else %>
+                                            <%#= text_field_tag :search,nil, class:"form-control", placeholder:"Trouvez une commande ... " %>
+                                        <%# end %>
+                                        <!--<button type="submit" class="btn btn-warning waves-effect waves-light ml-1"><i class="mdi mdi-magnify mr-1"></i> Cherche!</button>-->
+                                    </div>
+                                <%# end %>
+                            </div> 
+
+                            <div class="col-lg-2">  
+                                <%= link_to '#new_absence_type', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_absence_type'  do %>
+                                    <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                                <% end %>    
+                            </div>
+                        </div>
+
+                        
+                        <div class="table-responsive">
+                            <table data-toggle="table"
+                                    data-show-columns="false"
+                                    data-page-list="[5, 10, 20]"
+                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                    data-buttons-class="xs btn-light"
+                                    data-pagination="true" class="table-borderless">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th data-field="name">Type d'absence </th>
+                                        <th data-field="code">Code </th>
+                                        <th style="width: 125px;">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <% @absence_types.each do |absence_type| %>
+                                        <tr>  
+                                            <td><%= absence_type.name %></td>
+                                            <td><%= absence_type.code %></td>
+                                            <td>
+                                                <%= link_to absence_type_path(absence_type), remote: true, title: "Voir", class: "action-icon" do %>
+                                                    <i class="mdi mdi-eye"></i>
+                                                <% end %>
+                                                <%= link_to edit_absence_type_path(absence_type), remote: true, title: "Modifier", class: "action-icon" do %>
+                                                    <i class="mdi mdi-border-color"></i>
+                                                <% end %>  
+                                                <%= link_to absence_type, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                                    <i class="mdi mdi-delete"></i>
+                                                <% end %>                                           
+                                            </td>                                            
+                                        </tr> 
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+
+    <div id='remote-container'></div>
+</div> <!-- content -->
+
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="new_absence_type" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Définition d'un type d'absence</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <%= simple_form_for(AbsenceType.new, as: :absence_type, method: :post, html: { class: "form-horizontal" }) do |f| %>
+                
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.input :name, label: "Type d'absence", placeholder: "Entrer le type d'absence", class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :code, label: "Code de type d'absence", placeholder: "Entrer le code de type d'absence", class: 'form-control' %>
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+

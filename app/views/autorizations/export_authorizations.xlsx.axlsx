@@ -1,0 +1,10 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Rapport des autorisations") do |sheet|
+  # Create the header row
+  sheet.add_row ["Présnom", "Nom", "Date", "heure de début", "heure de reprise", "Status"]
+  # Create entries for each item
+  @autorizations.each do |a|
+    sheet.add_row [a.user.first_name, a.user.last_name, a.date, a.start_hour, a.end_hour, a.status]
+  end
+end

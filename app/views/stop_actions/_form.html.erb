@@ -1,0 +1,28 @@
+<!-- Modal -->
+<div class="modal fade" id="edit_stop_action" role="dialog">
+    <%= simple_form_for @stop_action do |f| %>
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <%= f.input :code, label: 'Code', placeholder: "Entrer le code d'action", class: 'form-control' %>
+                        </div>
+                        <div class="form-group">
+                            <%= f.input :name, label: 'Action', placeholder: "Entrer une action", class: 'form-control' %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <%= f.button :submit, 'Valider', class: 'btn btn-raised btn-success' %>
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>

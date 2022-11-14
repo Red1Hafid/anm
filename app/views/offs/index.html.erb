@@ -1,0 +1,318 @@
+<% provide(:title, 'offs') %>
+
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">Jours fériés</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Liste des jours fériés de l'année <%= @year %></h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                <div class="col-lg-6">
+                                    <%= form_tag import_offs_path, multipart: true do %>
+                                        <%= file_field_tag :file, required: true %>
+                                        <%= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
+                                    <% end %>
+                                </div> 
+                            <% end %>
+
+                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                <div class="col-lg-2">  
+                                    <%= link_to '#new_off', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_off'  do %>
+                                        <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                                    <% end %>    
+                                </div>
+                            <% end %>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+        
+        <% if @results[:datas][2] %>
+            <div class="card">
+                <div class="card-body">    
+                    <% if @results[:datas][2] %>
+                        <a class="text-dark" data-toggle="collapse" href="#todayTasks" 
+                            aria-expanded="false" aria-controls="todayTasks">
+                            <h5 class="mb-0"><i class='mdi mdi-chevron-down font-18'></i> <%= @results[:year][2] %> <span class="text-muted font-14"></span></h5>
+                        </a>
+
+                        <br>
+
+                        <div class="collapse" id="todayTasks">
+                            <div class="card mb-0 shadow-none">
+                                <div class="table-responsive">
+                                    <table data-toggle="table"
+                                            data-show-columns="false"
+                                            data-page-list="[5, 10, 20]"
+                                            data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                            data-buttons-class="xs btn-light"
+                                            data-pagination="true" class="table-borderless">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th data-field="code">Code</th>
+                                                <th data-field="day_off">Jour férié</th>
+                                                <th data-field="description">Description </th>
+                                                <th data-field="start_date">Date de début</th>
+                                                <th data-field="end_date">Date de fin </th>
+                                                <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                <th style="width: 125px;">Actions</th>
+                                                <% end %>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <% @results[:datas][2].each do |off| %>
+                                                <tr>  
+                                                    <td><%= off.code %></td>
+                                                    <td><%= off.title %></td>
+                                                    <td><%=h truncate(off.description, :length => 60) %></td>
+                                                    <td><%= off.start.strftime('%d/%m/%Y') %></td>
+                                                    <td><%= off.end.strftime('%d/%m/%Y') %></td>
+                                                    <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                        <td>
+                                                            <%= link_to off_path(off), remote: true, class: "action-icon" do %>
+                                                                <i class="mdi mdi-eye"></i>
+                                                            <% end %>
+
+                                                            <%= link_to edit_off_path(off), remote: true, class: "action-icon" do %>
+                                                                <i class="mdi mdi-border-color"></i>
+                                                            <% end %>
+
+                                                            <% if off.code == "FRM" %>
+                                                                <%= link_to pre_adjust_path(off), title: "Adjuster", remote: true, class: "action-icon" do %>
+                                                                    <i class="mdi mdi-ray-vertex"></i>
+                                                                <% end %>
+                                                            <% end %>
+
+                                                            <%= link_to off, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                                                                    <i class="mdi mdi-delete"></i>
+                                                            <% end %> 
+                                                        </td> 
+                                                    <% end %>                                        
+                                                </tr> 
+                                            <% end %>     
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- end card -->
+                        </div> <!-- end .collapse-->
+                        <br>
+                    <% end%>     
+                </div>
+            </div>    
+        <% end %>
+
+        <% if @results[:datas][1] %>
+            <div class="card">
+                <div class="card-body">
+                    <% if @results[:datas][1] %>
+                        <a class="text-dark" data-toggle="collapse" href="#upcomingTasks" 
+                            aria-expanded="false" aria-controls="upcomingTasks">
+                            <h5 class="mb-0"><i class='mdi mdi-chevron-down font-18'></i> <%= @results[:year][1] %> <span class="text-muted font-14"></span></h5>
+                        </a>
+
+                        <br>
+
+                        <div class="collapse show" id="upcomingTasks">
+                            <div class="card mb-0 shadow-none">
+                                <div class="table-responsive">
+                                    <table data-toggle="table"
+                                            data-show-columns="false"
+                                            data-page-list="[5, 10, 20]"
+                                            data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                            data-buttons-class="xs btn-light"
+                                            data-pagination="true" class="table-borderless">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th data-field="code">Code</th>
+                                                <th data-field="day_off">Jour férié</th>
+                                                <th data-field="description">Description </th>
+                                                <th data-field="start_date">Date de début</th>
+                                                <th data-field="end_date">Date de fin </th>
+                                                <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                <th style="width: 125px;">Actions</th>
+                                                <% end %>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <% @results[:datas][1].each do |off| %>
+                                                <tr>  
+                                                    <td><%= off.code %></td>
+                                                    <td><%= off.title %></td>
+                                                    <td><%=h truncate(off.description, :length => 60) %></td>
+                                                    <td><%= off.start.strftime('%d/%m/%Y') %></td>
+                                                    <td><%= off.end.strftime('%d/%m/%Y') %></td>
+                                                    <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                        <td>
+                                                            <%= link_to off_path(off), remote: true, class: "action-icon" do %>
+                                                                <i class="mdi mdi-eye"></i>
+                                                            <% end %>
+
+                                                            <%= link_to edit_off_path(off), remote: true, class: "action-icon" do %>
+                                                                <i class="mdi mdi-border-color"></i>
+                                                            <% end %>
+
+                                                            <% if off.code == "FRM" %>
+                                                                <%= link_to pre_adjust_path(off), title: "Adjuster", remote: true, class: "action-icon" do %>
+                                                                    <i class="mdi mdi-ray-vertex"></i>
+                                                                <% end %>
+                                                            <% end %>
+
+                                                            <%= link_to off, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                                                                    <i class="mdi mdi-delete"></i>
+                                                            <% end %> 
+                                                        </td> 
+                                                    <% end %>                                        
+                                                </tr> 
+                                            <% end %> 
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- end card -->
+                        </div> <!-- end .collapse-->
+                        <br>
+                    <% end%>     
+                </div>
+            </div> 
+        <% end %>
+
+        <% if @results[:datas][0] %>
+            <div class="card">
+                <div class="card-body">
+                    <% if @results[:datas][0] %>
+                        <a class="text-dark" data-toggle="collapse" href="#otherTasks" 
+                            aria-expanded="false" aria-controls="otherTasks">
+                            <h5 class="mb-0"><i class='mdi mdi-chevron-down font-18'></i> <%= @results[:year][0] %> <span class="text-muted font-14"></span></h5>
+                        </a>
+
+                        <br>
+
+                        <div class="collapse" id="otherTasks">
+                            <div class="card mb-0 shadow-none">
+                                <div class="table-responsive">
+                                    <table data-toggle="table"
+                                            data-show-columns="false"
+                                            data-page-list="[5, 10, 20]"
+                                            data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                            data-buttons-class="xs btn-light"
+                                            data-pagination="true" class="table-borderless">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th data-field="code">Code</th>
+                                                <th data-field="day_off">Jour férié</th>
+                                                <th data-field="description">Description </th>
+                                                <th data-field="start_date">Date de début</th>
+                                                <th data-field="end_date">Date de fin </th>
+                                                <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                <th style="width: 125px;">Actions</th>
+                                                <% end %>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <% @results[:datas][0].each do |off| %>
+                                                <tr>  
+                                                    <td><%= off.code %></td>
+                                                    <td><%= off.title %></td>
+                                                    <td><%=h truncate(off.description, :length => 60) %></td>
+                                                    <td><%= off.start.strftime('%d/%m/%Y') %></td>
+                                                    <td><%= off.end.strftime('%d/%m/%Y') %></td>
+                                                    <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                        <td>
+                                                            <%= link_to off_path(off), remote: true, class: "action-icon" do %>
+                                                                <i class="mdi mdi-eye"></i>
+                                                            <% end %>
+
+                                                            <%= link_to edit_off_path(off), remote: true, class: "action-icon" do %>
+                                                                <i class="mdi mdi-border-color"></i>
+                                                            <% end %>
+
+                                                            <% if off.code == "FRM" %>
+                                                                <%= link_to pre_adjust_path(off), title: "Adjuster", remote: true, class: "action-icon" do %>
+                                                                    <i class="mdi mdi-ray-vertex"></i>
+                                                                <% end %>
+                                                            <% end %>
+
+                                                            <%= link_to off, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                                                                    <i class="mdi mdi-delete"></i>
+                                                            <% end %> 
+                                                        </td> 
+                                                    <% end %>                                        
+                                                </tr> 
+                                            <% end %>  
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div> <!-- end card -->
+                        </div> <!-- end .collapse-->
+                        <br>
+                    <% end%>  
+                </div>
+            </div>
+        <% end %>
+    </div>
+    <!-- end row -->
+    <div id='remote-container'></div>
+</div> <!-- content -->
+
+
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="new_off" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Ajout d'un jour férié</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <%= simple_form_for(Off.new, as: :off, method: :post, html: { class: "form-horizontal" }) do |f| %>
+                
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.input :code, label: 'Code', placeholder: "Entrer le code du jour férié", class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :title, label: 'Jour férié', placeholder: "Entrer le nom du jour férié", class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :start, label: 'Date de début', value: Date.today, as: :date, html5: true, class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :end, label: 'Date de fin', value: Date.today, as: :date, html5: true, class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :description, label: 'Déscription', class: 'form-control' %>
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+

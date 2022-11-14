@@ -1,0 +1,228 @@
+<div class="content">
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item"><a href="<%= furlough_path %>">Congés</a></li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Information du congé</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+        
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title mb-3">Journal de congé</h4>
+
+                        <div class="track-order-list">
+                            <ul class="list-unstyled">
+                                <% @journals_furlough.each_with_index do |journal, i| %>
+                                    <li class="completed">
+                                        <% if @journals_furlough.size-1 == i %>
+                                            <span class="active-dot dot"></span>
+                                        <% end %>
+                                        <h5 class="mt-0 mb-1">
+                                            <% if journal.status == "Nouveau" %>
+                                                <span class="badge badge-info">Nouveau congé</span>
+                                            <% elsif journal.status == 'En cours' %>
+                                                <span class="badge badge-pink">En cours</span>
+                                            <% elsif journal.status == "Soumis" %>
+                                                <span class="badge badge-warning"> Congé soumis</span> 
+                                            <% elsif journal.status == "Approuvé" %>
+                                                <span class="badge badge-success">Congé approuvé</span>
+                                            <% elsif journal.status == "Refusé" %>
+                                                <span class="badge badge-danger">Congé refusée</span>
+                                            <% elsif journal.status == "Cancel" %>
+                                                <span class="badge badge-dark">Congé annulée</span>   
+                                            <% elsif journal.status == 'Régularisé' %>
+                                                <span class="badge badge-secondary">Congé de régularisation</span>
+                                            <% elsif journal.status == 'Traité' %>
+                                                <span class="badge badge-primary">Congé traité</span>
+                                            <% end %>
+                                        </h5>
+                                        <p class="text-muted"><%= l journal.created_at, format: ('%d %b %Y') %> à <%= journal.created_at.hour %>:<%= journal.created_at.min %></p>
+                                    </li>
+                                <% end %>
+                            </ul>
+
+                            <br>
+                            <br>
+
+                            <h4 class="header-title mb-3">Duré de ce congé:</h4>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-6">
+                                        <h4><span class="badge badge-pink"><%= @furlough_duration_by_days %> </span> jour(s) de congé</h4>
+                                    </div>
+                                     <div class="mb-6">
+                                        <h4><span class="badge badge-pink"><%= @furlough_duration_by_hours %> </span> heurs de congé</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+                            <br>
+
+                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                <% if @furlough.status == "Soumis" ||  @furlough.status == "En cours" %>       
+                                    <%= link_to validate_path(@furlough), data: { confirm: 'Etes vous sur?' }, title: "Approuver", class:"btn btn-success waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                        <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                    <% end %>     
+
+                                    <%= link_to pre_refuse_path(@furlough), title: "Refuser", remote: true, class: "btn btn-danger waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                        <i class="mdi mdi-close-octagon"></i>
+                                    <% end %> 
+
+                                    <%= link_to pre_cancel_path(@furlough), title: "Annuler", remote: true, class: "btn btn-secondary waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="ti-na"></i>
+                                    <% end %>
+                                    
+                                    <%= link_to @furlough, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "btn btn-warning waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                        <i class="mdi mdi-delete"></i>
+                                    <% end %>          
+                                <% end %>
+                            <% end %>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title mb-3">Détails de congé</h4>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <h5 class="mt-0">Type de congé :</h5>
+                                    <p><%= @furlough.furlough_type.name %></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <h5 class="mt-0">Nom du collaborateur :</h5>
+                                    <p>
+                                       <%= @furlough.user.last_name %> <%= @furlough.user.first_name %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <h5 class="mt-0">Date de début</h5>
+                                    <p><%= @furlough.start.strftime('%d/%m/%Y') %> à <%= @furlough.hour_start %> h</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <h5 class="mt-0">Date de fin</h5>
+                                    <% if @furlough.hour_end == "14:00" %>
+                                       <p>
+                                          <%= @furlough.end.strftime('%d/%m/%Y') %> à <%= @furlough.hour_end %> h
+                                       </p>
+                                    <% else %>
+                                        <p>
+                                           <%= @furlough.end.send(:-, 1.day).strftime('%d/%m/%Y') %> à 18:00 h
+                                        </p>
+                                    <% end %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <% if @furlough.refus_date.present? %>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">Date de refus:</h5>
+                                        <p><%= l @furlough.refus_date, format: ('%d %b %Y')%> à <%= @furlough.refus_date.hour %>:<%= @furlough.refus_date.min %></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">La raison de refus:</h5>
+                                        <p>
+                                            <%= @furlough.refuse_comment %>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        <% end %>
+
+                        <% if @furlough.cancel_date.present? %>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">Date d'annulation:</h5>
+                                        <p><%= l @furlough.cancel_date, format: ('%d %b %Y')%> à <%= @furlough.cancel_date.hour %>:<%= @furlough.cancel_date.min %></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">La raison d'annulation:</h5>
+                                        <p>
+                                            <%= @furlough.cancel_comment %>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        <% end %>
+
+                        <% if @furlough.notes %>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">Alerte(s) :</h5>
+                                        <% @furlough.notes.each do |note| %>
+                                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                <% if @furlough.user_id != current_user.id %>
+                                                    <% if note.split[0] == "pas" %>
+                                                       <h4><span class="badge badge-info">- Le collaborateur n'a <%= note %></span></h4>
+                                                    <% else %>
+                                                       <h4><span class="badge badge-info">- Le collaborateur a <%= note %></span></h4>
+                                                    <% end %>
+                                                <% else %>
+                                                    <% if note.split[0] == "pas" %>
+                                                      <h4><span class="badge badge-info">- Vous n'avez <%= note %></span></h4>
+                                                    <% else %>
+                                                      <h4><span class="badge badge-info">- Vous avez <%= note %></span></h4>
+                                                    <% end %>
+                                                <% end %>
+                                            <% else %>
+                                                <% if note.split[0] == "pas" %>
+                                                   <h4><span class="badge badge-info">- Vous n'avez <%= note %></span></h4>
+                                                <% else %>
+                                                   <h4><span class="badge badge-info">- Vous avez <%= note %></span></h4>
+                                                <% end %>
+                                            <% end %>
+                                        <% end %>   
+                                    </div>
+                                </div>
+                            </div>
+                        <% end %>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+      
+    </div> <!-- container -->
+</div> <!-- content -->
+
+<div id='remote-container'></div>
+
+

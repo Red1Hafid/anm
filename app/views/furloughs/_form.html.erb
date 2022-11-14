@@ -1,0 +1,206 @@
+<!-- Modal -->
+<div class="modal fade" id="edit_furlough" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Modification du congé <%= @furlough.reference_furlough %></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <% if ["En cours", "Nouveau"].include? @furlough.status %>
+                <%= simple_form_for @furlough do |f| %>
+                    <div class="modal-body">
+                        <div class="form-group mb-3">
+                            <%= f.association :furlough_type, :as => :collection_select, collection: FurloughType.where(is_actif: true).where.not(code: ['CSSR', 'CPAR']), label: 'Type de congé', label_method: :name, value_method: :id, input_html: { id: 'type_furlough', onchange:'reloadFurloughType();'}, class: 'form-control',  include_blank: false %>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 fixed_duration"></span> <h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 informing_before"></span> <h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 is_payer"></span> <h4>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-8">
+                                    <%= f.input :start, label: 'Date de début', value: DateTime.strptime("1448607600",'%s'), as: :date ,html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'start_date', onchange:'reloadDuration();'}, class: 'form-control' %>
+                                </div>
+                                <div class="col-4">
+                                    <%= f.input :hour_start, label: 'Heur de départ', as: :select, collection: (['8:00','14:00']), input_html: { id: 'hour_start', onchange:'reloadDuration();'}, html5: true, placeholder: "Entrer la date de début de congé", class: 'form-control' %>
+                                </div>
+                        </div>
+                    </div>
+    
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-8">
+                                    <%= f.input :end, label: 'Date de fin', value:  DateTime.strptime("1448607600",'%s'), as: :date, html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'end_date', onchange:'reloadDuration();' }, class: 'form-control' %>
+                                </div>
+                                <div class="col-4">
+                                    <%= f.input :hour_end, label: 'Heure de reprise', as: :select, collection: (['8:00','14:00']), html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'hour_end', onchange:'reloadDuration();' }, class: 'form-control' %>
+                                </div>
+                                <div class="col-12">
+                                    <h4><span class="badge badge-danger ml-1 dr"></span><h4>
+                                </div>
+                            </div>
+                        </div>
+                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                            <% if @furlough.user_id != current_user.id %>
+                                <div class="form-group mb-3 card">
+                                    <div class="form-group">
+                                        <%= f.association :user, :as => :collection_select,
+                                        collection: @users, label_method: :full_name_user, label: 'Collaborateurs',
+                                        include_blank: false %>  
+                                    </div>
+                                </div>
+                            <% end %>
+                        <% end %>
+
+                        <div class="col-12">
+                            <%= f.object.documment.filename %>
+                            <%= f.file_field :documment %>
+                            <h4><span class="badge badge-danger ml-1"></span><h4>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <%= f.button :submit, 'Modifier', class: 'btn btn-raised btn-success' %>
+                        <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+                    </div>
+                <% end %>
+            <% else %>
+                <%= simple_form_for @furlough do |f| %>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <%= f.association :furlough_type, :as => :collection_select, collection: FurloughType.where(is_actif: true).where.not(code: ['CSSR', 'CPAR']), label: false, label_method: :name, value_method: :id, input_html: { id: 'type_furlough', :style => "display:none;"}, class: 'form-control',  include_blank: false %>
+                            <h4><span class="badge badge-soft-info badge-pill">Congé de <%= @furlough.furlough_type.name %></span><h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 fixed_duration"></span> <h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 informing_before"></span> <h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 is_payer"></span> <h4>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-8">
+                                    <%= f.input :start, label: 'Date de début', value: DateTime.strptime("1448607600",'%s'), as: :date ,html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'start_date', onchange:'reloadDuration();'}, class: 'form-control', :disabled => true %>
+                                </div>
+                                <div class="col-4">
+                                    <%= f.input :hour_start, label: 'Heur de départ', as: :select, collection: (['8:00','14:00']), input_html: { id: 'hour_start', onchange:'reloadDuration();'}, html5: true, placeholder: "Entrer la date de début de congé", class: 'form-control', :disabled => true %>
+                                </div>
+                        </div>
+                    </div>
+    
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-8">
+                                    <%= f.input :end, label: 'Date de fin', value:  DateTime.strptime("1448607600",'%s'), as: :date, html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'end_date', onchange:'reloadDuration();' }, class: 'form-control', :disabled => true %>
+                                </div>
+                                <div class="col-4">
+                                    <%= f.input :hour_end, label: 'Heure de reprise', as: :select, collection: (['8:00','14:00']), html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'hour_end', onchange:'reloadDuration();' }, class: 'form-control', :disabled => true %>
+                                </div>
+                                <div class="col-12">
+                                    <h4><span class="badge badge-danger ml-1 dr"></span><h4>
+                                </div>
+                            </div>
+                        </div>
+                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                            <% if @furlough.user_id != current_user.id %>
+                                <div class="form-group mb-3 card">
+                                    <div class="form-group">
+                                        <%= f.association :user, :as => :collection_select,
+                                        collection: @users, label_method: :full_name_user, label: 'Collaborateurs',
+                                        include_blank: false, :disabled => true %>  
+                                    </div>
+                                </div>
+                            <% end %>
+                        <% end %>
+
+                        <div class="col-12">
+                            <%= f.object.documment.filename %>
+                            <%= f.file_field :documment %>
+                            <h4><span class="badge badge-danger ml-1"></span><h4>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <%= f.button :submit, 'Modifier', class: 'btn btn-raised btn-success' %>
+                        <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+                    </div>
+
+                    </div>
+               <% end %>
+            <% end %>
+        </div>
+    </div> 
+</div>
+
+<script>
+    function set_user_id(){
+
+        var user_email = document.getElementsByClassName("select2-selection select2-selection--single")[0].innerText;
+
+        console.log(user_email);
+
+        var url = '<%= domainename + 'finduserid/' %>';
+        $.when(
+            $.getJSON(url+user_email)
+        ).done( function(json) {
+
+            $('#user').val(json);
+              
+        }); 
+
+    }
+    
+     function reloadFurloughType(){
+
+        var furlough_type_id = document.getElementById("type_furlough").value;
+        var url = '<%= domainename + 'findtypefurlough/' %>';
+
+        $.when(
+            $.getJSON(url+furlough_type_id)
+        ).done( function(json) {
+
+           if (json.max_duration != null) {
+
+              if (json.fixed_duration === true) {
+                $('.fixed_duration').text("Ce type de congé à une duré fixe de " + json.max_duration + " jour(s)");
+              }else{
+                  $('.fixed_duration').text("");
+              }
+           }else{
+               $('.fixed_duration').text("");
+           }
+
+           if (json.informing_before === true) {
+               $('.informing_before').text("Ce type de congé demande une duré de déclaration de 48h");
+           }else{
+               $('.informing_before').text("");
+           } 
+
+           if (json.is_payer === true) {
+               $('.is_payer').text("Ce type de congé est payé");
+           } else {
+               $('.is_payer').text("Ce type de congé n'est pas payé");
+           }  
+              
+        });  
+
+    }
+    
+    function reloadDuration() {
+        var start_date = document.getElementById("start_date").value;
+        var end_date = document.getElementById("end_date").value;
+        var hour_start = document.getElementById("hour_start").value;
+        var hour_end = document.getElementById("hour_end").value;
+        var url = '<%= domainename + 'duration_taken/' %>';
+    
+            $.when(
+                $.getJSON(url+start_date+'/'+hour_start+'/'+end_date+'/'+hour_end)
+            ).done( function(json) {
+
+              
+
+                if(json > 0 ) {
+                     $('.dr').text(json + " jour(s) dans ce congé");
+                }else{
+                     $('.dr').text("la date de début de congé ne doit pas étre supérieure à la date de fin");
+                }
+
+            });  
+    }
+</script>

@@ -1,0 +1,309 @@
+<% provide(:title, 'furloughs') %>
+
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">tableau de bord</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Tableau de bord</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+        <div class="row">
+            <div class="col-md-6 col-xl-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-info rounded-circle">
+                                <i class="fe-calendar avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup"><%= @number_furlough_soumis %></span></h3>
+                                <% if @number_furlough_soumis == 1 %>
+                                  <p class="text-muted mb-1 text-truncate"><%= link_to 'Congé', furloughs_path(:status => "Soumis") %></p>
+                                <% else %>
+                                  <p class="text-muted mb-1 text-truncate"><%= link_to 'Congés', furloughs_path(:status => "Soumis") %></p>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-uppercase">Soumis <span class="float-right"></span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-info" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 49%">
+                                <span class="sr-only"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-warning rounded-circle">
+                                <i class="fe-fe-calendar avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup"><%= @number_refused_furlough %></span></h3>
+                                <% if @number_refused_furlough == 1 %>
+                                  <p class="text-muted mb-1 text-truncate"><%= link_to 'Congé', furloughs_path(:attached => false) %></p>
+                                <% else %>
+                                  <p class="text-muted mb-1 text-truncate"><%= link_to 'Congés', furloughs_path(:attached => false) %></p>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-uppercase">Congés à régulariser<span class="float-right"></span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="49" aria-valuemin="0" aria-valuemax="100" style="width: 49%">
+                                <span class="sr-only"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-success rounded-circle">
+                                <i class="fe-fe-calendar avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup"><%= @number_in_approuved_furlough %></span></h3>
+                                <% if @number_in_approuved_furlough == 1 %>
+                                  <p class="text-muted mb-1 text-truncate"><%= link_to 'Congé', furloughs_path(:status => "Approuvé") %></p>
+                                <% else %>
+                                  <p class="text-muted mb-1 text-truncate"><%= link_to 'Congés', furloughs_path(:status => "Approuvé") %></p>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-uppercase">Approuvé <span class="float-right"></span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 49%">
+                                <span class="sr-only"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-danger rounded-circle">
+                                <i class="fe-fe-calendar avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup"><%= @number_in_canceled_furlough %></span></h3>
+                                <% if @number_in_canceled_furlough == 1 %>
+                                  <p class="text-muted mb-1 text-truncate"><%= link_to 'Congé', furloughs_path(:status => "Annulé") %></p>
+                                <% else %>
+                                  <p class="text-muted mb-1 text-truncate"><%= link_to 'Congés', furloughs_path(:status => "Annulé") %></p>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-uppercase">Annulé <span class="float-right"></span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="49" aria-valuemin="0" aria-valuemax="100" style="width: 49%">
+                                <span class="sr-only"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-xl-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-dark rounded-circle">
+                                <i class="fe-calendar avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup"><%= @number_authorization_soumis %></span></h3>
+                                <% if @number_authorization_soumis == 1 %>
+                                  <p class="text-muted mb-1 text-truncate">Autorisation<%#= link_to 'Congé', furloughs_path(:status => "Soumis") %></p>
+                                <% else %>
+                                  <p class="text-muted mb-1 text-truncate">Autorisations<%#= link_to 'Congés', furloughs_path(:status => "Soumis") %></p>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-uppercase">Soumis <span class="float-right"></span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-dark" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="100" style="width: 49%">
+                                <span class="sr-only"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+            <div class="col-md-6 col-xl-3">
+                <div class="card-box">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="avatar-sm bg-pink rounded-circle">
+                                <i class="fe-fe-calendar avatar-title font-22 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right">
+                                <h3 class="text-dark my-1"><span data-plugin="counterup"><%= @number_authorization_approuved %></span></h3>
+                                <% if @number_authorization_approuved == 1 %>
+                                  <p class="text-muted mb-1 text-truncate">Autorisation<%#= link_to 'Congé', furloughs_path(:attached => false) %></p>
+                                <% else %>
+                                  <p class="text-muted mb-1 text-truncate">Autorisations<%#= link_to 'Congés', furloughs_path(:attached => false) %></p>
+                                <% end %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="text-uppercase">Approuvé<span class="float-right"></span></h6>
+                        <div class="progress progress-sm m-0">
+                            <div class="progress-bar bg-pink" role="progressbar" aria-valuenow="49" aria-valuemin="0" aria-valuemax="100" style="width: 49%">
+                                <span class="sr-only"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end card-box-->
+            </div> <!-- end col -->
+
+        </div>
+
+        <br>
+
+        <div class="row  mb-3">
+            <div class="col-12">
+                <div class="card mb-3">
+                        <br>
+                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                            <div class="row col-lg-12">                               
+                                <div class="col-lg-10">
+                                    <div class="form-group">
+                                        <%= form_tag root_path, :method => 'get',  class: "form-inline" do %>
+                                            <div class="form-group">
+                                                <%= date_field_tag 'search[date_from]', @search.date_from, class:"form-control", id:"date_from" %>
+                                                <%= date_field_tag 'search[date_to]', @search.date_to, class:"form-control", id:"date_to" %>
+                                            
+                                                <div class="col-lg-2">
+                                                    <%= submit_tag 'Chercher',  class: "btn btn-warning waves-effect waves-light ml-1" %> 
+                                                </div>   
+                                            </div>
+                                        <% end %>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2">
+                                    <div class="text-lg-right mt-3 mt-lg-0">   
+                                        <%= form_tag export_path(format: :xlsx), :method => 'get' do %>
+                                            <div class="form-group"> 
+                                                <%= date_field_tag :date_from, nil, class:"form-control", id: "from", :style => "display:none;" %>
+                                                <%= date_field_tag :date_to, nil, class:"form-control", id: "to", :style => "display:none;" %>
+                                                <div class="col-lg-4">
+                                                    <button type="submit" class="btn btn-warning waves-effect waves-light ml-1"> Exporter</button>
+                                                </div>    
+                                            </div>
+                                        <% end %>            
+                                    </div>
+                                </div>                              
+                            </div>
+                        <% end %>
+
+                        <div class="table-responsive">
+                            <table class="table table-centered table-nowrap mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                          <th>Collaborateur </th>
+                                        
+                                            <th>Jours travaillés <br> (Période séléctionnée)</th>
+                                        
+                                            <th>Jours fériés consommés <br> (Période séléctionnée)</th>
+                                            <th>Gains en solde / J <br> (Période séléctionnée)</th>
+                                            <th>Tous les jours fériés <br> consommé</th>
+                                            <th>Solde réel / J</th>
+                                        <% else %>
+                                            <th>Jours travaillés <br> (Mois courant)</th>
+                                        
+                                            <th>Jours fériés consommés <br> (Mois courant)</th>
+                                            <th>Gains en solde / J <br> (Mois courant)</th>
+                                            <th>Tous les jours fériés <br> consommé</th>
+                                            <th>Solde réel / J</th>
+                                        <% end %>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% @analysis.each do |analyse| %>
+                                        <tr>  
+                                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                <td><%= analyse[0] %> <%= analyse[1] %></td>
+                                            <% end %> 
+                                            <td><%= analyse[3] %></td>
+                                            <td><%= analyse[4] %></td> 
+                                            <td><%= analyse[5] %></td>  
+                                            <td><%= analyse[7] %></td> 
+                                            <td><%= analyse[8] %></td>                                   
+                                        </tr>   
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+
+        <div class="row">
+            <div class="col-12 ">
+                <%#= @furloughs %>
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div>
+</div> <!-- content -->
+
+<script>
+    function get_date_from_and_to(){
+        var date_from = document.getElementById("date_from").value;
+        var date_to = document.getElementById("date_to").value;
+
+        $('#from').val(date_from);
+        $('#to').val(date_to);    
+    }
+</script>

@@ -1,0 +1,142 @@
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="show_utilisateur" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Detail profil</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+                            
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="card-box">
+                        <div class="media mb-3">
+                            <% if @user.avatar.attached? %>
+                                <%= image_tag @user.avatar, class: "d-flex mr-3 rounded-circle avatar-lg" %>
+                            <% else %>
+                                <%= image_tag 'avatar-profile.png', class: "d-flex mr-3 rounded-circle avatar-lg" %>
+                            <% end %>
+                            <div class="media-body">
+                                <h4 class="mt-0 mb-1"><%= @user.role.title %></h4>
+                                <p class="text-muted"><%= @user.first_name %> <%= @user.last_name %></p>
+                                <p class="text-muted"><i class="mdi mdi-office-building"></i> <%= @user.job_title %></p>
+                                <% if @user.is_active %>
+                                    <span class="badge badge-soft-succes badge-pill"></span> Actif
+                                <% else %>
+                                    <span class="badge badge-soft-succes badge-pill"></span> Inactif
+                                <% end %>
+                                
+                            </div>
+                        </div>
+
+                        <div class="">
+                            <h4 class="font-13 mt-0 text-uppercase mb-1">Email professtionnel :</h4>
+                            <p class="mb-3"><%= @user.email %></p>
+
+                            <% if @user.personnal_email.present? %>
+                                <h4 class="font-13 mt-0 text-uppercase mb-1">Email personnel :</h4>
+                                <p class="mb-3"><%= @user.personnal_email %></p>
+                            <% end %>
+
+                            <h4 class="font-13 mt-0 text-uppercase mb-11">Situation familiale :</h4>
+                            <p class="mb-3"><%= @user.family_status %></p>
+
+                            <h4 class="font-13 mt-0 text-uppercase mb-1">Date d'intégration :</h4>
+                            <p class="mb-3"><%= @user.started_at %></p>
+
+                            <% if @line_manager %>
+                                <h4 class="font-13 mt-0 text-uppercase mb-1">Gestionnaire Hiéarchique  :</h4>
+                                <p class="mb-3"><%= @line_manager.first_name %> <%= @line_manager.last_name %></p>
+                            <% end %>
+
+                            <% if @fonctional_manager %>
+                                <h4 class="font-13 mt-0 text-uppercase mb-1">Gestionnaire fonctionnell :</h4>
+                                <p class="mb-3"><%= @fonctional_manager.first_name %> <%= @fonctional_manager.last_name %></p>
+                            <% end %>
+
+                            <% if !@user.disabled_date.nil? %>
+                                <h4 class="font-13 mt-0 text-uppercase mb-1">Date de désactivation</h4>
+                                <p class="mb-3"><%= @user.disabled_date %></p>
+                            <% end %>
+
+                        </div>
+                    </div>
+
+                    <div class="card-box", style= "background-color: Cornsilk ; !important">
+
+                        <div class="widget-chart text-center" dir="ltr", style= "background-color: Cornsilk ; !important">
+                            
+                            <div id="total-revenue" class="mt-0"  data-colors="#f1556c"></div>
+
+                            <% if @balance_d > 1 %>
+                                <h2><%= @balance_d %> jours</h2>
+                            <% else%>
+                                 <h2><%= @balance_d %> jours</h2>
+                            <% end %>
+                            
+                            <h5 class="text-muted mt-0">Congés pris sur l'année courante <span class="text-muted font-14">(<%= @furloughs.count %>)</span></h5>
+
+                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                <div class="row mt-4" data-plugin="dragula" data-containers='["congé-sans-solde", "congé-annuel"]'>
+                                    <% @current_year_furloughs.each do |cyf| %>
+                                        <div class="col-lg-12">
+                                            <a class="text-dark" data-toggle="collapse" href="#congé-sans-solde"
+                                                aria-expanded="false" aria-controls="#congé-sans-solde">
+                                                <h5 class="mb-0"><i class='mdi mdi-chevron-down font-18'></i><%= cyf.first %> <span class="text-muted font-14">(<%= cyf.last.count %>)</span></h5>
+                                            </a>                    
+                                            <div class="collapse show" id="congé-sans-solde">
+                                                <div class="card mb-0 shadow-none", style= "background-color: Cornsilk ; !important">
+                                                    <div class="card-body pb-0" id="congé-sans-solde">                                                 
+                                                        <div class="d-sm-flex justify-content-between">
+                                                            <div class="mt-3 mt-sm-0">
+                                                                <ul class="list-inline font-10">
+                                                                    <% cyf.last.each do |c| %>
+                                                                        <li class="list-inline-item pr-1">
+                                                                            <i class='mdi mdi-calendar'></i>
+                                                                                À partir de <strong><%= c.start.strftime('%d/%m/%Y') %></strong> à <strong><%= c.hour_start %></strong> h
+                                                                            
+                                                                            <% if c.hour_end == "14:00" %>
+                                                                                
+                                                                                jusqu'à le <strong><%= c.end.strftime('%d/%m/%Y') %></strong> à <strong><%= c.hour_end %></strong> h
+                                                                                
+                                                                            <% else %>
+                                                                                jusqu'à le <strong><%= c.end.send(:-, 1.day).strftime('%d/%m/%Y') %></strong> à <strong>18:00</strong> h
+                                                                            <% end %>
+                                                                        </li>
+                                                                        <li><span class="badge badge-soft-danger p-1"><%= @furlough_duration_by_days %></span></li>
+                                                                    <% end %>
+                                                                </ul>
+                                                            </div>
+                                                        </div>     
+                                                    </div>
+                                                </div>
+                                            </div>                                       
+                                        </div>
+                                        <br>
+                                    <% end %>
+                                </div>
+                            <% end %>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <% if @user.actif? %>
+                    <%= link_to disable_path(@user), data: { confirm: 'Etes vous sur?' }, title: "Désactiver", class: "btn btn-danger waves-effect waves-light" do %>
+                        <i class="mdi mdi-close-octagon"></i>
+                    <% end %> 
+                <% elsif @user.desabled? %>
+                    <%= link_to enable_path(@user), data: { confirm: 'Etes vous sur?' }, title: "Activer", class: "btn btn-success waves-effect waves-light" do %>
+                        <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                    <% end %> 
+                <% end %>
+                
+                <button type="button" class="btn btn-warning waves-effect waves-light" data-dismiss="modal">Annuler</button>
+            </div>
+          
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

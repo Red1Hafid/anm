@@ -1,0 +1,46 @@
+<div class="modal fade" id="show_absence" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Detail de cette entrée d'absence</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="card-box">
+                    <h4 class="font-13 text-muted text-uppercase mb-2">Absence type :</h4>
+                    <p class="mb-3"><%= @absence.absence_type.name %></p>
+
+                    <h4 class="font-13 text-muted text-uppercase mb-2">Colaborateure :</h4>
+                    <p class="mb-3"><%= @absence.user.first_name %> <%= @absence.user.last_name %></p>
+
+                    <h4 class="font-13 text-muted text-uppercase mb-2">Heure de début :</h4>
+                    <p class="mb-3"><%= @absence.start_time %></p>
+
+                    <h4 class="font-13 text-muted text-uppercase mb-2">Heure de fin :</h4>
+                    <p class="mb-3"><%= @absence.end_time %></p>
+                </div>    
+            </div>
+
+            <div class="modal-footer">
+            
+                <%= link_to edit_absence_path(@absence), remote: true, class: "btn btn-warning waves-effect waves-light" do %>
+                    <i class="mdi mdi-border-color"></i>
+                <% end %>
+
+                <%= link_to @absence, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "btn btn-danger waves-effect waves-light" do %>
+                    <i class="mdi mdi-delete"></i>
+                <% end %>       
+            </div>
+      
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+
+            
+
+
+
+
+

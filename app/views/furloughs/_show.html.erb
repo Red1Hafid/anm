@@ -1,0 +1,320 @@
+<div class="modal fade" id="show_furlough" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Detail du cette demande de congé</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title mb-3">Journal de congé</h4>
+
+                        <div class="track-order-list">
+                            <ul class="list-unstyled">
+                                <% if @journals_furlough.count == 0 %>
+                                    <h5 class="mt-0 mb-1">
+                                        <% if @furlough.status == "Nouveau" %>
+                                            <span class="badge badge-info">Nouveau congé</span>
+                                        <% elsif @furlough.status == 'En cours' %>
+                                            <span class="badge badge-pink">En cours</span>
+                                        <% elsif @furlough.status == "Soumis" %>
+                                            <span class="badge badge-warning"> Congé soumis</span> 
+                                        <% elsif @furlough.status == "Approuvé" %>
+                                            <span class="badge badge-success">Congé approuvé</span>
+                                        <% elsif @furlough.status == "Refusé" %>
+                                            <span class="badge badge-danger">Congé refusée</span>
+                                        <% elsif @furlough.status == "Cancel" %>
+                                            <span class="badge badge-dark">Congé annulée</span>   
+                                        <% elsif @furlough.status == "Régularisé" %>
+                                            <span class="badge badge-secondary">Congé de régularisation</span>
+                                        <% elsif @furlough.status == "Traité" %>
+                                            <span class="badge badge-primary">Congé traité</span>
+                                        <% elsif @furlough.status == "Annulé" %>
+                                            <span class="badge badge-secondary">Congé annulé</span>
+                                        <% end %>
+                                    </h5>
+                                    <p class="text-muted"><%=l @furlough.created_at, format: ('%d %b %Y') %> à <%= @furlough.created_at.hour %>:<%= @furlough.created_at.min %></p>
+                                <% else %>
+                                    <% @journals_furlough.each_with_index do |journal, i| %>
+                                        <li class="completed">
+                                            <% if @journals_furlough.size-1 == i %>
+                                                <span class="active-dot dot"></span>
+                                            <% end %>
+                                            <h5 class="mt-0 mb-1">
+                                                <% if journal.status == "Nouveau" %>
+                                                    <span class="badge badge-info">Nouveau congé</span>
+                                                <% elsif journal.status == 'En cours' %>
+                                                    <span class="badge badge-pink">En cours</span>
+                                                <% elsif journal.status == "Soumis" %>
+                                                    <span class="badge badge-warning"> Congé soumis</span> 
+                                                <% elsif journal.status == "Approuvé" %>
+                                                    <span class="badge badge-success">Congé approuvé</span>
+                                                <% elsif journal.status == "Refusé" %>
+                                                    <span class="badge badge-danger">Congé refusée</span>
+                                                <% elsif journal.status == "Cancel" %>
+                                                    <span class="badge badge-dark">Congé annulée</span>   
+                                                <% elsif journal.status == "Régularisé" %>
+                                                    <span class="badge badge-secondary">Congé de régularisation</span>
+                                                <% elsif journal.status == "Traité" %>
+                                                    <span class="badge badge-primary">Congé traité</span>
+                                                <% end %>
+                                            </h5>
+                                            <p class="text-muted"><%= l journal.created_at, format: ('%d %b %Y') %> à <%= journal.created_at.hour %>:<%= journal.created_at.min %></p>
+                                        </li>
+                                    <% end %>
+                                <% end %>   
+                            </ul>
+
+                            <br>
+                            <br>
+
+                            <div class="float-right">
+                                <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                    <% if @furlough.status == "Soumis" %>      
+                                            <%= link_to validate_path(@furlough), data: { confirm: 'Etes vous sur?' }, title: "Approuver", class:"btn btn-success waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                                <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                            <% end %>   
+
+                                            <%= link_to edit_furlough_path(@furlough), remote: true, title: "Modifier", class: "btn btn-success waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                                <i class="mdi mdi-border-color"></i>
+                                            <% end %>    
+
+                                            <%= link_to pre_refuse_path(@furlough), title: "Refuser", remote: true, class: "btn btn-danger waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                                <i class="mdi mdi-close-octagon"></i>
+                                            <% end %> 
+
+                                            <%= link_to pre_cancel_path(@furlough), title: "Annuler", remote: true, class: "btn btn-secondary waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                                    <i class="ti-na"></i>
+                                            <% end %>
+                                            
+                                            <%= link_to @furlough, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "btn btn-warning waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                                <i class="mdi mdi-delete"></i>
+                                            <% end %> 
+                                    <% elsif @furlough.status == "En cours" %>  
+                                        <%= link_to edit_furlough_path(@furlough), remote: true, title: "Modifier", class: "btn btn-success waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="mdi mdi-border-color"></i>
+                                        <% end %>  
+
+                                        <%= link_to validate_path(@furlough), data: { confirm: 'Etes vous sur?' }, title: "Approuver", class:"btn btn-success waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                        <% end %>     
+
+                                        <%= link_to pre_refuse_path(@furlough), title: "Refuser", remote: true, class: "btn btn-danger waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="mdi mdi-close-octagon"></i>
+                                        <% end %> 
+
+                                        <%= link_to pre_cancel_path(@furlough), title: "Annuler", remote: true, class: "btn btn-secondary waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                                <i class="ti-na"></i>
+                                        <% end %>
+                                        
+                                        <%= link_to @furlough, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "btn btn-warning waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="mdi mdi-delete"></i>
+                                        <% end %> 
+                                    <% elsif @furlough.status == "Approuvé" %>  
+
+                                        <%= link_to pre_cancel_path(@furlough), title: "Annuler", remote: true, class: "btn btn-secondary waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                                <i class="ti-na"></i>
+                                        <% end %>
+                                    <% elsif @furlough.status == "Nouveau" %>        
+
+                                        <%= link_to edit_furlough_path(@furlough), remote: true, title: "Modifier", class: "btn btn-success waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="mdi mdi-border-color"></i>
+                                        <% end %>  
+
+                                        <%= link_to soumettre_path(@furlough), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Soumettre", class: "btn btn-secondary waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                        <% end %>  
+                                        
+                                        <%= link_to @furlough, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "btn btn-warning waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="mdi mdi-delete"></i>
+                                        <% end %> 
+
+                                    <% end %>                  
+                                <% else %>
+                                    <% if @furlough.status == "Nouveau" %>        
+
+                                        <%= link_to edit_furlough_path(@furlough), remote: true, title: "Modifier", class: "btn btn-success waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="mdi mdi-border-color"></i>
+                                        <% end %>  
+
+                                        <%= link_to soumettre_path(@furlough), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Soumettre", class: "btn btn-secondary waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                        <% end %>  
+                                        
+                                        <%= link_to @furlough, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "btn btn-warning waves-effect waves-light", style: "padding-top: 3px; padding-right: 5px; padding-bottom: 3px; padding-left: 5px !important" do %>
+                                            <i class="mdi mdi-delete"></i>
+                                        <% end %> 
+                                    <% end %> 
+                                       
+                                <% end %>
+                            </div>
+
+                            <br>
+                            <br>
+
+                            <h4 class="header-title mb-3">Duré de ce congé:</h4>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-6">
+                                        <h4><span class="badge badge-pink"><%= @furlough_duration_by_days %> </span> jour(s) de congé</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <% if !@furlough.furlough_regular_id.nil? %>
+                                <h4 class="header-title mb-3">Lien vers le congé régularisé : <%= link_to 'cliquer ici', furlough_path(@furlough_regular) %></h4>
+                            <% end %>
+
+                            <% if @paren_discontinuity %>
+                                <h4 class="header-title mb-3">Lien vers le congé pére : <%= link_to @paren_discontinuity.reference_furlough, furlough_path(@paren_discontinuity) %></h4>
+                            <% end %>
+
+
+                            <% if @childs_discontinuity.count > 0 %>
+                                <h4 class="header-title"> Lien vers congé fils :
+                                    <% @childs_discontinuity.each do |child| %>
+                                         <%= link_to child.reference_furlough, furlough_path(child) %> /
+                                    <% end %>
+                                </h4>
+                            <% end %>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title mb-3">Détails de congé</h4>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <h5 class="mt-0">Type de congé :</h5>
+                                    <p><%= @furlough.furlough_type.name %></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <h5 class="mt-0">Nom du collaborateur :</h5>
+                                    <p>
+                                       <%= @furlough.user.last_name %> <%= @furlough.user.first_name %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <h5 class="mt-0">Date de début</h5>
+                                    <p><%= @furlough.start.strftime('%d/%m/%Y') %> à <%= @furlough.hour_start %> h</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mb-4">
+                                    <h5 class="mt-0">Date de fin</h5>
+                                    <% if @furlough.hour_end == "14:00" %>
+                                       <p>
+                                          <%= @furlough.end.strftime('%d/%m/%Y') %> à <%= @furlough.hour_end %> h
+                                       </p>
+                                    <% else %>
+                                        <p>
+                                           <%= @furlough.end.send(:-, 1.day).strftime('%d/%m/%Y') %> à 18:00 h
+                                        </p>
+                                    <% end %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <% if @furlough.refus_date.present? %>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">Date de refus:</h5>
+                                        <p><%= l @furlough.refus_date, format: ('%d %b %Y')%> à <%= @furlough.refus_date.hour %>:<%= @furlough.refus_date.min %></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">La raison de refus:</h5>
+                                        <p>
+                                            <%= @furlough.refuse_comment %>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        <% end %>
+
+                        <% if @furlough.cancel_date.present? %>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">Date d'annulation:</h5>
+                                        <p><%= l @furlough.cancel_date, format: ('%d %b %Y')%> à <%= @furlough.cancel_date.hour %>:<%= @furlough.cancel_date.min %></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-4">
+                                        <h5 class="mt-0">La raison d'annulation:</h5>
+                                        <p>
+                                            <%= @furlough.cancel_comment %>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        <% end %>
+
+                        <div class="card-box", style= "background-color: Cornsilk ; !important">
+
+                            <div class="widget-chart text-center" dir="ltr", style= "background-color: Cornsilk ; !important">
+                                <% if @furlough.notes %>
+                                    <h5 class="mt-0">Alerte(s) :</h5>
+                                    <% @furlough.notes.each do |note| %>
+                                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                            <% if @furlough.user_id != current_user.id %>
+                                                <% if note.split[0] == "pas" %>
+                                                    <p>- Le collaborateur n'a <%= note %></p>
+                                                <% else %>
+                                                    <p>- Le collaborateur a <%= note %></p>
+                                                <% end %>
+                                            <% else %>
+                                                <% if note.split[0] == "pas" %>
+                                                    <p>- Vous n'avez <%= note %></p>
+                                                <% else %>
+                                                    <p>- Vous avez <%= note %></p>
+                                                <% end %>
+                                            <% end %>
+                                        <% else %>
+                                            <% if note.split[0] == "pas" %>
+                                                <p>- Vous n'avez <%= note %></p>
+                                            <% else %>
+                                                <p>- Vous avez <%= note %></p>
+                                            <% end %>
+                                        <% end %>
+                                    <% end %>  
+                                <% end %>                              
+                            </div>
+                        
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                
+            </div>
+   
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+            
+
+

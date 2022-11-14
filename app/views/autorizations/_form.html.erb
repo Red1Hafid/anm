@@ -1,0 +1,116 @@
+<!-- Modal -->
+<div class="modal fade" id="edit_autorization" role="dialog">
+    <%= simple_form_for @autorization do |f| %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Modification d'autorisation</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+                <div class="modal-body">  
+                    <div class="col-12">
+                        <%= f.input :department, label: 'Département', class: 'form-control' %>
+                    </div>
+
+                    <div class="col-12">
+                        <%= f.input :function, label: 'Fonction', class: 'form-control' %>
+                    </div>
+                
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-12">
+                                <%= f.input :date, label: 'Date de sortie', as: :date ,html5: true, placeholder: "Entrer la date de début d'autorisation", class: 'form-control', input_html: { id: 'date', onchange:'reloadHourDuration();' } %>
+                            </div>
+                       </div>
+                   </div>
+ 
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-8">
+                                 <%= f.input :start_hour, label: 'Heure de début', as: :select, collection: (['8:00','9:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00']), html5: true, placeholder: "Entrer l'heur de début", input_html: { id: 'hour_start', onchange:'reloadHourDuration();' }, class: 'form-control' %>
+                            </div>
+                            <div class="col-4">
+                                <%= f.input :end_hour, label: 'Heure de reprise', as: :select, collection: (['8:00','9:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00']), html5: true, placeholder: "Entrer l'heur de fin", input_html: { id: 'hour_end', onchange:'reloadHourDuration();' }, class: 'form-control' %>
+                            </div>
+                            <div class="col-12">
+                                <h4><span class="badge badge-danger ml-1" id="dr"></span><h4>
+                            </div>
+                            <div class="col-12">
+                               <h4><span class="badge badge-danger ml-1 valid_hours"></span><h4>
+                            </div>
+                            <div class="col-12" id="recovery_method" style="display:none;">
+                                <%= f.input :recovery_method, as: :radio_buttons, label: 'Méthode de récuperation', collection: [['0', 'Répartition des heures sur les autres jours travaillés de la semaine'], ['1', 'Retrancher de mon solde de congé']], label_method: :second, value_method: :first %>  
+                            </div>  
+                            <div class="col-12">
+                                <%= f.input :comment, label: 'Motif', class: 'form-control' %>
+                            </div>
+                        </div>
+                    </div>
+                                       
+                </div>
+
+                <div class="modal-footer">
+                    <div id="submit_button">
+                       <%= f.button :submit, 'Confirmer', class: 'btn btn-raised btn-success' %>
+                    </div> 
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+
+<script>
+    function set_user_id(){
+
+        var user_name = document.getElementsByClassName("select2")[0].innerText;
+
+        console.log(user_name);
+
+        var url = '<%= domainename + 'finduserid/' %>';
+        $.when(
+            $.getJSON(url+user_name)
+        ).done( function(json) {
+
+            $('#user_id').val(json);
+              
+        }); 
+
+    }
+
+    function reloadHourDuration() {
+        var date = document.getElementById("date").value;
+        var start_hour = document.getElementById("hour_start").value;
+        var end_hour = document.getElementById("hour_end").value;
+        var user_id = document.getElementById("user_id").value;
+        var url = '<%= domainename + 'authorization_hour_taken/' %>';
+
+        console.log("user_id" + user_id);
+        $.when(
+            $.getJSON(url+user_id+'/'+date+'/'+start_hour+'/'+end_hour)
+        ).done( function(json) {
+
+            if(json.authorization__hour_duration > 0 && json.authorization__hour_duration <= 4) {
+                    $('#dr').text(json.authorization__hour_duration + " heure(s) dans cette autorisation");
+                    document.getElementById("submit_button").style.display = "block"; 
+            }
+            if(json.authorization__hour_duration > 4){
+                $('#dr').text("Vous avez dépassé les 4 heures");
+                document.getElementById("submit_button").style.display = "none";
+            }
+            if(json.authorization__hour_duration == 0){
+                $('#dr').text("0 heures");
+                document.getElementById("submit_button").style.display = "none";
+            }
+
+            if(json.authorization__hour_duration >= 3 && json.authorization__hour_duration <= 4) {
+                document.getElementById("recovery_method").style.display = "block";
+            }else{
+                document.getElementById("recovery_method").style.display = "none";
+            }
+
+        }); 
+
+    }
+
+</script>

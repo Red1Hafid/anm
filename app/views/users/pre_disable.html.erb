@@ -1,0 +1,81 @@
+<% provide(:title, 'disable collaborateur') %>
+
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">gestion des collaborateurs</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Désactivation de <%= @user.first_name %> <%= @user.last_name %></h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <%= simple_form_for(@user, as: :user, method: :post, url: disable_path, html: { class: "form-horizontal" }) do |f| %>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="form-group col-md-12 legend">
+                                        <%= f.input :disabled_date, value: Date.today, as: :date, html5: true, label: 'Date de désactivation', required: true, hint: "La date de départ est obligatoire" %>
+                                    </div>
+                                </div>
+
+                                <label>Raison d'arrêt :</label>
+                                        
+                                    
+                                <div class="card-box", style= "background-color: LightBlue ; !important">
+                                    <div class="form-group mb-3">
+                                        <div class="form-group">
+                                            <%= f.label :stop_action_id, label: "Action" %> <br>
+                                            <%= f.collection_select :stop_action_id, StopAction.order(created_at: :asc), :id, :name, include_blank: false, required: true, hint: "L'action de départ doit être renseignè" , input_html: {class: 'form-control select optional'} %>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <div class="form-group">
+                                            <%= f.label :ground_id, label: "Motif" %> <br>
+                                            <%= f.grouped_collection_select :ground_id, StopAction.order(created_at: :asc), :grounds, :name, :id, :description, include_blank: false, required: true, hint: "Le motif de départ doit être renseignè", input_html: {class: 'form-control select optional'} %>
+                                        </div>
+                                    </div>    
+
+                                    <%= f.file_field :document %>   
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-md-12 legend">
+                                        <%= f.input :disable_comment, html5: true, label: 'Remarque', required: true, hint: "La raison de départ doit être renseignè" %>
+                                    </div>
+                                </div>            
+                            </div>
+                            <div class="modal-footer">
+                                <%= f.button :submit, "Désactiver", data: { confirm: 'Etes vous sur?' }, class: 'btn btn-raised btn-success' %>
+                                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Fermer</button>
+                            </div>
+                        <% end %>
+                                
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+
+        <div class="row">
+            <div class="col-12 ">
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div>
+</div> <!-- content -->

@@ -1,0 +1,44 @@
+<!-- Modal -->
+<div class="modal fade" id="discontinuity_furlough" role="dialog">
+    <%= simple_form_for(@furlough, as: :furlough, method: :post, url: discontinuity_path) do |f| %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h4 class="modal-title" id="myLargeModalLabel">Discontinuté</h4>
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <%= f.input :start, label: 'Date de début', value: DateTime.strptime("1448607600",'%s'), as: :date ,html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'start_date', onchange:'reloadDuration();'}, class: 'form-control' %>
+                            </div>
+                            <div class="col-4">
+                                <%= f.input :hour_start, label: 'Heur de départ', as: :select, collection: (['8:00','14:00']), input_html: { id: 'hour_start', onchange:'reloadDuration();'}, html5: true, placeholder: "Entrer la date de début de congé", class: 'form-control' %>
+                            </div>
+                       </div>
+                   </div>
+ 
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-8">
+                                <%= f.input :end, label: 'Date de fin', value:  DateTime.strptime("1448607600",'%s'), as: :date, html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'end_date', onchange:'reloadDuration();' }, class: 'form-control' %>
+                            </div>
+                            <div class="col-4">
+                                <%= f.input :hour_end, label: 'Heure de reprise', as: :select, collection: (['8:00','14:00']), html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'hour_end', onchange:'reloadDuration();' }, class: 'form-control' %>
+                            </div>
+                            <div class="col-12">
+                                <h4><span class="badge badge-danger ml-1 dr"></span><h4>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <%= f.button :submit, 'Valider', data: { confirm: 'Etes vous sur?' }, class: 'btn btn-raised btn-success' %>
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+

@@ -1,0 +1,157 @@
+<% provide(:title, 'fonctional manager extern') %>
+
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">des gestionnaires fonctionnels</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Liste des gestionnaires fonctionnels</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+          <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+
+                            <div class="col-lg-5">
+                                <%= search_form_for @q, class: "form-inline" do |f| %>
+                                    <div class="form-group">
+                                        <div class="col-lg-8">
+                                            <%= f.search_field :first_name_or_last_name_or_job_title_or_email_or_full_cont, class:"form-control" %>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <%= f.submit 'Chercher',  class: "btn btn-warning waves-effect waves-light ml-1" %> 
+                                        </div>   
+                                    </div>
+                                <% end %>
+                            </div> 
+
+                             <div class="col-lg-2">  
+                                <%= link_to '#new_fonctional_manager', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_fonctional_manager'  do %>
+                                    <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                                <% end %>    
+                            </div>
+
+                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                <div class="col-lg-5">
+                                    <%= form_tag import_fonctional_manager_externs_path, multipart: true do %>
+                                        <%= file_field_tag :file, required: true %>
+                                        <%= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
+                                    <% end %>
+                                </div> 
+                            <% end %>
+                        </div>    
+
+                        <div class="table-responsive">
+                            <table data-toggle="table"
+                                    data-show-columns="false"
+                                    data-page-list="[5, 10, 20]"
+                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                    data-buttons-class="xs btn-light"
+                                    data-pagination="true" class="table-borderless">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th data-field="fonctional_manager_externs">Matricule</th>
+                                        <th data-field="">Nom complet</th>
+                                        <th data-field="job_title">Poste</th>
+                                        <th data-field="email">Email</th>
+                                        <th data-field="phone">Téléphone</th>
+                                        <th style="width: 125px;">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <% @fonctional_manager_externs.each do |fonctional_manager| %>
+                                        <tr>     
+                                            <td><%= fonctional_manager.id_external_manager %></td>                                     
+                                            <td> <%= fonctional_manager.first_name %> <%= fonctional_manager.last_name %>
+                                            </td>
+                                            <td><%= fonctional_manager.job_title %></td>
+                                            <td><%= fonctional_manager.email %></td>
+                                            <td><%= fonctional_manager.phone_number %></td>
+                                             <td>
+                                                <%= link_to fonctional_manager_extern_path(fonctional_manager), remote: true, title: "Voir", class: "action-icon" do %>
+                                                     <i class="mdi mdi-eye"></i>
+                                                <% end %>
+                                                <%= link_to edit_fonctional_manager_extern_path(fonctional_manager), remote: true, title: "Modifier", class: "action-icon" do %>
+                                                     <i class="mdi mdi-border-color"></i>
+                                                <% end %> 
+                                                <%= link_to fonctional_manager, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                                    <i class="mdi mdi-delete"></i>
+                                                <% end %>  
+                                            </td>                                                      
+                                        </tr> 
+                                    <% end %> 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+    </div>
+</div> <!-- content -->
+
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="new_fonctional_manager" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Ajout d'un Gestionnaire fonctionnel</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <%= simple_form_for(FonctionalManagerExtern.new, as: :fonctional_manager_extern, method: :post, html: { class: "form-horizontal" }) do |f| %>
+                
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.input :id_external_manager, label: 'Matricule', class: 'form-control', placeholder: "Entrer le matricule" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :first_name, label: 'Prénom', class: 'form-control', placeholder: "Entrer le prénom" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :last_name, label: 'Nom', class: 'form-control', placeholder: "Entrer le nom" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :email, label: 'Email professionnel', class: 'form-control', placeholder: "Email professionnel" %>
+                    </div>
+
+                     <div class="form-group mb-3">
+                        <%= f.input :phone_number, label: 'Téléphone', placeholder: "Téléphone", class: 'form-control' %>
+                    </div>    
+                  
+                    <div class="form-group mb-3">
+                        <%= f.input :gender, as: :radio_buttons, label: 'Sex', collection: [['0', 'Femme'], ['1', 'Homme']], label_method: :second, value_method: :first %>  
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <%= f.input :job_title, label: 'Fonction', placeholder: "Fonction", class: 'form-control' %>
+                    </div>     
+                   
+                </div>
+            
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id='remote-container'></div>

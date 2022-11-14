@@ -1,0 +1,121 @@
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="edit_utilisateur" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Modification de collaborateur</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+             <%= simple_form_for @user do |f| %>
+                
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.input :first_name, label: 'Prénom', class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :last_name, label: 'Nom', class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :email, label: 'Email professionnel', class: 'form-control', placeholder: "Email professionnel" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :personnal_email, label: 'Email personnel', class: 'form-control', placeholder: "email personnel" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :started_at, label: "Date d'intégration", value: Date.today, as: :date, html5: true, class: 'form-control' %>
+                    </div>   
+                    <div class="form-group mb-3">
+                        <% if current_user.role.title == "Super Admin" %>
+                          <%= f.association :role, label: 'Role', label_method: :title, collection: Role.all.order(created_at: :desc), value_method: :id, class: 'form-control', include_blank: false %>
+                        <% else current_user.role.title == "Rh" %>
+                          <%= f.association :role, label: 'Role', label_method: :title, collection: Role.where.not(title: "Super Admin").order(created_at: :desc), value_method: :id, class: 'form-control', include_blank: false %>
+                        <% end %>
+                    </div>       
+                    <div class="form-group mb-3">
+                        <%= f.input :gender, as: :radio_buttons, label: 'Sexe', collection: [['0', 'Femme'], ['1', 'Homme']], label_method: :second, value_method: :first %>  
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <%= f.input :family_status, label: 'Situation familiale', collection: ["Celibataire", "Marié(e)", "Autre.."], class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :job_title, label: 'Intitulé de poste', placeholder: "Intitulé de poste", class: 'form-control' %>
+                    </div>  
+                  
+                    <div class="form-group mb-3">
+                        <label>Responsabilité</label> <br>
+                        <% User::MANAGERS.each do |key| %>
+                            <%= f.check_box :manager_titles, { multiple: true, checked: f.object.manager_titles&.include?(key.to_s) }, key, nil %>
+                            <%= f.label key %>
+                        <% end %>
+                    </div>  
+
+                    <label>Gestionnaires associés :</label>
+
+                    <div class="card-box", style= "background-color: LightBlue ; !important">      
+                    
+                        <div class="form-group mb-3">
+                            <div class="form-group">
+                                <%= f.input :line_manager_id, :as => :collection_select,
+                                collection: @line_managers, label_method: :full_name_user, label: 'Gestionnaire hiérarchque ',
+                                include_blank: true, class:"select form-control" %>  
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <div class="form-group">
+                                <%= f.input :fonctionnal_manager_id, :as => :collection_select,
+                                collection: @fonctional_managers, label_method: :full_name_user, label: 'Gestionnaire fonctionnel',
+                                include_blank: true, class:"select form-control" %>  
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Modifier', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+
+    function set_user_line_manager(){
+
+        var user_name = document.getElementsByClassName("select2-selection select2-selection--single")[0].innerText;
+
+        console.log(user_name);
+
+        var url = '<%= domainename + 'findlinemanagerid/' %>';
+        $.when(
+            $.getJSON(url+user_name)
+        ).done( function(json) {
+
+            $('#line_managers').val(json);
+                
+        }); 
+
+    }
+
+    function set_user_fonctionnal_manager(){
+
+        var user_name = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText;
+
+        if (user_name == ""){
+             $('#fonctional_managers').val("");
+           
+        }else{
+           var url = '<%= domainename + 'findfonctionalmanagerid/' %>';
+            $.when(
+                $.getJSON(url+user_name.slice(1))
+            ).done( function(json) {
+
+                $('#fonctional_managers').val(json);
+                    
+            });     
+        }
+    }
+</script>

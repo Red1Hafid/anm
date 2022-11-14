@@ -1,0 +1,288 @@
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">gestion des absences</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Absences</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <%= link_to '#new_absence', class: "btn btn-lg font-16 btn-primary btn-block", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_absence'  do %>
+                                    <i class="mdi mdi-plus mr-1">Nouvelle entrée d'absence</i>
+                                <% end %> 
+                                <div id="external-events" class="m-t-20">
+                                    <br>
+                                    <p class="text-muted">Filtre par types d'absences</p>
+                                    <% if params[:display] == 'calendar' %>
+                                        <div class="external-event bg-info" data-class="bg-info">
+                                            <i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>
+                                            <%= link_to absences_path(display: 'calendar'), class: "text-white" do %>
+                                                Tous les absences
+                                            <% end %>
+                                        </div>
+                                        <div class="external-event bg-success" data-class="bg-success">
+                                            <i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>
+                                            <%= link_to absences_path(display: 'calendar', code_absence_type: 'ABSJ'), class: "text-white" do %>
+                                                Absences Justifiées
+                                            <% end %>
+                                        </div>
+                                        <div class="external-event bg-danger" data-class="bg-danger">
+                                            <i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>
+                                            <%= link_to absences_path(display: 'calendar', code_absence_type: 'ABSI'), class: "text-white" do %>
+                                                Absences Injustifiées
+                                            <% end %>
+                                        </div>
+                                        <div class="external-event bg-warning" data-class="bg-warning">
+                                            <i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>
+                                            <%= link_to absences_path(display: 'calendar', code_absence_type: 'ABST'), class: "text-white" do %>
+                                                Accident de travail
+                                            <% end %>
+                                        </div>
+                                    <% else %>
+                                        <div class="external-event bg-info" data-class="bg-info">
+                                            <i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>
+                                            <%= link_to absences_path(display: 'table'), class: "text-white" do %>
+                                                Tous les absences
+                                            <% end %>
+                                        </div>
+                                        <div class="external-event bg-success" data-class="bg-success">
+                                            <i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>
+                                            <%= link_to absences_path(display: 'table', code_absence_type: 'ABSJ'), class: "text-white" do %>
+                                                Absences Justifiées
+                                            <% end %>
+                                        </div>
+                                        <div class="external-event bg-danger" data-class="bg-danger">
+                                            <i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>
+                                            <%= link_to absences_path(display: 'table', code_absence_type: 'ABSI'), class: "text-white" do %>
+                                                Absences Injustifiées
+                                            <% end %>
+                                        </div>
+                                        <div class="external-event bg-warning" data-class="bg-warning">
+                                            <i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>
+                                            <%= link_to absences_path(display: 'table', code_absence_type: 'ABST'), class: "text-white" do %>
+                                                Accident de travail
+                                            <% end %>
+                                        </div>
+                                    <% end %> 
+                                    <p class="text-muted">Type d'affichage</p>
+                                    <div class="external-event bg-info" data-class="bg-info">
+                                        <i class="mdi mdi-checkbox-blank-circle mr-2 vertical-middle"></i>
+                                        <% if params[:display] == "calendar" %>
+                                            <%= link_to absences_path(display: 'table'), class: "text-white" do %>
+                                                Liste d'absences
+                                            <% end %>
+                                        <% else %>
+                                            <%= link_to absences_path(display: 'calendar'), class: "text-white" do %>
+                                                Calendrier d'absences
+                                            <% end %>
+                                        <% end %>
+                                    </div>
+                                </div>
+
+                            </div> <!-- end col-->
+
+                            <div class="col-lg-9">
+                                <% if params[:display] == "calendar" %>
+                                    <%= month_calendar(events: @absences) do |date, absence| %>
+                                        <%= content_tag :div, class: "calendar-day", data: {date: date} do %>
+                                            <div class="day">
+                                                <%= link_to date.day, '#new_absence', :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_absence' %>
+                                            </div>
+                                            <% absence.each do |a| %>
+                                                <% if a.absence_type.code == "ABSI" %>
+                                                    <div class="external-event text-center bg-danger" data-class="bg-success">
+                                                        <%= a.user.first_name %> <%= a.user.last_name %>
+                                                        <br>
+                                                        <%= link_to absence_path(a), remote: true, title: "Voir", class: "action-icon text-white" do %>
+                                                            <i class="mdi mdi-eye"></i>
+                                                        <% end %>
+                                                        <%= link_to edit_absence_path(a), remote: true, title: "Modifier", class: "action-icon text-white" do %>
+                                                            <i class="mdi mdi-border-color"></i>
+                                                        <% end %> 
+                                                    </div>
+                                                <% elsif a.absence_type.code == "ABSJ" %>
+                                                    <div class="external-event text-center bg-success" data-class="bg-success">
+                                                        <%= a.user.first_name %> <%= a.user.last_name %>
+                                                        <br>
+                                                        <%= link_to absence_path(a), remote: true, title: "Voir", class: "action-icon text-white" do %>
+                                                            <i class="mdi mdi-eye"></i>
+                                                        <% end %>
+                                                        <%= link_to edit_absence_path(a), remote: true, title: "Modifier", class: "action-icon text-white" do %>
+                                                            <i class="mdi mdi-border-color"></i>
+                                                        <% end %> 
+                                                    </div>
+                                                <% else %>
+                                                <div class="external-event text-center bg-warning" data-class="bg-success">
+                                                        <%= a.user.first_name %> <%= a.user.last_name %>
+                                                        <br>
+                                                        <%= link_to absence_path(a), remote: true, title: "Voir", class: "action-icon text-white" do %>
+                                                            <i class="mdi mdi-eye"></i>
+                                                        <% end %>
+                                                        <%= link_to edit_absence_path(a), remote: true, title: "Modifier", class: "action-icon text-white" do %>
+                                                            <i class="mdi mdi-border-color"></i>
+                                                        <% end %> 
+                                                    </div>
+                                                <% end %>
+                                            <% end %>
+                                        <% end %>
+                                    <% end %>
+                                <% else %>
+                                    <div class="col-lg-4">
+                                        <%= link_to pre_export_absences_path(), remote: true, class: "btn btn-warning waves-effect waves-light mr-3" do %>
+                                            <i class="mdi mdi-plus mr-1">Rapport</i>
+                                        <% end %>  
+                                    </div>
+                                    <br>
+                                    <div class="table-responsive">
+                                        <table data-toggle="table"
+                                                data-show-columns="false"
+                                                data-page-list="[5, 10, 20]"
+                                                data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                                data-buttons-class="xs btn-light"
+                                                data-pagination="true" class="table-borderless">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                        <th data-field="collaborator">Collaborateurs</th>
+                                                    <% else %>
+                                                            <% if !current_user.manager_titles.nil? %>
+                                                                <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
+                                                                    <th data-field="collaborator">Collaborateurs</th>
+                                                                <% end %>
+                                                            <% end %>
+                                                    <% end %>
+                                                    <th data-field="date">Date d'absence</th>
+                                                    <th data-field="start_hour">Heure de début</th>
+                                                    <th data-field="end_hour">Heure de fin</th>                                          
+                                                    <th data-field="type_absence">Absence</th>
+                                                    <th style="width: 125px;">Actions</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <% @absences.each do |absence| %>
+                                                    <tr> 
+                                                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                            <td><%= "#{absence.user.last_name} #{absence.user.first_name}" %></td>
+                                                        <% else %>
+                                                            <% if !current_user.manager_titles.nil? %>
+                                                                <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
+                                                                    <td><%= "#{absence.user.last_name} #{absence.user.first_name}" %></td>
+                                                                <% end %>
+                                                            <% end %>
+                                                        <% end %>
+                                                        <td><%= absence.start_time.to_date %></td>
+                                                        <td><%= absence.start_time.hour %></td>
+                                                        <td><%= absence.end_time.hour %></td>
+                                                        <td>
+                                                            <% if absence.absence_type.code == "ABSJ" %>
+                                                            <div class="badge font-14 badge badge-success p-1">Absence Justifiée</div>
+                                                            <% elsif absence.absence_type.code == "ABSI" %> 
+                                                                <div class="badge font-14 badge badge-danger p-1">Absence Injustifiée</div>  
+                                                            <% else %>
+                                                                <div class="badge font-14 badge badge-warning p-1">Accident de travail</div> 
+                                                            <% end %>
+                                                        </td>
+                                                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                            <td>
+                                                                <%= link_to absence_path(absence), remote: true, class: "action-icon" do %>
+                                                                    <i class="mdi mdi-eye"></i>
+                                                                <% end %>
+
+                                                                <%= link_to edit_absence_path(absence), remote: true, title: "Modifier", class: "action-icon" do %>
+                                                                    <i class="mdi mdi-border-color"></i>
+                                                                <% end %> 
+
+                                                                <%= link_to absence, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                                                    <i class="mdi mdi-delete"></i>
+                                                                <% end %>   
+
+                                                            </td>                                                            </td>      
+                                                        <% else %>
+                                                            <td>
+                                                                <%= link_to absence_path(absence), remote: true, class: "action-icon" do %>
+                                                                    <i class="mdi mdi-eye"></i>
+                                                                <% end %>
+                                                            </td>  
+                                                        <% end %>                                       
+                                                    </tr> 
+                                                <% end %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <% end %>
+                            </div> <!-- end col -->
+
+                        </div>  <!-- end row -->
+                    </div> <!-- end card body-->
+                </div> <!-- end card -->
+
+                <div id='remote-container'></div>
+
+                <!-- Add New Event MODAL -->
+                <!--  Modal content for the Large example -->
+                <div class="modal fade" id="new_absence" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myLargeModalLabel">Nouvelle entrée d'absence</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <%= simple_form_for(Absence.new, as: :absence, method: :post, html: { class: "form-horizontal" }) do |f| %>
+                                
+                                <div class="modal-body">
+                                
+                                    <div class="form-group mb-3">
+                                        <%= f.association :absence_type, :as => :collection_select, collection: AbsenceType.all, label: "Type d'absence", label_method: :name, value_method: :id, class: 'form-control',  include_blank: false  %>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <%= f.association :user, :as => :collection_select, collection: User.all, label: "Collaborateures", label_method: :email, value_method: :id, class: 'form-control',  include_blank: false  %>
+                                    </div>
+                                    
+                                    <div class="form-group mb-3">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <%= f.input :start_time, label: 'Date de début', value: DateTime.strptime("1448607600",'%s'), as: :datetime ,html5: true, placeholder: "Entrer la date de début de congé", class: 'form-control' %>
+                                            </div>
+                                            <div class="col-6">
+                                                <%= f.input :end_time, label: 'Date de fin', value:  DateTime.strptime("1448607600",'%s'), as: :datetime, html5: true, placeholder: "Entrer la date de début de congé", class: 'form-control' %>
+                                            </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                                </div>
+                            <% end %>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+              
+            </div>
+            <!-- end col-12 -->
+        </div> <!-- end row -->
+        
+    </div> <!-- container -->
+
+</div> <!-- content -->

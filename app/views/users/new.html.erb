@@ -1,0 +1,156 @@
+
+<div class="content">
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">gestion des collaborateurs</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Nouveau collaborateur</h4>
+                </div>
+            </div>
+        </div> 
+
+        <div class="card-box">
+            <%= simple_form_for(User.new, as: :user, method: :post, html: { class: "form-horizontal" }) do |f| %>
+                
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.input :matricule, label: 'Matricule', class: 'form-control', placeholder: "Entrer le matricule" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :first_name, label: 'Prénom', class: 'form-control', placeholder: "Entrer le prénom" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :last_name, label: 'Nom', class: 'form-control', placeholder: "Entrer le nom" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :email, label: 'Email professionnel', class: 'form-control', placeholder: "Email professionnel" %>
+                    </div>
+                     <div class="form-group mb-3">
+                        <%= f.input :gender, as: :radio_buttons, label: 'Sexe', collection: [['0', 'Femme'], ['1', 'Homme']], label_method: :second, value_method: :first %>  
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :family_status, label: 'Situation familiale', collection: ["Celibataire", "Marié(e)", "Autre.."], class: 'form-control' %>
+                    </div>
+                     <div class="form-group mb-3">
+                        <%= f.input :job_title, label: 'Intitulé de poste', placeholder: "Intitulé de poste", class: 'form-control' %>
+                    </div>   
+                     <div class="form-group mb-3">
+                        <%= f.input :started_at, label: "Date d'intégration", value: Date.today, as: :date, html5: true, class: 'form-control' %>
+                    </div>  
+                    <div class="form-group mb-3">
+                        <p><strong>Photo </strong></p>
+                        <%= f.file_field :avatar, label: 'Photo' %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :personnal_email, label: 'Email personnel', class: 'form-control', placeholder: "email personnel" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :phone_number, label: 'Téléphone', placeholder: "Téléphone", class: 'form-control' %>
+                    </div>    
+                    <div class="form-group mb-3">
+                        <%= f.input :home_adress, label: 'Adresse', placeholder: "Adresse", class: 'form-control' %>
+                    </div>       
+                    <div class="form-group mb-3">
+                        <%#= f.input :manager_title, as: :check_boxes, collection: [['Gestionnaire fonctionnel', 1], ['Gestionnaire hiérarchique', 2]], label: "Manager" %>
+                        <label>Résponsabilité</label> <br>
+                        <% User::MANAGERS.each do |key| %>
+                            <%= f.check_box :manager_titles, { multiple: true }, key, nil %>
+                            <%= f.label key %>
+                        <% end %>
+                    </div>              
+                   <label>Géstionnaires associés :</label>
+                        
+                    
+                    <div class="card-box", style= "background-color: LightBlue ; !important">
+                            <div class="form-group mb-3">
+                                <%= f.input :line_manager_id, label: "Géstionnaires hiérarchique", input_html: { id: 'line_managers', :style => "display:none;" }%>
+                                <select data-toggle="select2" onchange='set_user_line_manager();'>
+                                    <option></option>
+                                    <optgroup label="Géstionnaires hiérarchque">
+                                        <%= @line_managers.each do |user| %>
+                                            <option><%= user.first_name %> <%= user.last_name %></option>
+                                        <% end %>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <%= f.input :fonctionnal_manager_id, label: "Géstionnaires fonctionnel", input_html: { id: 'fonctional_managers', :style => "display:none;" }%>
+                                <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange='set_user_fonctionnal_manager();'>
+                                    <optgroup label="Géstionnaires fonctionnel">
+                                        <%= @fonctional_managers.each do |user| %>
+                                            <option><%= user.first_name %> <%= user.last_name %></option>
+                                        <% end %>
+                                        
+                                    </optgroup>
+                                </select>
+                            </div> 
+                         
+                    </div>            
+
+
+                    <div class="form-group mb-3">
+                        <% if current_user.role.title == "Super Admin" %>
+                          <%= f.association :role, label: 'Role', label_method: :title, collection: Role.all.order(created_at: :desc), value_method: :id, class: 'form-control', include_blank: false %>
+                        <% elsif current_user.role.title == "Rh" %>
+                          <%= f.association :role, label: 'Role', label_method: :title, collection: Role.where.not(title: "Super Admin").order(created_at: :desc), value_method: :id, class: 'form-control', include_blank: false %>
+                        <% end %>
+                    </div>       
+                </div>
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    function set_user_line_manager(){
+
+        var user_name = document.getElementsByClassName("select2-selection select2-selection--single")[0].innerText;
+
+        console.log(user_name);
+
+        var url = '<%= domainename + 'findlinemanagerid/' %>';
+        $.when(
+            $.getJSON(url+user_name)
+        ).done( function(json) {
+
+            $('#line_managers').val(json);
+                
+        }); 
+
+    }
+
+     function set_user_fonctionnal_manager(){
+
+        var user_name = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText;
+
+        console.log(user_name);
+
+        console.log(user_name.slice(1));
+
+        var url = '<%= domainename + 'findfonctionalmanagerid/' %>';
+        $.when(
+            $.getJSON(url+user_name.slice(1))
+        ).done( function(json) {
+
+            $('#fonctional_managers').val(json);
+                
+        }); 
+
+    }
+</script>

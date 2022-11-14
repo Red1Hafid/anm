@@ -1,0 +1,36 @@
+<!-- Modal -->
+<div class="modal fade" id="edit_absence" role="dialog">
+    <%= simple_form_for @absence do |f| %>
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Modification de cette entrée d'absence</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group mb-3">
+                    <%= f.association :absence_type, class: 'form-control',  include_blank: true  %>
+                </div>
+                <div class="form-group mb-3">
+                    <%= f.association :user, class: 'form-control',  include_blank: true  %>
+                </div>
+                <div class="form-group mb-3">
+                    <div class="row">
+                      <div class="col-6">
+                          <%= f.input :start_time, label: 'Date de début', value: DateTime.strptime("1448607600",'%s'), as: :datetime ,html5: true, placeholder: "Entrer la date de début d'absence", class: 'form-control' %>
+                      </div>
+                      <div class="col-6">
+                          <%= f.input :end_time, label: 'Date de fin', value: DateTime.strptime("1448607600",'%s'), as: :datetime ,html5: true, placeholder: "Entrer la date de fin d'absence", class: 'form-control' %>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <%= f.button :submit, 'Valider', class: 'btn btn-raised btn-success' %>
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+

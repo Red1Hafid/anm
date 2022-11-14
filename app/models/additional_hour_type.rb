@@ -1,0 +1,2 @@
+class AdditionalHourType < ApplicationRecord
+end

@@ -1,0 +1,46 @@
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="edit_fonctional_manager_extern" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Demande de  congé</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+             <%= simple_form_for @fonctional_manager_extern do |f| %>
+                
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.input :id_external_manager, label: 'Matricule', class: 'form-control', placeholder: "Entrer le matricule" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :first_name, label: 'Prénom', class: 'form-control', placeholder: "Entrer le prénom" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :last_name, label: 'Nom', class: 'form-control', placeholder: "Entrer le nom" %>
+                    </div>
+                    <div class="form-group mb-3">
+                        <%= f.input :email, label: 'Email professionnel', class: 'form-control', placeholder: "Email professionnel" %>
+                    </div>
+
+                     <div class="form-group mb-3">
+                        <%= f.input :phone_number, label: 'Téléphone', placeholder: "Téléphone", class: 'form-control' %>
+                    </div>    
+                  
+                    <div class="form-group mb-3">
+                        <%= f.input :gender, as: :radio_buttons, label: 'Sex', collection: [['0', 'Femme'], ['1', 'Homme']], label_method: :second, value_method: :first %>  
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <%= f.input :job_title, label: 'Fonction', placeholder: "Fonction", class: 'form-control' %>
+                    </div>     
+                   
+                </div>
+            
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Modifier', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

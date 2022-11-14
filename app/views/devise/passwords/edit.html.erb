@@ -1,0 +1,79 @@
+<% provide(:title, 'login') %>
+
+ <div class="account-pages mt-5 mb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-pattern">
+
+                    <div class="card-body p-4">
+                        
+                        <div class="text-center w-75 m-auto">
+                            <div class="auth-logo">
+                                <a href="<%= root_path %>" class="logo logo-dark text-center">
+                                    <span class="logo-lg">
+                                        <%= image_tag 'logo.png', height: "70", alt: "MDEO" %>
+                                    </span>
+                                </a>
+            
+                                <a href="<%= root_path %>" class="logo logo-light text-center">
+                                    <span class="logo-lg">
+                                        <%= image_tag 'logo.png', height: "70", alt: "MDEO" %>
+                                    </span>
+                                </a>
+                            </div>
+                            <p class="text-muted mb-4 mt-3">Entrez et confirmer votre nouveau mot de passe.</p>
+                        </div>
+                        <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+                          <%= f.error_notification %>
+
+                          <%= f.input :reset_password_token, as: :hidden %>
+                          <%= f.full_error :reset_password_token %>
+
+                          <div class="form-group mb-3">
+                              <div class="input-group input-group-merge">
+                                  <%= f.password_field :password, autocomplete: 'new-password', class: 'form-control underline-input', placeholder: 'Mot de passe' %>
+                                  <div class="input-group-append" data-password="false">
+                                      <div class="input-group-text">
+                                          <span class="password-eye"></span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="form-group mb-3">
+                              <div class="input-group input-group-merge">
+                                  <%= f.password_field :password_confirmation, autocomplete: 'new-password', class: 'form-control underline-input', placeholder: 'Confirmation du mot de passe' %>
+                                  <div class="input-group-append" data-password="false">
+                                      <div class="input-group-text">
+                                          <span class="password-eye"></span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="form-group mb-0 text-center">
+                                <button class="btn btn-primary btn-block" type="submit"> Changer le mot de passe </button>
+                          </div>
+                        <% end %>
+                    </div> <!-- end card-body -->
+                </div>
+                <!-- end card -->
+
+                <div class="row mt-3">
+                    <div class="col-12 text-center">
+                      <%= render 'devise/shared/links' %>
+                    </div> <!-- end col -->
+                    <div class="col-12 text-center mt-2 text-white">
+                        2022 - <script>document.write(new Date().getFullYear())</script> &copy; Developpé par <a href="http://www.innovimp.com" target="_blank" class="text-white"> Super Admin Numérique Maroc</a> 
+                    </div> <!-- end col -->
+                </div>
+                <!-- end row -->
+
+            </div> <!-- end col -->
+        </div>
+        <!-- end row -->
+    </div>
+    <!-- end container -->
+</div>
+<!-- end page -->
