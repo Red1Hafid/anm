@@ -41,8 +41,8 @@ services:
       - ./app:/srv/Alithya-ANM-WEB/app
       - ./config:/srv/Alithya-ANM-WEB/config
       - ./db:/srv/Alithya-ANM-WEB/db
-      - ./db:/srv/Alithya-ANM-WEB/public
-      - ./db:/srv/Alithya-ANM-WEB/storage
+      - ./public:/srv/Alithya-ANM-WEB/public
+      - ./storage:/srv/Alithya-ANM-WEB/storage
       - ./test:/srv/Alithya-ANM-WEB/test
       - ./lib:/srv/Alithya-ANM-WEB/lib
       - ./coverage:/srv/Alithya-ANM-WEB/coverage
