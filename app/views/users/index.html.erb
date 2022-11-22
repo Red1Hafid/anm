@@ -55,6 +55,7 @@
                                             Filtrer par roles
                                         </button>
                                         <div class="dropdown-menu" style="">
+                                            <a class="dropdown-item" href="<%= users_path() %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-info"></i>Tous</a>
                                             <a class="dropdown-item" href="<%= users_path(type: 'Rh') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-info"></i>Rh</a>
                                             <a class="dropdown-item" href="<%= users_path(type: 'Collaborateur') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-success"></i>Collaborateur</a>
                                         </div>
@@ -237,9 +238,11 @@
                                 <select data-toggle="select2" onchange='set_user_line_manager();'>
                                     <option></option>
                                     <optgroup label="Gestionnaire hiérarchque">
+                                    <% if @line_managers %>
                                         <%= @line_managers.each do |user| %>
                                             <option><%= user.first_name %> <%= user.last_name %></option>
                                         <% end %>
+                                    <% end %>
                                     </optgroup>
                                 </select>
                             </div>
@@ -248,9 +251,11 @@
                                 <%= f.input :fonctionnal_manager_id, label: "Gestionnaire fonctionnel", input_html: { id: 'fonctional_managers', :style => "display:none;" } %>
                                 <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange='set_user_fonctionnal_manager();'>
                                     <optgroup label="Gestionnaire fonctionnel">
+                                    <% if @fonctional_managers %>
                                         <%= @fonctional_managers.each do |user| %>
                                             <option><%= user.first_name %> <%= user.last_name %></option>
-                                        <% end %>           
+                                        <% end %>  
+                                    <% end %>         
                                     </optgroup>
                                 </select>
                             </div> 

@@ -50,13 +50,13 @@ class AutorizationsController < ApplicationController
     @autorization.stay_hour = authorization_duration
     if ["Super Admin", "Rh"].include? current_user.role.title 
       if @autorization.user_id == current_user.id
-        @autorization.stay_hour = 
+        @autorization.stay_hour = authorization_duration
         if @autorization.save
           redirect_to authorizations_administration_path, notice: "Autorization was successfully created." 
         end
       else
         @autorization.encours!
-
+        @autorization.stay_hour = authorization_duration
         if @autorization.save
           redirect_to autorizations_path, notice: "Autorization was successfully created." 
         end
@@ -65,15 +65,18 @@ class AutorizationsController < ApplicationController
     else
       if !current_user.manager_titles.nil?
         if current_user.manager_titles.include? "Gestionnaire hiérarchique"
+          @autorization.stay_hour = authorization_duration
           if @autorization.save
             redirect_to authorizations_administration_path, notice: "Autorization was successfully created." 
           end
         else
+          @autorization.stay_hour = authorization_duration
           if @autorization.save
             redirect_to autorizations_path, notice: "Autorization was successfully created." 
           end
         end
       else
+        @autorization.stay_hour = authorization_duration
         if @autorization.save
           redirect_to autorizations_path, notice: "Autorization was successfully created." 
         end

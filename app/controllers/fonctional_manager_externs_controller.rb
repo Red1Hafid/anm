@@ -22,7 +22,7 @@ class FonctionalManagerExternsController < ApplicationController
     def create
       @fonctional_manager_extern = FonctionalManagerExtern.new(fonctional_manager_extern_params)
       @fonctional_manager_extern.save
-      @fonctional_manager = FonctionalManager.create(matricule: @fonctional_manager_extern.matricule, first_name: @fonctional_manager_extern.first_name, last_name: @fonctional_manager_extern.last_name)
+      @fonctional_manager = FonctionalManager.create(matricule: @fonctional_manager_extern.id_external_manager, first_name: @fonctional_manager_extern.first_name, last_name: @fonctional_manager_extern.last_name)
       role = Role.find(current_user.role_id)
       @journal = Journal.new
       @journal.content = "le #{role.title} (#{current_user.first_name} #{current_user.last_name}) à ajouter le gestionnaire externe (#{@fonctional_manager_extern.first_name} #{@fonctional_manager_extern.first_name}) - loger le : #{Time.now}"
@@ -83,7 +83,7 @@ class FonctionalManagerExternsController < ApplicationController
     end
 
     def fonctional_manager_extern_params
-      params.require(:fonctional_manager_extern).permit(:id_external_manager, :first_name, :last_name, :email, :job_title, :phone_number, :gender)
+      params.require(:fonctional_manager_extern).permit(:id_external_manager, :first_name, :last_name, :email, :job_title, :phone_number, :gender, :matricule)
     end
 end
   

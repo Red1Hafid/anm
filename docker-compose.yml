@@ -1,0 +1,79 @@
+version: '3'
+services:
+  db:
+    platform: linux/x86_64
+    container_name: anm_mysql
+    image: mysql
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - alithya
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_USER=${DATABASE_USERNAME}
+    volumes:
+      - ./dump:/docker-entrypoint-initdb.d
+      - ./mycustom.cnf:/etc/mysql/conf.d/custom.cnf
+
+  db-admin-portal:
+    image: adminer
+    restart: always
+    networks:
+      - alithya
+    depends_on: 
+      - "db"
+    ports:
+      - 8080:8080
+
+  alithya:
+    container_name: anm_web
+    build: .
+    restart: always
+    networks:
+      - alithya
+    working_dir: /srv/Alithya-ANM-WEB
+    volumes:
+      - ./app:/srv/Alithya-ANM-WEB/app
+      - ./config:/srv/Alithya-ANM-WEB/config
+      - ./db:/srv/Alithya-ANM-WEB/db
+      - ./public:/srv/Alithya-ANM-WEB/public
+      - ./storage:/srv/Alithya-ANM-WEB/storage
+      - ./test:/srv/Alithya-ANM-WEB/test
+      - ./lib:/srv/Alithya-ANM-WEB/lib
+      - ./coverage:/srv/Alithya-ANM-WEB/coverage
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+
+  redis:
+    container_name: anm_redis
+    image: redis:5.0.7
+    command: redis-server
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - alithya
+
+  sidekiq:
+    container_name: anm_sidekiq
+    build:
+        context: .
+        dockerfile: ./Dockerfile-sidekiq
+    depends_on:
+      - redis
+    restart: always
+    networks:
+      - alithya
+    env_file:
+      - .env
+
+networks:
+  alithya:
+    driver: bridge
