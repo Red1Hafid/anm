@@ -3,6 +3,7 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   resources :absences
   resources :absence_types
+
   get 'settings/index'
   mount Sidekiq::Web => "/sidekiq", as: :sidekiq
 
@@ -75,6 +76,7 @@ Rails.application.routes.draw do
   resources :settings
   resources :stop_actions
   resources :grounds
+  resources :frais_category
 
   resources :furlough_types do
     collection { post :import }
