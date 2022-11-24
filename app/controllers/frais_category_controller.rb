@@ -13,7 +13,7 @@ class FraisCategoryController < ApplicationController
   end
 
   def set_frais_category
-    puts("frais")
+   @fraisCategory = FraiCategory.find(params[:id])
   end
 
   def fraisCategory_params

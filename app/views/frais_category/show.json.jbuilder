@@ -1,0 +1,1 @@
+json.partial! "fraisCategory/fraiCategory", fraisCategory: @fraisCategory
