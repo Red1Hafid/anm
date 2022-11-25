@@ -1,0 +1,33 @@
+<!-- Modal -->
+<div class="modal fade" id="edit_cost" role="dialog">
+  <%= simple_form_for(@cost) do |f| %>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <%= f.error_notification %>
+              <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+              <div class="form-group">
+                <%= f.input :name, label: 'Name', placeholder: "Entrer le Nom de frais", class: 'form-control'%>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div>
+            <%= f.submit %>
+            <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <% end %>
+
+  <%=  link_to "costs index", costs_path %>
+</div>

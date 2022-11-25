@@ -16,3 +16,12 @@
  *= require trix
  *= require_self
  */
+
+.thead-light {
+    .action {
+        width: 125px;
+        .th-inner {
+           width: 100%;
+        }
+    }
+}

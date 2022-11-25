@@ -84,6 +84,7 @@ Rails.application.routes.draw do
   resources :settings
   resources :stop_actions
   resources :grounds
+  resources :costs
 
   resources :furlough_types do
     collection { post :import }
@@ -106,6 +107,7 @@ Rails.application.routes.draw do
   resources :grounds do
     collection { post :import }
   end
+
 
   resources :journals
   resources :fonctional_manager_externs
