@@ -17,18 +17,22 @@ class CostsController < ApplicationController
 
   def create
     @cost = Cost.new(cost_params)
+    @cost.user_id = current_user.id
     if @cost.save
+      flash[:notice] = "Cost was created successfully."
       redirect_to costs_path
+    else
+      render 'new'
     end
   end
 
   def edit
-    #@cost = Cost.find(params[:id])
   end
 
 
   def update
      @cost = Cost.find(params[:id])
+     @cost.user_id = current_user.id
      if @cost.update(cost_params)
          puts("updated")
          redirect_to costs_path
@@ -48,6 +52,6 @@ class CostsController < ApplicationController
     end
 
   def cost_params
-    params.require(:cost).permit(:name)
+    params.require(:cost).permit(:name, :percentage ,note_ids: [""])
   end
 end
