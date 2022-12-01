@@ -1,3 +1,11 @@
+:concurrency: 2
+:pidfile: tmp/pids/sidekiq.pid
+:logfile: ./log/sidekiq.log
+:queues:
+  - [import_queue, 1]
+  - [default, 1]
+
+
 :schedule:
   balance_furlough_job:
     cron: '0 * * * * *'   # Runs once per minute

@@ -1,0 +1,120 @@
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="page-title-box">
+          <div class="page-title-right">
+            <ol class="breadcrumb m-0">
+              <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+              <li class="breadcrumb-item active">Actions</li>
+            </ol>
+          </div>
+          <h4 class="page-title">Liste des Frais</h4>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-3">
+
+              <div class="col-lg-8">
+                <%= form_tag costs_path, :method => 'get',  class: "form-inline" do %>
+                  <div class="form-group">
+                    <% if params[:search].present? %>
+                      <%= text_field_tag :search,nil, class:"form-control", value:"#{params[:search]}" %>
+                    <% else %>
+                      <%= text_field_tag :search,nil, class:"form-control", placeholder:"Trouvez une commande ... " %>
+                    <% end %>
+                    <button type="submit" class="btn btn-warning waves-effect waves-light ml-1"><i class="mdi mdi-magnify mr-1"></i> Chercher !</button>
+                  </div>
+                <% end %>
+              </div>
+
+              <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                <div class="col-lg-4 d-flex justify-content-end">
+                  <%= link_to '#new_cost', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_cost'  do %>
+                    <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <div class="row mb-3">
+              <div class="table-responsive">
+                <table data-toggle="table"
+                       data-show-columns="false"
+                       data-pagination="true"
+                       data-buttons-class="xs btn-light"
+                       class="table-borderless"
+                       data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                >
+                  <thead class="thead-light">
+                    <tr>
+                      <th data-field="name">Name</th>
+                      <th class="action">Actions</th>
+                    </tr>
+
+                  </thead>
+                  <tbody>
+                  <% @costs.each do |cost| %>
+                    <tr>
+                      <td>
+                        <%= cost.name %>
+                      </td>
+                      <td class="action">
+                        <%= link_to cost_path(cost), remote: true, class: "action-icon" do %>
+                          <i class="mdi mdi-eye"></i>
+                        <% end %>
+
+                        <%= link_to  edit_cost_path(cost), remote: true, class: "action-icon" do %>
+                          <i class="mdi mdi-border-color"></i>
+                        <% end %>
+
+                        <%= link_to cost, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                          <i class="mdi mdi-delete"></i>
+                        <% end %>
+
+                      </td>
+                    </tr>
+                  <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id='remote-container'></div>
+</div>
+
+
+<div class="modal fade" id="new_cost" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myLargeModalLabel">Ajout des frais</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <%= simple_form_for(Cost.new, as: :cost, method: :post, html: { class: "form-horizontal" }) do |f| %>
+        <div class="modal-body">
+          <%= f.error_notification %>
+          <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+          <div class="form-group">
+            <%= f.input :name, label: 'Name', placeholder: "Entrer le nom", class: 'form-control' %>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+          <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+        </div>
+
+      <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+</div><!-- /.modal -->
