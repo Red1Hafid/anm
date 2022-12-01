@@ -10,6 +10,11 @@
           <div class="form-group">
             <%= @cost.name %>
           </div>
+          <div class="form-group">
+            <% if @cost.notes.any? %>
+              <div class="mt-2 badge badge-pill badge-info"><%= render  @cost.notes %></div>
+            <% end %>
+          </div>
         </div>
 
         <div class="modal-footer">

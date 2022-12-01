@@ -53,6 +53,8 @@
                   <thead class="thead-light">
                     <tr>
                       <th data-field="name">Name</th>
+                      <th data-field="category">Category</th>
+                      <th data-field="percentage">Percentage</th>
                       <th class="action">Actions</th>
                     </tr>
 
@@ -62,6 +64,14 @@
                     <tr>
                       <td>
                         <%= cost.name %>
+                      </td>
+                      <td>
+                        <% if cost.notes.any? %>
+                          <%= render  cost.notes %>
+                        <% end %>
+                      </td>
+                      <td>
+                        <%= cost.percentage %>%
                       </td>
                       <td class="action">
                         <%= link_to cost_path(cost), remote: true, class: "action-icon" do %>
@@ -106,10 +116,29 @@
           <div class="form-group">
             <%= f.input :name, label: 'Name', placeholder: "Entrer le nom", class: 'form-control' %>
           </div>
+
+          <div class="form-group">
+            <%= f.label :percentage %>
+            <div class="form-control mb-1">
+              <%= f.select :percentage, [['25%',1],['50%',2],['75%',3],['100%',4]], :include_blank=>true,  class: "form-control"%>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :note %>
+            <div class="form-control mb-1">
+              <%= f.collection_select(:note_ids, Note.all, :id, :name , class: "btn btn-secondary dropdown-toggle")%>
+            </div>
+            <!-- Write your comments here <%= f.collection_select(:note_ids, Note.all, :id, :name, {prompt: "Make your selection from the notes list (can be empty)"}, {multiple: true ,size: 1, class: "custom-select shadow rounded"}) %>
+            -->
+          </div>
         </div>
 
-        <div class="modal-footer">
-          <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+        <div class="modal-footer d-flex justify-content-between">
+          <div>
+            <button type="button" class="btn btn-raised btn-primary" data-dismiss="modal">Add Category</button>
+            <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+          </div>
           <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
         </div>
 

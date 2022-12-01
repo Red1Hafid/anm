@@ -37,6 +37,7 @@ class User < ApplicationRecord
   belongs_to :role
   has_many :furloughs
   has_one :bank
+  has_many :costs
 
   def self.search(params)  
     p = params[:search]   

@@ -80,6 +80,7 @@ Rails.application.routes.draw do
   resources :stop_actions
   resources :grounds
   resources :costs
+  resources :notes
 
   resources :furlough_types do
     collection { post :import }
