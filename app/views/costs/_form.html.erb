@@ -17,16 +17,7 @@
 
               <div class="form-group">
                 <%= f.label :percentage %>
-                <div class="form-control">
-                  <%= f.select :percentage, [['25%',25],['50%',50],['75%',75],['100%',100]]%>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <%= f.label :note %>
-                <div class="form-control">
-                  <%= f.collection_select(:note_ids, Note.all, :id, :name, {class: "from-control" }) %>
-                </div>
+                <%= f.select :percentage, [['25%',25],['50%',50],['75%',75],['100%',100]] , {}, { :class => 'form-control' }%>
               </div>
             </div>
           </div>
@@ -34,7 +25,6 @@
 
         <div class="modal-footer d-flex justify-content-between">
           <div>
-            <button type="button" class="btn btn-raised btn-primary" data-dismiss="modal">Add Category</button>
             <%= f.submit class: 'btn btn-outline-success'%>
           </div>
           <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button></div>

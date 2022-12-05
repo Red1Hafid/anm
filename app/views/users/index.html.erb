@@ -297,8 +297,8 @@
         var user_name = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText;
 
         if (user_name == ""){
-             $('#fonctional_managers').val("");
-           
+
+            $('#fonctional_managers').val("");
         }else{
            var url = '<%= domainename + 'findfonctionalmanagerid/' %>';
             $.when(
