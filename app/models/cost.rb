@@ -1,5 +1,6 @@
 class Cost < ApplicationRecord
-  belongs_to :user
-  has_many :cost_notes
-  has_many :notes, :through => :cost_notes
+  validates :name, presence: true, format: {with: /[a-zA-Z]/}, uniqueness: true
+
+  has_many :notes
+  has_many :users, through: :notes
 end

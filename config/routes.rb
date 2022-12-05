@@ -68,7 +68,7 @@ Rails.application.routes.draw do
   post 'adjust/:id' => 'offs#adjust', as: 'adjust'
 
   get '/start_load' =>  'load_updated_files#start_load', as: 'start_load'
-  
+  get 'findcostid/:name' => 'costs#find_cost_id', as: 'find_cost_id'
   
 
   #for js routes
@@ -87,6 +87,9 @@ Rails.application.routes.draw do
   end
   get 'enablefurloughtype/:id' => 'furlough_types#enable_furlough_type', as: 'enable_furlough_type'
   get 'disablefurloughtype/:id' => 'furlough_types#disable_furlough_type', as: 'disable_furlough_type'
+
+  get 'disablecost/:id' => 'costs#disable_cost', as: 'disable_cost'
+  get 'enablecost/:id' => 'costs#enable_cost', as: 'enable_cost'
 
   resources :offs do
     collection { post :import }

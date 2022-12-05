@@ -1,5 +1,5 @@
 class CostsController < ApplicationController
-  before_action :set_cost, only: %i[show edit update destroy]
+  before_action :set_cost, only: [:show , :edit, :update, :destroy, :enable_cost, :disable_cost]
 
   def index
     @q = Cost.ransack(params[:q])
@@ -17,7 +17,8 @@ class CostsController < ApplicationController
 
   def create
     @cost = Cost.new(cost_params)
-    @cost.user_id = current_user.id
+    @cost.is_active = true
+    @cost.enabled_date = Date.today
     if @cost.save
       flash[:notice] = "Cost was created successfully."
       redirect_to costs_path
@@ -26,13 +27,19 @@ class CostsController < ApplicationController
     end
   end
 
+  def find_cost_id
+    name = params[:name].split.first
+    puts name
+    cost = Cost.find_by(name: name)
+    render :json => cost.id
+  end
+
   def edit
   end
 
 
   def update
      @cost = Cost.find(params[:id])
-     @cost.user_id = current_user.id
      if @cost.update(cost_params)
          puts("updated")
          redirect_to costs_path
@@ -45,6 +52,22 @@ class CostsController < ApplicationController
     end
   end
 
+  def disable_cost
+    @cost.is_active = false
+    @cost.disabled_date = Date.today
+    if @cost.save
+      redirect_to costs_path, success: "Le Frais est désactivé avec succès"
+    end
+  end
+
+  def enable_cost
+    @cost.is_active = true
+    @cost.enabled_date = Date.today
+    if @cost.save
+      redirect_to costs_path, success: "Le Frais est activé avec succès"
+    end
+  end
+
 
   private
     def set_cost
@@ -52,6 +75,6 @@ class CostsController < ApplicationController
     end
 
   def cost_params
-    params.require(:cost).permit(:name, :percentage ,note_ids: [""])
+    params.require(:cost).permit(:name, :percentage)
   end
 end

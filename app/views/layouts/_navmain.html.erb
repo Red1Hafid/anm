@@ -167,6 +167,12 @@
             <% end %>
           </li>
           <li>
+            <%= link_to notes_path, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
+              <i data-feather="watch"></i>
+              <span>Gestion des Notes </span>
+            <% end %>
+          </li>
+          <li>
             <a href="#sidebarProjects" data-toggle="collapse">
               <i data-feather="settings"></i>
               <span> Paramètres </span>
@@ -272,7 +278,7 @@
               <i data-feather="alert-circle"></i>
               <span>Gestion des absences</span>
             <% end %>
-          </li> 
+          </li>
           <li>
             <%= link_to certificate_requests_path, class: "dropdown-item notify-item", :style => "font-size: 13px;" do %>
                 <i data-feather="file-text"></i>
