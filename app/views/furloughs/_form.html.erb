@@ -11,9 +11,9 @@
                     <div class="modal-body">
                         <div class="form-group mb-3">
                             <%= f.association :furlough_type, :as => :collection_select, collection: FurloughType.where(is_actif: true).where.not(code: ['CSSR', 'CPAR']), label: 'Type de congé', label_method: :name, value_method: :id, input_html: { id: 'type_furlough', onchange:'reloadFurloughType();'}, class: 'form-control',  include_blank: false %>
-                            <h4><span class="badge badge-soft-info badge-pill ml-1 fixed_duration"></span> <h4>
-                            <h4><span class="badge badge-soft-info badge-pill ml-1 informing_before"></span> <h4>
-                            <h4><span class="badge badge-soft-info badge-pill ml-1 is_payer"></span> <h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 fixed_duration"></span></h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 informing_before"></span></h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 is_payer"></span></h4>
                         </div>
                         <div class="form-group mb-3">
                             <div class="row">
@@ -35,7 +35,7 @@
                                     <%= f.input :hour_end, label: 'Heure de reprise', as: :select, collection: (['8:00','14:00']), html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'hour_end', onchange:'reloadDuration();' }, class: 'form-control' %>
                                 </div>
                                 <div class="col-12">
-                                    <h4><span class="badge badge-danger ml-1 dr"></span><h4>
+                                    <h4><span class="badge badge-danger ml-1 dr"></span></h4>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                         <div class="col-12">
                             <%= f.object.documment.filename %>
                             <%= f.file_field :documment %>
-                            <h4><span class="badge badge-danger ml-1"></span><h4>
+                            <h4><span class="badge badge-danger ml-1"></span></h4>
                         </div>
 
                     </div>
@@ -68,10 +68,10 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <%= f.association :furlough_type, :as => :collection_select, collection: FurloughType.where(is_actif: true).where.not(code: ['CSSR', 'CPAR']), label: false, label_method: :name, value_method: :id, input_html: { id: 'type_furlough', :style => "display:none;"}, class: 'form-control',  include_blank: false %>
-                            <h4><span class="badge badge-soft-info badge-pill">Congé de <%= @furlough.furlough_type.name %></span><h4>
-                            <h4><span class="badge badge-soft-info badge-pill ml-1 fixed_duration"></span> <h4>
-                            <h4><span class="badge badge-soft-info badge-pill ml-1 informing_before"></span> <h4>
-                            <h4><span class="badge badge-soft-info badge-pill ml-1 is_payer"></span> <h4>
+                            <h4><span class="badge badge-soft-info badge-pill">Congé de <%= @furlough.furlough_type.name %></span></h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 fixed_duration"></span></h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 informing_before"></span></h4>
+                            <h4><span class="badge badge-soft-info badge-pill ml-1 is_payer"></span></h4>
                         </div>
                         <div class="form-group mb-3">
                             <div class="row">
@@ -93,7 +93,7 @@
                                     <%= f.input :hour_end, label: 'Heure de reprise', as: :select, collection: (['8:00','14:00']), html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'hour_end', onchange:'reloadDuration();' }, class: 'form-control', :disabled => true %>
                                 </div>
                                 <div class="col-12">
-                                    <h4><span class="badge badge-danger ml-1 dr"></span><h4>
+                                    <h4><span class="badge badge-danger ml-1 dr"></span></h4>
                                 </div>
                             </div>
                         </div>
@@ -112,7 +112,7 @@
                         <div class="col-12">
                             <%= f.object.documment.filename %>
                             <%= f.file_field :documment %>
-                            <h4><span class="badge badge-danger ml-1"></span><h4>
+                            <h4><span class="badge badge-danger ml-1"></span></h4>
                         </div>
 
                     </div>
