@@ -19,6 +19,10 @@
                 <%= f.label :percentage %>
                 <%= f.select :percentage, [['25%',25],['50%',50],['75%',75],['100%',100]] , {}, { :class => 'form-control' }%>
               </div>
+
+              <div class="form-group">
+                <%= f.input :max_value, label: 'Coût maximum', placeholder: "Entrer le coût maximum", class: 'form-control' %>
+              </div>
             </div>
           </div>
         </div>
