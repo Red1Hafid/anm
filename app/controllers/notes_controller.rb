@@ -23,13 +23,18 @@ class NotesController < ApplicationController
     else
       @note.user_id = current_user.id
     end
-    if @note.save
-      redirect_to notes_path
+    @cost = Cost.find(@note.cost_id)
+    if @note.total > @cost.max_value
+      redirect_to notes_path, warning: "Le cout du Note est plus grand que le max de frais"
+    else
+      if @note.save
+        flash[:notice] = "La Note est créée avec succès."
+        redirect_to notes_path, success: "La Note est créée avec succès"
+      end
     end
   end
 
   def edit
-    #@note = note.find(params[:id])
   end
 
 
@@ -37,13 +42,13 @@ class NotesController < ApplicationController
      @note = Note.find(params[:id])
      if @note.update(note_params)
          puts("updated")
-         redirect_to notes_path
+         redirect_to notes_path,  success: "La Note est édité avec succès"
      end
   end
 
   def destroy
     if @note.destroy
-        redirect_to notes_path
+        redirect_to notes_path, success: "La Note est supprimé avec succès"
     end
   end
 

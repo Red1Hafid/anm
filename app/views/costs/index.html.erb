@@ -54,6 +54,7 @@
                     <tr>
                       <th data-field="name">Name</th>
                       <th data-field="percentage">Percentage</th>
+                      <th data-field="max_value">Coût maximum</th>
                       <th data-field="is_active">Status</th>
                       <th class="action">Actions</th>
                     </tr>
@@ -71,6 +72,13 @@
                           <% else %>
                             NaN
                           <% end %>
+                      </td>
+                      <td>
+                        <% if cost.max_value %>
+                          <%= cost.max_value %>
+                        <% else %>
+                          NaN
+                        <% end %>
                       </td>
                       <td>
                         <% if cost.is_active %>
@@ -136,6 +144,10 @@
           <div class="form-group">
             <%= f.label :percentage %>
             <%= f.select :percentage, [['25%',25],['50%',50],['75%',75],['100%',100]] , {include_blank: true }, { :class => 'form-control' }%>
+          </div>
+
+          <div class="form-group">
+            <%= f.input :max_value, label: 'Coût maximum', placeholder: "Entrer le coût maximum", class: 'form-control' %>
           </div>
 
         </div>

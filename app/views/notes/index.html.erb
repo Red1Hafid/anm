@@ -54,6 +54,7 @@
                   <tr>
                     <th data-field="name">Name</th>
                     <th data-field="total">Montant</th>
+                    <th data-field="cost_id">Type de Frais</th>
                     <th data-field="created_at">Date</th>
                     <th data-field="documment">Doc</th>
                     <th class="action">Actions</th>
@@ -69,6 +70,10 @@
 
                       <td>
                         <%= note.total %>
+                      </td>
+
+                      <td>
+                        <%= note.cost.name %>
                       </td>
 
                       <td>
@@ -164,8 +169,12 @@
           </div>
 
           <div class="col-12">
-            <%= f.object.documment %>
-            <%= f.file_field :documment %>
+            <% if f.object.documment  %>
+              <%= f.object.documment %>
+              <%= f.file_field :documment %>
+              <% else %>
+              NaN
+            <% end %>
             <h4><span class="badge badge-danger ml-1"></span></h4>
           </div>
 

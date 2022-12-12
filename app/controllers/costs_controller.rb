@@ -20,8 +20,8 @@ class CostsController < ApplicationController
     @cost.is_active = true
     @cost.enabled_date = Date.today
     if @cost.save
-      flash[:notice] = "Cost was created successfully."
-      redirect_to costs_path
+      flash[:notice] = "Le coût est créé avec succès."
+      redirect_to costs_path,  success: "Le coût est créé avec succès."
     else
       render 'new'
     end
@@ -42,13 +42,13 @@ class CostsController < ApplicationController
      @cost = Cost.find(params[:id])
      if @cost.update(cost_params)
          puts("updated")
-         redirect_to costs_path
+         redirect_to costs_path,  success: "Le Frais est édité avec succès"
      end
   end
 
   def destroy
     if @cost.destroy
-        redirect_to costs_path
+        redirect_to costs_path, success: "Le Frais est supprimé avec succès"
     end
   end
 
@@ -75,6 +75,6 @@ class CostsController < ApplicationController
     end
 
   def cost_params
-    params.require(:cost).permit(:name, :percentage)
+    params.require(:cost).permit(:name, :percentage, :max_value)
   end
 end
