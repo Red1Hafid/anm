@@ -53,10 +53,12 @@
                   <thead class="thead-light">
                   <tr>
                     <th data-field="name">Name</th>
+                    <th data-fied="user_id">collaborateur</th>
                     <th data-field="total">Montant</th>
                     <th data-field="cost_id">Type de Frais</th>
                     <th data-field="created_at">Date</th>
-                    <th data-field="documment">Doc</th>
+                    <th data-field="documment">
+                      pièce jointe</th>
                     <th class="action">Actions</th>
                   </tr>
 
@@ -66,6 +68,11 @@
                     <tr>
                       <td>
                         <%= note.name %>
+                      </td>
+
+                      <td>
+                        <%= note.user.first_name %>
+                        <%= note.user.last_name %>
                       </td>
 
                       <td>
@@ -82,7 +89,7 @@
 
                       <td>
                         <% if note.documment.attached?  %>
-                          <%= image_tag(note.documment) %>
+                          <%= link_to 'Voir pdf', rails_blob_path(note.documment, disposition: "attachment") %>
                         <% end %>
                       </td>
 
@@ -170,12 +177,12 @@
 
           <div class="col-12">
             <% if f.object.documment  %>
-              <%= f.object.documment %>
+              <%= f.object.documment.filename %>
               <%= f.file_field :documment %>
-              <% else %>
+              <h4><span class="badge badge-danger ml-1"></span></h4>
+            <% else %>
               NaN
             <% end %>
-            <h4><span class="badge badge-danger ml-1"></span></h4>
           </div>
 
         </div>
