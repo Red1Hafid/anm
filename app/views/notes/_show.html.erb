@@ -12,6 +12,7 @@
             <span class="font-weight-bold text-capitalize d-block my-1"> Collaborateur: </span>
             <span class="font-weight-bold text-capitalize d-block my-1"> Date: </span>
             <span class="font-weight-bold text-capitalize d-block my-1"> Montant: </span>
+            <span class="font-weight-bold text-capitalize d-block my-1"> pièce jointe: </span>
           </div>
           <div class="col-sm">
             <div class="w-100 text-capitalize my-1"> <%= @note.name %></div>
@@ -20,7 +21,7 @@
             <div class="w-100 text-capitalize my-1"> <%= @note.total %></div>
             <div>
               <% if @note.documment.attached?  %>
-                <%= image_tag(@note.documment) %>
+                <%= link_to 'Voir pdf', rails_blob_path(@note.documment, disposition: "attachment") %>
               <% end %>
             </div>
           </div>

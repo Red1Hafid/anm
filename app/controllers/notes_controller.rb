@@ -17,7 +17,6 @@ class NotesController < ApplicationController
   end
 
   def create
-    puts "create"
     @note = Note.new(note_params)
     if ['Super Admin', 'Rh'].include? current_user.role.title
     else
@@ -27,6 +26,9 @@ class NotesController < ApplicationController
     if @note.total > @cost.max_value
       redirect_to notes_path, warning: "Le cout du Note est plus grand que le max de frais"
     else
+      if params[:documment].present?
+        Note.update_note
+      end
       if @note.save
         flash[:notice] = "La Note est créée avec succès."
         redirect_to notes_path, success: "La Note est créée avec succès"
@@ -41,6 +43,9 @@ class NotesController < ApplicationController
   def update
      @note = Note.find(params[:id])
      if @note.update(note_params)
+       if params[:documment].present?
+         Note.update_note
+       end
          puts("updated")
          redirect_to notes_path,  success: "La Note est édité avec succès"
      end
@@ -60,6 +65,6 @@ class NotesController < ApplicationController
     end
 
   def note_params
-    params.require(:note).permit(:name, :total, :user_id, :cost_id, :document)
+    params.require(:note).permit(:name, :total, :user_id, :cost_id, :documment)
   end
 end
