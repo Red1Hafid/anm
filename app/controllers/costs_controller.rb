@@ -1,11 +1,16 @@
 class CostsController < ApplicationController
-  before_action :set_cost, only: [:show , :edit, :update, :destroy, :enable_cost, :disable_cost]
+  before_action :set_cost, only: [:show , :edit, :update, :destroy, :enable_cost, :disable_cost, :delete_cost]
 
   def index
-    @q = Cost.ransack(params[:q])
-    @costs = Cost.all
     @setting = Setting.find(1)
-    @costs = @q.result(distinct: true)
+    @q = Cost.ransack(params[:q])
+    @costs = @q.result.where(status: 1)
+  end
+
+  def archived_cost
+    @setting = Setting.find(1)
+    @search = Cost.ransack(params[:search])
+    @costs = @search.result.where(status: 2)
   end
 
   def show
@@ -44,6 +49,13 @@ class CostsController < ApplicationController
          puts("updated")
          redirect_to costs_path,  success: "Le Frais est édité avec succès"
      end
+  end
+
+  def delete_cost
+    @cost.deleted!
+    if @cost.save
+      redirect_to costs_path, notice: "Le Frais est supprimé avec succès."
+    end
   end
 
   def destroy

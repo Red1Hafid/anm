@@ -1,0 +1,122 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="page-title-box">
+        <div class="page-title-right">
+          <ol class="breadcrumb m-0">
+            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+            <li class="breadcrumb-item active">Actions</li>
+          </ol>
+        </div>
+        <h4 class="page-title">Liste des Frais Archived</h4>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row mb-3">
+
+            <div class="col-lg-8">
+              <%= search_form_for @search, class: "form-inline" do |f| %>
+                <div class="form-group">
+                  <div class="col-lg-8">
+                    <%= f.search_field :name_or_percentage_cont, class:"form-control" %>
+                  </div>
+                  <div class="col-lg-4">
+                    <%= f.submit 'Chercher',  class: "btn btn-warning waves-effect waves-light ml-1" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+              <div class="col-lg-4 d-flex justify-content-end align-items-center">
+                <%= link_to '<- Back to  Costs', costs_path, :class => "btn btn-info stretched-link" %>
+              </div>
+            <% end %>
+
+          </div>
+          <div class="row mb-3">
+            <div class="table-responsive">
+              <table data-toggle="table"
+                     data-show-columns="false"
+                     data-pagination="true"
+                     data-buttons-class="xs btn-light"
+                     class="table-borderless"
+                     data-page-size=<%= (@setting.number_items_of_page).to_s %>
+              >
+                <thead class="thead-light">
+                <tr>
+                  <th data-field="name">Name</th>
+                  <th data-field="percentage">Percentage</th>
+                  <th data-field="max_value">Coût maximum</th>
+                  <th data-field="is_active">Status</th>
+                  <th class="action">Actions</th>
+                </tr>
+
+                </thead>
+                <tbody>
+                <% @costs.each do |cost| %>
+                  <tr>
+                    <td>
+                      <%= cost.name %>
+                    </td>
+                    <td>
+                      <% if cost.percentage %>
+                        <%= cost.percentage %>%
+                      <% else %>
+                        NaN
+                      <% end %>
+                    </td>
+                    <td>
+                      <% if cost.max_value %>
+                        <%= cost.max_value %>
+                      <% else %>
+                        NaN
+                      <% end %>
+                    </td>
+                    <td>
+                      <% if cost.is_active %>
+                        <span class="badge badge-success">Actif</span>
+                      <% else %>
+                        <span class="badge badge-dark">Désactiver</span>
+                      <% end %>
+                    </td>
+                    <td class="action">
+                      <%= link_to cost_path(cost), remote: true, class: "action-icon" do %>
+                        <i class="mdi mdi-eye"></i>
+                      <% end %>
+
+                      <%= link_to  edit_cost_path(cost), remote: true, class: "action-icon" do %>
+                        <i class="mdi mdi-border-color"></i>
+                      <% end %>
+
+                      <%= link_to delete_cost_path(cost.id), data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                        <i class="mdi mdi-delete"></i>
+                      <% end %>
+
+                      <% if cost.is_active == true %>
+                        <%= link_to disable_cost_path(cost), data: { confirm: 'Etes vous sur de disativer?', title: 'Confirme le changement du status?' }, title: "changement du status", class: "action-icon" do %>
+                          <i class="mdi mdi-lock"></i>
+                        <% end %>
+                      <% else %>
+                        <%= link_to enable_cost_path(cost), data: { confirm: 'Etes vous sur d activer?', title: 'Confirme le changement du status?' }, title: "changement du status", class: "action-icon" do %>
+                          <i class="mdi mdi-lock-open"></i>
+                        <% end %>
+                      <% end %>
+
+                    </td>
+                  </tr>
+                <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id='remote-container'></div>
+</div>
