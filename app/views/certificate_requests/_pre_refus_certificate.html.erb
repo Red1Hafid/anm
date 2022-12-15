@@ -1,0 +1,28 @@
+<!-- Modal -->
+<div class="modal fade" id="refus_certificate" role="dialog">
+    <%= simple_form_for(@certificate_request, as: :certificate_request, method: :post, url: refus_certificate_path) do |f| %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h4 class="modal-title" id="myLargeModalLabel">Refus de l'attestation</h4>
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%= f.input :date_refus, value: Date.today, as: :date, html5: true, label: "Date de refus de la demande", required: true, hint: "La date de refus doit être mentionné" %>
+                    </div>
+                    <div class="col-12">
+                        <%= f.input :comment_refus, label: "La raison de refus", required: true, hint: "La raison de refus doit être mentionné" %>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <%= f.button :submit, "Valider l'attestation", data: { confirm: 'Etes vous sur?' }, class: 'btn btn-raised btn-success' %>
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+

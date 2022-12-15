@@ -32,15 +32,19 @@
             <% end %>
 
             <%= link_to additional_hours_administration_path, class: "dropdown-item notify-item" do %>
-              <i class="fe-calendar"></i>
+              <i class="fe-plus"></i>
               <span>Mes Heures sup.</span>
             <% end %>
           <% end %>
 
           <% if ['Rh'].include? current_user.role.title %>
             <%= link_to authorizations_administration_path, class: "dropdown-item notify-item" do %>
-              <i class="fe-calendar"></i>
+              <i class="fe-watch"></i>
               <span>Mes autorisations</span>
+            <% end %>
+            <%= link_to certificate_requests_administration_path, class: "dropdown-item notify-item" do %>
+              <i class="fe-file-text"></i>
+              <span>Mes demandes d'attestaions</span>
             <% end %>
           <% end %>
           
@@ -140,7 +144,7 @@
           </li>
           <li>
             <%= link_to additional_hours_path, class: "dropdown-item notify-item" do %>
-              <i data-feather="watch"></i>
+              <i data-feather="plus"></i>
               <span>Gestion des heures sup</span>
             <% end %>
           </li>
@@ -152,8 +156,14 @@
           </li>
           <li>
             <%= link_to absences_path, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
-              <i data-feather="watch"></i>
+              <i data-feather="alert-circle"></i>
               <span>Gestion des absences</span>
+            <% end %>
+          </li>
+          <li>
+            <%= link_to certificate_requests_path, class: "dropdown-item notify-item", :style => "font-size: 13px;" do %>
+                <i data-feather="file-text"></i>
+                <span>Demmandes des attestations</span>
             <% end %>
           </li>
           <li>
@@ -185,6 +195,9 @@
                 <li>
                   <%= link_to "Motifs de départ", grounds_path %>
                 </li>
+                <li>
+                  <%= link_to "Template d'attestations", template_attestations_path %>
+                </li>
                 <% if current_user.role.title == 'Super Admin' %>
                   <li>
                     <%= link_to "Initialisation de la base de donnée", start_load_path, data: { confirm: "Etes vous sur de faire l'import?" } %>
@@ -205,13 +218,19 @@
               <span>Supervision</span>
             <% end %>
           </li>
+          <li>
+            <%= link_to root_path, target: :_blank, class: "dropdown-item notify-item" do %>
+              <i data-feather="help-circle"></i>
+              <span>help !</span>
+            <% end %>
+          </li>
         <% else %>
           <li>
             <% if['Collaborateur'].include? current_user.role.title %>
               <% if !current_user.manager_titles.nil? %>
                 <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
                   <%= link_to autorizations_path, class: "dropdown-item notify-item" do %>
-                    <i class="fe-calendar"></i>
+                    <i class="fe-watch"></i>
                     <span>Gestion des autorisations</span>
                   <% end %>
 
@@ -241,16 +260,22 @@
           </li>
           <li>
             <%= link_to additional_hours_path, class: "dropdown-item notify-item" do %>
-              <i data-feather="watch"></i>
+              <i data-feather="plus"></i>
               <span>Mes heures sup</span>
             <% end %>
           </li>
           <li>
             <%= link_to absences_path, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
-              <i data-feather="watch"></i>
+              <i data-feather="alert-circle"></i>
               <span>Gestion des absences</span>
             <% end %>
           </li> 
+          <li>
+            <%= link_to certificate_requests_path, class: "dropdown-item notify-item", :style => "font-size: 13px;" do %>
+                <i data-feather="file-text"></i>
+                <span>Mes demmandes d'attestations</span>
+            <% end %>
+          </li>
           <li>
             <%= link_to offs_path, class: "dropdown-item notify-item" do %>
               <i data-feather="book"></i>

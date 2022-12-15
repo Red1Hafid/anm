@@ -13,5 +13,6 @@
  *= require_tree .
  *= require jquery-ui
  *= require simple_calendar
+ *= require trix
  *= require_self
  */
