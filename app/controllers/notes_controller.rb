@@ -2,10 +2,11 @@ class NotesController < ApplicationController
   before_action :set_note, only: %i[show edit update destroy]
 
   def index
-    @costs = Cost.where(is_active: true)
-    @users = User.all
-    @notes = Note.all
     @setting = Setting.find(1)
+    @q = Note.ransack(params[:q])
+    @costs = Cost.where(is_active: true).where(status: 'created')
+    @users = User.all
+    @notes =  @q.result(distinct: true)
   end
 
   def show

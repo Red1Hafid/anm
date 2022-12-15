@@ -39,7 +39,11 @@
                     <i class="mdi mdi-plus mr-1"> Nouveau</i>
                   <% end %>
 
-                  <%= link_to 'Archived Costs ->', archived_cost_path, :class => "btn btn-info stretched-link" %>
+                  <% if  params.has_key?(:status)%>
+                    <a class="btn btn-info" href="<%= costs_path %>"> <i class="mdi mdi-filter mr-1"></i> Categories</a>
+                  <% else %>
+                    <a class="btn btn-info" href="<%= costs_path(status: 'deleted') %>"> <i class="mdi mdi-filter mr-1"></i>Categories Archivé</a>
+                  <% end %>
                 </div>
               <% end %>
             </div>

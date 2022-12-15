@@ -3,15 +3,15 @@ class CostsController < ApplicationController
 
   def index
     @setting = Setting.find(1)
-    @q = Cost.ransack(params[:q])
-    @costs = @q.result.where(status: 1)
+    if params[:status].present?
+      @q = Cost.ransack(params[:q])
+      @costs = @q.result(distinct: true).where(status: 2)
+    else
+      @q = Cost.ransack(params[:q])
+      @costs = @q.result(distinct: true).where(status: 1)
+    end
   end
 
-  def archived_cost
-    @setting = Setting.find(1)
-    @search = Cost.ransack(params[:search])
-    @costs = @search.result.where(status: 2)
-  end
 
   def show
   end
@@ -28,7 +28,7 @@ class CostsController < ApplicationController
       flash[:notice] = "Le coût est créé avec succès."
       redirect_to costs_path,  success: "Le coût est créé avec succès."
     else
-      render 'new'
+      #render 'new'
     end
   end
 
@@ -52,6 +52,8 @@ class CostsController < ApplicationController
   end
 
   def delete_cost
+    @cost.is_active = false
+    @cost.disabled_date = Date.today
     @cost.deleted!
     if @cost.save
       redirect_to costs_path, notice: "Le Frais est supprimé avec succès."
