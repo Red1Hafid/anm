@@ -24,15 +24,19 @@ class NotesController < ApplicationController
       @note.user_id = current_user.id
     end
     @cost = Cost.find(@note.cost_id)
+    if (Date.today.mjd - @note.facture_date.to_date.mjd) > 31
+      redirect_to notes_path, warning: "Le retard est supérieur à un mois"
+      else
     if @note.total > @cost.max_value
       redirect_to notes_path, warning: "Le cout du Note est plus grand que le max de frais"
     else
-      if params[:documment].present?
-        Note.update_note
-      end
-      if @note.save
-        flash[:notice] = "La Note est créée avec succès."
-        redirect_to notes_path, success: "La Note est créée avec succès"
+        if params[:documment].present?
+          Note.update_note
+        end
+        if @note.save
+          flash[:notice] = "La Note est créée avec succès."
+          redirect_to notes_path, success: "La Note est créée avec succès"
+        end
       end
     end
   end
@@ -66,6 +70,6 @@ class NotesController < ApplicationController
     end
 
   def note_params
-    params.require(:note).permit(:name, :total, :user_id, :cost_id, :documment)
+    params.require(:note).permit(:name, :facture_date, :total, :user_id, :cost_id, :documment)
   end
 end

@@ -2,7 +2,7 @@
   <div class="modal-dialog">
     <div class="modal-content py-2">
       <div class="modal-header">
-        <h4 class="modal-title" id="myLargeModalLabel">Show Frais</h4>
+        <h4 class="modal-title" id="myLargeModalLabel">Show Category</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       </div>
         <div class="modal-body mx-3">
@@ -10,10 +10,18 @@
             <div class="col-sm">
               <span class="font-weight-bold d-block my-1"> Nom: </span>
               <span class="font-weight-bold d-block my-1"> pourcentage: </span>
+              <span class="font-weight-bold d-block my-1"> Coût maximum: </span>
+              <span class="font-weight-bold d-block my-1"> status: </span>
             </div>
             <div class="col-sm">
               <div class="w-100 my-1 text-capitalize"><%= @cost.name %></div>
               <div class="w-100 my-1 text-capitalize"><%= @cost.percentage %>%</div>
+              <div class="w-100 my-1 text-capitalize"><%= @cost.max_value %> DH</div>
+              <% if @cost.is_active %>
+                <span class="badge badge-success">Actif</span>
+              <% else %>
+                <span class="badge badge-dark">Désactiver</span>
+              <% end %>
             </div>
           </div>
         </div>

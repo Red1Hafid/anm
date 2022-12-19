@@ -18,7 +18,7 @@
             <div class="w-100 text-capitalize my-1"> <%= @note.name %></div>
             <div class="w-100 text-capitalize my-1"> <%= @note.user.first_name%> <%= " " %> <%= @note.user.last_name %></div>
             <div class="w-100 text-capitalize my-1">  <%= @note.created_at.strftime('%d/%m/%Y') %></div>
-            <div class="w-100 text-capitalize my-1"> <%= @note.total %></div>
+            <div class="w-100 text-capitalize my-1"> <%= @note.total %>  Dh</div>
             <div>
               <% if @note.documment.attached?  %>
                 <%= link_to 'Voir pdf', rails_blob_path(@note.documment, disposition: "attachment") %>
