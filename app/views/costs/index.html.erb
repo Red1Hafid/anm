@@ -10,7 +10,7 @@
               <li class="breadcrumb-item active">Actions</li>
             </ol>
           </div>
-          <h4 class="page-title">Liste des Frais</h4>
+          <h4 class="page-title">Liste des Categories</h4>
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@
                       </td>
                       <td>
                         <% if cost.max_value %>
-                          <%= cost.max_value %>
+                          <%= cost.max_value %>  Dh
                         <% else %>
                           NaN
                         <% end %>
@@ -135,7 +135,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myLargeModalLabel">Ajout des frais</h4>
+        <h4 class="modal-title" id="myLargeModalLabel">Ajout des Categories</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       </div>
       <%= simple_form_for(Cost.new, as: :cost, method: :post, html: { class: "form-horizontal" }) do |f| %>

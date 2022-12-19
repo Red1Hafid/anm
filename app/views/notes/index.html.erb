@@ -10,7 +10,7 @@
               <li class="breadcrumb-item active">Actions</li>
             </ol>
           </div>
-          <h4 class="page-title">Gestion des Notes des frais</h4>
+          <h4 class="page-title">Gestion des Notes des Frais</h4>
         </div>
       </div>
     </div>
@@ -24,7 +24,7 @@
                 <%= search_form_for @q, class: "form-inline" do |f| %>
                   <div class="form-group">
                     <div class="col-lg-8">
-                      <%= f.search_field :name_cont, class:"form-control" %>
+                      <%= f.search_field :name_or_user_first_name_or_user_last_name_cont, class:"form-control" %>
                     </div>
                     <div class="col-lg-4">
                       <%= f.submit 'Chercher',  class: "btn btn-warning waves-effect waves-light ml-1" %>
@@ -37,6 +37,12 @@
                 <div class="col-lg-4 d-flex justify-content-end">
                   <%= link_to '#new_note', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_note'  do %>
                     <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                  <% end %>
+
+                  <%= form_tag furloughs_path, :method => 'get',  class: "form-inline" do %>
+                    <div class="form-group">
+                      <%= link_to 'Exporter', notes_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                    </div>
                   <% end %>
                 </div>
               <% end %>
@@ -55,10 +61,10 @@
                     <th data-field="name">Name</th>
                     <th data-fied="user_id">collaborateur</th>
                     <th data-field="total">Montant</th>
-                    <th data-field="cost_id">Type de Frais</th>
-                    <th data-field="created_at">Date</th>
+                    <th data-field="cost_id">Type de Categories</th>
+                    <th data-field="facture_date">Date de Facture</th>
                     <th data-field="documment">
-                      pièce jointe</th>
+                      Pièce jointe</th>
                     <th class="action">Actions</th>
                   </tr>
 
@@ -76,7 +82,7 @@
                       </td>
 
                       <td>
-                        <%= note.total %>
+                        <%= note.total %>  Dh
                       </td>
 
                       <td>
@@ -84,7 +90,7 @@
                       </td>
 
                       <td>
-                        <%= note.created_at.strftime('%d/%m/%Y')  %>
+                        <%= note.facture_date.strftime('%d/%m/%Y')  %>
                       </td>
 
                       <td>
@@ -127,7 +133,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myLargeModalLabel">Ajout des Notes des frais</h4>
+        <h4 class="modal-title" id="myLargeModalLabel">Ajout des Notes des Categories</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       </div>
       <%= simple_form_for(Note.new, as: :note, method: :post, html: { class: "form-horizontal" }) do |f| %>
@@ -154,7 +160,7 @@
           <% end %>
 
           <div class="form-group mb-3">
-            <%= f.input :cost_id, label: "Les Frais", input_html: { id: 'cost', :style => "display:none;" } %>
+            <%= f.input :cost_id, label: "Les Categories", input_html: { id: 'cost', :style => "display:none;" } %>
             <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange='set_cost_id();'>
               <optgroup label="Gestionnaire fonctionnel">
                 <% if @costs %>
@@ -172,7 +178,7 @@
           </div>
 
           <div class="form-group">
-            <%= f.input :created_at, as: :date, html5: true, label: 'Date', placeholder: "Entrer la date", class: 'form-control' %>
+            <%= f.input :facture_date, as: :date, html5: true, label: 'Date', placeholder: "Entrer la date", class: 'form-control' %>
           </div>
 
           <div class="col-12">
