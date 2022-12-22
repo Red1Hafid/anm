@@ -102,8 +102,14 @@
                           <i class="mdi mdi-border-color"></i>
                         <% end %>
 
-                        <%= link_to delete_cost_path(cost.id), data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
-                          <i class="mdi mdi-delete"></i>
+                        <% if cost.status != 'deleted' %>
+                          <%= link_to delete_cost_path(cost.id), data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                            <i class="mdi mdi-archive-arrow-down"></i>
+                          <% end %>
+                        <% else %>
+                          <%= link_to unarchive_cost_path(cost.id), data: { confirm: 'Etes vous sur?', title: 'Confirme le désarchivage?' }, title: "Suprimer", class: "action-icon" do %>
+                            <i class="mdi mdi-archive-arrow-up"></i>
+                          <% end %>
                         <% end %>
 
                         <% if cost.is_active == true %>

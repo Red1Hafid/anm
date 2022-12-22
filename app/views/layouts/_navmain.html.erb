@@ -181,8 +181,15 @@
           </li>
           <li>
             <%= link_to notes_path, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
-              <i data-feather="watch"></i>
+              <i data-feather="bookmark"></i>
               <span>Gestion des Notes </span>
+            <% end %>
+          </li>
+
+          <li>
+            <%= link_to affectations_url, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
+              <i data-feather="maximize-2"></i>
+              <span> Affectations </span>
             <% end %>
           </li>
           <li>
@@ -211,6 +218,13 @@
                 <li>
                   <%= link_to "Types des Frais ", costs_path %>
                 </li>
+
+                <li>
+                  <%= link_to projects_path, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
+                    <span>  Projects </span>
+                  <% end %>
+                </li>
+
                 <li>
                   <%= link_to "Variables système", settings_path %>
                 </li>

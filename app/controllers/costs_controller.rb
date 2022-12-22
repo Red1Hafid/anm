@@ -1,5 +1,5 @@
 class CostsController < ApplicationController
-  before_action :set_cost, only: [:show , :edit, :update, :destroy, :enable_cost, :disable_cost, :delete_cost]
+  before_action :set_cost, only: [:show , :edit, :update, :destroy, :enable_cost, :disable_cost, :delete_cost, :unarchive_cost]
 
   def index
     @setting = Setting.find(1)
@@ -57,6 +57,13 @@ class CostsController < ApplicationController
     @cost.deleted!
     if @cost.save
       redirect_to costs_path, notice: "Le Frais est supprimé avec succès."
+    end
+  end
+
+  def unarchive_cost
+    @cost.created!
+    if @cost.save
+      redirect_to costs_path, notice: "Le cout est désarchivé avec succès."
     end
   end
 

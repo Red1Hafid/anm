@@ -1,0 +1,53 @@
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="edit_project" role="dialog">
+  <%= simple_form_for(@project) do |f| %>
+    <tr>
+      <td>
+        <%= project.name %>
+      </td>
+      <td>
+        <% if project.description %>
+          <%= project.description %>%
+        <% else %>
+          NaN
+        <% end %>
+      </td>
+      <td>
+        <% if project.unit_affaire %>
+          <%= project.unit_affaire %>  Dh
+        <% else %>
+          NaN
+        <% end %>
+      </td>
+      <td>
+        <% if project.client %>
+          <%= project.client %>
+        <% else %>
+          NaN
+        <% end %>
+      </td>
+      <td>
+        <% if project.is_active %>
+          <span class="badge badge-success">Actif</span>
+        <% else %>
+          <span class="badge badge-dark">Désactiver</span>
+        <% end %>
+      </td>
+      <td class="action">
+        <%= link_to project_path(project), remote: true, class: "action-icon" do %>
+          <i class="mdi mdi-eye"></i>
+        <% end %>
+
+        <%= link_to  edit_project_path(project), remote: true, class: "action-icon" do %>
+          <i class="mdi mdi-border-color"></i>
+        <% end %>
+
+
+      </td>
+    </tr>
+  <% end %>
+</div>
+

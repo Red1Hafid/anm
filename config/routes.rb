@@ -93,9 +93,21 @@ Rails.application.routes.draw do
   get 'enablecost/:id' => 'costs#enable_cost', as: 'enable_cost'
   get 'findcostid/:name' => 'costs#find_cost_id', as: 'find_cost_id'
   get 'deletecost/:id' => 'costs#delete_cost', as: 'delete_cost'
+  get 'unarchivecost/:id' => 'costs#unarchive_cost', as: 'unarchive_cost'
 
 
   resources :notes
+
+
+  resources :projects
+  get 'deleteproject/:id' => 'projects#delete_project', as: 'delete_c'
+  get 'disableproject/:id' => 'projects#disable_project', as: 'disable_project'
+  get 'enableproject/:id' => 'projects#enable_project', as: 'enable_project'
+  get 'findprojectid/:name' => 'projects#find_project_id', as: 'find_project_id'
+  get 'deleteproject/:id' => 'costs#delete_project', as: 'delete_project'
+  get 'unarchiveproject/:id' => 'projects#unarchive_project', as: 'unarchive_project'
+
+  resources :affectations
 
   resources :furlough_types do
     collection { post :import }
