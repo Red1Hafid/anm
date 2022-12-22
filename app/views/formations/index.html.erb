@@ -1,0 +1,136 @@
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">Types de formations</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Liste des demandes de formation</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">  
+                            <div class="col-lg-12">
+                                <div class="text-lg-right">  
+                                    <%= link_to '#new_formation', class: "btn btn-secondary waves-effect waves-light mb-2 mr-2", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_formation'  do %>
+                                        <i class="mdi mdi-plus mr-1"> Nouvelle demande de formation</i>
+                                    <% end %>                               
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="table-responsive">
+                            <table data-toggle="table"
+                                    data-show-columns="false"
+                                    data-page-list="[5, 10, 20]"
+                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                    data-buttons-class="xs btn-light"
+                                    data-pagination="true" class="table-borderless">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th data-field="collaborateur">Colaborateur</th>
+                                        <th data-field="type_formation">Type de formation</th>
+                                        <th data-field="formation">formation</th>
+                                        <th data-field="nbr_hour">Heures de formation</th>
+                                        <th data-field="start_date">date de début</th>
+                                        <th data-field="start_fin">date de fin</th>
+                                        <th style="width: 125px;">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <% @formations.each do |formation| %>
+                                        <tr>                                         
+                                            <td> <%= formation.user.first_name %> <%= formation.user.last_name %></td>
+                                            <td><%= formation.formation_type.description %></td>    
+                                            <td><%= formation.description %></td>     
+                                            <td><%= formation.total_hour %></td>       
+                                            <td><%= formation.start_date %></td> 
+                                            <td><%= formation.end_date %></td> 
+                                            <td>
+                                              <%= link_to formation_path(formation), remote: true, title: "Voir", class: "action-icon" do %>
+                                                  <i class="mdi mdi-eye"></i>
+                                              <% end %> 
+                                              <%= link_to edit_formation_path(formation), remote: true, title: "Modifier", class: "action-icon" do %>
+                                                  <i class="mdi mdi-border-color"></i>
+                                              <% end %> 
+                                              <%= link_to formation, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                                  <i class="mdi mdi-delete"></i>
+                                              <% end %> 
+                                            </td>                                            
+                                        </tr> 
+                                    <% end %> 
+                                </tbody>
+                            </table>
+                            <!-- end row -->
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+    </div>
+</div> <!-- content -->
+
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="new_formation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Nouvelle demande de formation</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <%= simple_form_for(Formation.new, as: :formation, method: :post, html: { class: "form-horizontal" }) do |f| %>
+                
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <%= f.association :user, label: "Collaborateur", label_method: :email, collection: User.where.not(role_id: 1).order(created_at: :desc), value_method: :id, class: 'form-control', include_blank: false %>
+                    </div>
+
+                    <div class="form-group mb-3">
+                      <%= f.association :formation_type, label: "Type d'attestation", label_method: :description, collection: FormationType.all.order(created_at: :desc), value_method: :id, class: 'form-control', include_blank: false %>
+                    </div>  
+
+                    <div class="form-group mb-3">
+                      <%= f.input :description, label: "Formation", class: 'form-control' %>
+                    </div>  
+
+                    <div class="form-group mb-3">
+                      <%= f.input :total_hour, label: "Total heures de formation", class: 'form-control' %>
+                    </div>   
+
+                    <div class="form-group mb-3">
+                      <%= f.input :start_date, label: "Date de début de formation", value: DateTime.strptime("1448607600",'%s'), as: :date ,html5: true, class: 'form-control' %>
+                    </div> 
+
+                    <div class="form-group mb-3">
+                      <%= f.input :end_date, label: "Date de fin de formation", value: DateTime.strptime("1448607600",'%s'), as: :date ,html5: true, class: 'form-control' %>
+                    </div>    
+                </div>
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id='remote-container'></div>
+
+

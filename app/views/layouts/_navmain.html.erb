@@ -73,11 +73,11 @@
       <% end %>
       <%= link_to root_path, class: "logo logo-light text-center" do %>
         <span class="logo-sm text-center">
-          <h3 style="color:grey;margin-top: 10%;">Alithya
+          <h3 style="color:grey;margin-top: 10%;">Go RH
             <h3>
             </span>
             <span class="logo-lg text-center">
-              <h3 style="color:grey;margin-top: 10%;">Alithya
+              <h3 style="color:grey;margin-top: 10%;">Alithya Go RH
                 <h3>
                 </span>
       <% end %>
@@ -123,6 +123,7 @@
     <!--- Sidemenu -->
     <div id="sidebar-menu">
       <ul id="side-menu">
+        <li> </li>
         <li>
           <%= link_to root_path, class: "dropdown-item notify-item" do %>
             <i data-feather="home"></i>
@@ -161,6 +162,12 @@
             <% end %>
           </li>
           <li>
+            <%= link_to formations_path, class: "dropdown-item notify-item", :style => "font-size: 14px;" do %>
+              <i data-feather="book"></i>
+              <span>Gestion des formations</span>
+            <% end %>
+          </li>
+          <li>
             <%= link_to certificate_requests_path, class: "dropdown-item notify-item", :style => "font-size: 13px;" do %>
                 <i data-feather="file-text"></i>
                 <span>Demmandes des attestations</span>
@@ -182,6 +189,9 @@
                 </li>
                 <li>
                   <%= link_to "Types d'absences", absence_types_path %>
+                </li>
+                <li>
+                  <%= link_to "Types de formations", formation_types_path %>
                 </li>
                 <li>
                   <%= link_to "Géstionnaires fonctionnels externe", fonctional_manager_externs_path %>
@@ -219,7 +229,7 @@
             <% end %>
           </li>
           <li>
-            <%= link_to root_path, target: :_blank, class: "dropdown-item notify-item" do %>
+            <%= link_to en_cours_devlopement_path, target: :_blank, class: "dropdown-item notify-item" do %>
               <i data-feather="help-circle"></i>
               <span>help !</span>
             <% end %>

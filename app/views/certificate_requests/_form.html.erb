@@ -23,30 +23,10 @@
                     </div>       
                 </div>
                 <div class="modal-footer">
-                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                    <%= f.button :submit, 'Modifier', class: 'btn btn-raised btn-success' %>
                     <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
                 </div>
             <% end %>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-<script>
-
-    function set_users(){
-
-        var user_name = document.getElementsByClassName("select2-selection select2-selection--single")[0].innerText;
-
-        console.log(user_name);
-
-        var url = '<%= domainename + 'findlinemanagerid/' %>';
-        $.when(
-            $.getJSON(url+user_name)
-        ).done( function(json) {
-
-            $('#users').val(json);
-                
-        }); 
-
-    }
-</script>

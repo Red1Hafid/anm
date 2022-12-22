@@ -1,6 +1,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :formations
+  resources :formation_types
   resources :user_confs
   resources :certificate_requests
   resources :template_attestations
@@ -31,6 +33,8 @@ Rails.application.routes.draw do
 
   root 'welcomes#index'
   get '/export' => 'welcomes#export', as: 'export'
+  get '/en-cours-developement' => 'welcomes#en_cours_devlopement', as: 'en_cours_devlopement'
+
 
   get '/congés', to: 'welcomes#furloughs_calendar', as: :conges
   get '/calendar', to: 'calendars#index', as: :calendar

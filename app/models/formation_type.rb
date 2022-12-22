@@ -1,0 +1,2 @@
+class FormationType < ApplicationRecord
+end

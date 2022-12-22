@@ -48,6 +48,9 @@ class WelcomesController < ApplicationController
     end
   end
 
+  def en_cours_devlopement
+  end
+
   def export()
     @search = AnalysisSearch.new(params[:search])
     @analysis = @search.get_analysis_between_two_date(current_user, params[:date_from].to_date, params[:date_to].to_date)
