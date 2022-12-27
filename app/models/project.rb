@@ -2,7 +2,7 @@ class Project < ApplicationRecord
   validates :name, presence: true, format: {with: /[a-zA-Z]/}, uniqueness: true
 
   has_many :affectations
-  has_many :users, through: :affectations
+  has_many :users, through: :projects
 
   enum status: {
     created: 1,

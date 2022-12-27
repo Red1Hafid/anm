@@ -50,6 +50,8 @@
                   <tr>
                     <th data-fied="user_id">collaborateur</th>
                     <th data-field="project_id">Project</th>
+                    <th data-field="comments">Commentaires</th>
+                    <th data-field="date_affectation">Date d'affectation</th>
                     <th class="action">Actions</th>
                   </tr>
 
@@ -59,12 +61,28 @@
                     <tr>
 
                       <td>
-                        <%= affectation.user.first_name %>
-                        <%= affectation.user.last_name %>
+                        <% if affectation.user %>
+                          <%= affectation.user.first_name %>
+                          <%= affectation.user.last_name %>
+                        <% end %>
                       </td>
 
                       <td>
-                        <%= affectation.project.name %>
+                        <% if affectation.user %>
+                          <%= affectation.project.name %>
+                        <% end %>
+                      </td>
+
+                      <td>
+                        <% if affectation.comments %>
+                          <%= affectation.comments %>
+                          <% else %>
+                            Nan
+                        <% end %>
+                      </td>
+
+                      <td>
+                        <%= affectation.date_affectation %>
                       </td>
 
                       <td class="action">
@@ -74,6 +92,10 @@
 
                         <%= link_to  edit_affectation_path(affectation), remote: true, class: "action-icon" do %>
                           <i class="mdi mdi-border-color"></i>
+                        <% end %>
+
+                        <%= link_to pre_disaffectation_path(affectation),  remote: true, class: "action-icon" do %>
+                          <i class="mdi mdi-sync-off"></i>
                         <% end %>
 
                         <%= link_to affectation, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
@@ -101,7 +123,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myLargeModalLabel">Ajout des affectations des Categories</h4>
+        <h4 class="modal-title" id="myLargeModalLabel">Ajouts des affectations</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       </div>
       <%= simple_form_for(Affectation.new, as: :affectation, method: :post, html: { class: "form-horizontal" }) do |f| %>
@@ -124,17 +146,27 @@
           <% end %>
 
           <div class="form-group mb-3">
-            <%= f.input :project_id, label: "Les Projects", input_html: { id: 'project', :style => "display:none;" } %>
-            <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange='set_project_id();'>
-              <optgroup label="Gestionnaire fonctionnel">
-                <% if @project %>
-                  <%= @project.each do |project| %>
-                    <option><%= project.name %></option>
+            <%= f.input :project_id, label: "Projet", input_html: { id: 'projects', :style => "display:none;" } %>
+            <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange='find_project();'>
+              <optgroup label="Projets">
+                <% if @projects %>
+                  <%= @projects.each do |project| %>
+                    <option><%= project.name %> </option>
                   <% end %>
                 <% end %>
               </optgroup>
             </select>
           </div>
+
+          <div class="form-group">
+            <label>Commentaires</label>
+            <%= f.text_area :comments, label: 'Commentaires', placeholder: "Commentaires", class: 'form-control' %>
+          </div>
+
+          <div class="form-group">
+            <%= f.input :date_affectation, as: :date, html5: true, label: 'Date Affectation', placeholder: "Entrer la date", class: 'form-control' %>
+          </div>
+
 
         </div>
 
@@ -169,23 +201,18 @@
 
     }
 
-    function set_project_id() {
-        var project = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText.slice(1);
-        console.log(project);
+    function find_project(){
 
-        if(cost == "") {
-            $('#cost').val("");
-        }
-        else {
+        var project = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText;
+        console.log(project);
             var url = '<%= domainename + 'findprojectid/' %>';
             $.when(
-              $.getJSON(url+project)
+                $.getJSON(url+project.slice(1))
             ).done( function(json) {
 
-                $('#cost').val(json);
+                $('#projects').val(json);
 
             });
-        }
     }
 
 </script>

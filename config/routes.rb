@@ -108,6 +108,8 @@ Rails.application.routes.draw do
   get 'unarchiveproject/:id' => 'projects#unarchive_project', as: 'unarchive_project'
 
   resources :affectations
+  get 'disaffectation/:id' => 'affectations#pre_disaffectation', as: 'pre_disaffectation'
+  post 'disaffectation/:id' => 'affectations#disaffectation', as: 'disaffectation'
 
   resources :furlough_types do
     collection { post :import }

@@ -30,6 +30,8 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.is_active = true
+    @project.enabled_date = Date.today
+    @project.disabled_at = Date.today
     if @project.save
       flash[:notice] = "Le project est créé avec succès."
       redirect_to projects_path,  success: "Le project est créé avec succès."
@@ -39,7 +41,11 @@ class ProjectsController < ApplicationController
   end
 
   def find_project_id
-    name = params[:name].split.first
+    name = params[:name]
+    puts "----------------------------------------------------------------------------------"
+    puts "----------------------------------------------------------------------------------"
+    puts "----------------------------------------------------------------------------------"
+    puts "----------------------------------------------------------------------------------"
     puts name
     project = Project.find_by(name: name)
     render :json => project.id
@@ -47,14 +53,8 @@ class ProjectsController < ApplicationController
 
   # PATCH/PUT /projects/1 or /projects/1.json
   def update
-    respond_to do |format|
-      if @project.update(project_params)
-        format.html { redirect_to project_url(@project), notice: "Project was successfully updated." }
-        format.json { render :show, status: :ok, location: @project }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @project.errors, status: :unprocessable_entity }
-      end
+    if @project.update(project_params)
+      redirect_to projects_path,  success: "Le Project est édité avec succès"
     end
   end
 
@@ -76,17 +76,13 @@ class ProjectsController < ApplicationController
 
   # DELETE /projects/1 or /projects/1.json
   def destroy
-    @project.destroy
-
-    respond_to do |format|
-      format.html { redirect_to projects_url, notice: "Project was successfully destroyed." }
-      format.json { head :no_content }
+    if @project.destroy
+      redirect_to projects_path, notice: "Le project est suprimé avec succès."
     end
   end
 
   def disable_project
     @project.is_active = false
-    @project.disabled_date = Date.today
     if @project.save
       redirect_to projects_path, success: "Le project est désactivé avec succès"
     end

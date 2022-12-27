@@ -1,12 +1,30 @@
+<!-- Modal -->
+<div class="modal fade" id="edit_affectation" role="dialog">
+  <%= simple_form_for(@affectation) do |f| %>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <%= f.error_notification %>
+              <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+              <div class="form-group">
+                <%= f.input :comments, label: 'Commnents', placeholder: "Edit Comments", class: 'form-control'%>
+              </div>
+            </div>
+          </div>
+        </div>
 
-<%= simple_form_for(@affectation) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+        <div class="modal-footer d-flex justify-content-between">
+          <div>
+            <%= f.submit class: 'btn btn-outline-success'%>
+          </div>
+          <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button></div>
+      </div>
+    </div>
 
-  <div class="form-inputs">
-  </div>
-
-  <div class="form-actions">
-    <%= f.button :submit %>
-  </div>
-<% end %>
+  <% end %>
+</div>
