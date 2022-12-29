@@ -21,6 +21,16 @@
             <div class="row mb-3">
 
               <div class="col-lg-8">
+                <%= search_form_for @q, class: "form-inline" do |f| %>
+                  <div class="form-group">
+                    <div class="col-lg-8">
+                      <%= f.search_field :project_name_or_user_first_name_or_user_last_name_cont, class:"form-control" %>
+                    </div>
+                    <div class="col-lg-4">
+                      <%= f.submit 'Chercher',  class: "btn btn-warning waves-effect waves-light ml-1" %>
+                    </div>
+                  </div>
+                <% end %>
               </div>
 
               <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
@@ -29,10 +39,16 @@
                     <i class="mdi mdi-plus mr-1"> Nouveau</i>
                   <% end %>
 
-                  <%= form_tag furloughs_path, :method => 'get',  class: "form-inline" do %>
+                  <%= form_tag affectations_path, :method => 'get',  class: "form-inline mr-3" do %>
                     <div class="form-group">
                       <%= link_to 'Exporter', affectations_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
                     </div>
+                  <% end %>
+
+                  <% if  params.has_key?(:status)%>
+                    <a class="btn btn-info" href="<%= affectations_path %>"> <i class="mdi mdi-filter mr-1"></i> Affectations</a>
+                  <% else %>
+                    <a class="btn btn-info" href="<%= affectations_path(status: 'disaffected') %>"> <i class="mdi mdi-filter mr-1"></i>Desaffectations</a>
                   <% end %>
                 </div>
               <% end %>
@@ -94,12 +110,10 @@
                           <i class="mdi mdi-border-color"></i>
                         <% end %>
 
-                        <%= link_to pre_disaffectation_path(affectation),  remote: true, class: "action-icon" do %>
-                          <i class="mdi mdi-sync-off"></i>
-                        <% end %>
-
-                        <%= link_to affectation, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
-                          <i class="mdi mdi-delete"></i>
+                        <% if affectation.is_active %>
+                          <%= link_to pre_disaffectation_path(affectation),  remote: true, class: "action-icon" do %>
+                            <i class="mdi mdi-sync-off"></i>
+                          <% end %>
                         <% end %>
 
                       </td>

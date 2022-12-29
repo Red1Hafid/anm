@@ -4,15 +4,21 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" id="myLargeModalLabel">Refuser ce congé</h4>
+          <h4 class="modal-title" id="myLargeModalLabel">Désaffectation</h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         </div>
         <div class="modal-body">
-          <div class="row">
+          <div class="form-group">
+            <%= f.input :date_disacffectation, as: :date, html5: true, label: 'Date Désaffectation ', placeholder: "Entrer la date", class: 'form-control' %>
+          </div>
+
+          <div class="form-group">
+            <label>Commentaires</label>
+            <%= f.text_area :desaffectation_comments, label: 'Désaffectation Commentaires', placeholder: "Commentaires", class: 'form-control' %>
           </div>
         </div>
         <div class="modal-footer">
-          <%= f.button :submit, 'Diesaffecter', data: { confirm: 'Etes vous sur?' }, class: 'btn btn-raised btn-success' %>
+          <%= f.button :submit, 'Désaffecter', data: { confirm: 'Etes vous sur?' }, class: 'btn btn-raised btn-success' %>
           <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
         </div>
       </div>

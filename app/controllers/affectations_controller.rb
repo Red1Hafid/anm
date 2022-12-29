@@ -4,7 +4,13 @@ class AffectationsController < ApplicationController
   # GET /affectations or /affectations.json
   def index
     @setting = Setting.find(1)
-    @affectations = Affectation.all
+    if params[:status].present?
+      @q = Affectation.ransack(params[:q])
+      @affectations = @q.result(distinct: true).where(status: 2)
+    else
+      @q = Affectation.ransack(params[:q])
+      @affectations = @q.result(distinct: true).where(status: 1)
+    end
     @users = User.all
     @projects = Project.where(is_active: true).where(status: 'created')
   end
@@ -26,11 +32,6 @@ class AffectationsController < ApplicationController
   # POST /affectations or /affectations.json
   def create
     @affectation = Affectation.new(affectation_params)
-    puts "----------------------------------------------------------------------------------------"
-    puts "----------------------------------------------------------------------------------------"
-    puts "----------------------------------------------------------------------------------------"
-    puts "----------------------------------------------------------------------------------------"
-    puts affectation_params
     if @affectation.save
       redirect_to affectations_path,  success: "Affectation est créé avec succès"
     end
@@ -38,9 +39,6 @@ class AffectationsController < ApplicationController
 
   def pre_disaffectation
 
-  end
-
-  def disaffectation
   end
 
   # PATCH/PUT /affectations/1 or /affectations/1.json
@@ -57,6 +55,15 @@ class AffectationsController < ApplicationController
     end
   end
 
+  def disaffectation
+    @affectation.update(disaffectation_params)
+    @affectation.disaffected!
+    @affectation.is_active = false
+    if @affectation.save
+      redirect_to affectations_path, notice: "Le Collaborateur  est désaffecté avec succès."
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_affectation
@@ -65,6 +72,11 @@ class AffectationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def affectation_params
-      params.require(:affectation).permit(:user_id, :project_id, :date_affectation, :date_disacffectation, :comments)
+      params.require(:affectation).permit(:user_id, :project_id, :date_affectation, :comments)
     end
+
+  def disaffectation_params
+    params.require(:affectation).permit(:date_disacffectation, :desaffectation_comments, :is_active)
+  end
+
 end
