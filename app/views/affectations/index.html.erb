@@ -106,11 +106,11 @@
                           <i class="mdi mdi-eye"></i>
                         <% end %>
 
-                        <%= link_to  edit_affectation_path(affectation), remote: true, class: "action-icon" do %>
-                          <i class="mdi mdi-border-color"></i>
-                        <% end %>
-
                         <% if affectation.is_active %>
+                          <%= link_to  edit_affectation_path(affectation), remote: true, class: "action-icon" do %>
+                            <i class="mdi mdi-border-color"></i>
+                          <% end %>
+
                           <%= link_to pre_disaffectation_path(affectation),  remote: true, class: "action-icon" do %>
                             <i class="mdi mdi-sync-off"></i>
                           <% end %>

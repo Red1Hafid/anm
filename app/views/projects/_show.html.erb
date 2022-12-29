@@ -2,18 +2,18 @@
   <div class="modal-dialog">
     <div class="modal-content py-2">
       <div class="modal-header">
-        <h4 class="modal-title" id="myLargeModalLabel">Show Project</h4>
+        <h4 class="modal-title" id="myLargeModalLabel">Afficher les détails du projet</h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       </div>
         <div class="modal-body mx-3">
           <div class="row border py-2 px-1">
             <div class="col-sm">
-              <span class="font-weight-bold d-block my-1"> Nom: </span>
-              <span class="font-weight-bold d-block my-1"> Description: </span>
-              <span class="font-weight-bold d-block my-1"> Client: </span>
-              <span class="font-weight-bold d-block my-1"> Chifre d affaire: </span>
-              <span class="font-weight-bold d-block my-1"> Status: </span>
-              <span class="font-weight-bold d-block my-1"> Project Type: </span>
+              <span class="font-weight-bolder d-block my-1"> Nom: </span>
+              <span class="font-weight-bolder d-block my-1"> Description: </span>
+              <span class="font-weight-bolder d-block my-1"> Client: </span>
+              <span class="font-weight-bolder d-block my-1"> Chifre d affaire: </span>
+              <span class="font-weight-bolder d-block my-1"> Status: </span>
+              <span class="font-weight-bolder d-block my-1"> Project Type: </span>
             </div>
             <div class="col-sm">
               <div class="w-100 my-1 text-capitalize"><%= @project.name %></div>
@@ -27,6 +27,27 @@
               <% end %>
               <div class="w-100 my-1 text-capitalize"><%= @project.project_type %></div>
             </div>
+          </div>
+          <div class="text-center w-100 font-weight-bolder mt-2"> Collaborateurs Concernés</div>
+          <div class="row border py-2 px-2 mt-2">
+            <% if @project.users.count > 0 %>
+              <div class="row w-100">
+                <%@project.users.each do |user| %>
+                  <div class="col-6">
+                    <span class="font-weight-bolder"> Nom et Prénom: </span>
+                  </div>
+                  <div class="col-6">
+                    <span><%= user.first_name %>  <%= user.last_name %></span>
+                  </div>
+
+                <% end %>
+              </div>
+            <% else %>
+                <div class="w-100 my-1 text-center font-weight-bold text-warning">
+                  Ce projet n'est affecté à aucun collaborateur
+                  <i class="mdi mdi-exclamation-thick"></i>
+                </div>
+            <% end %>
           </div>
         </div>
 
