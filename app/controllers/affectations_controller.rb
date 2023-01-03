@@ -32,13 +32,30 @@ class AffectationsController < ApplicationController
   # POST /affectations or /affectations.json
   def create
     @affectation = Affectation.new(affectation_params)
-    if @affectation.save
-      redirect_to affectations_path,  success: "Affectation est créé avec succès"
+    affs = Affectation.all.where(is_active: true)
+
+    present = false
+     affs.each do |aff|
+       if aff.user_id == @affectation.user_id
+         if aff.project_id == @affectation.project_id
+           present = true
+         end
+       end
+     end
+
+    if  present
+      redirect_to affectations_path,  warning: "Affectation est déja crèes"
+    else
+      if @affectation.save
+        redirect_to affectations_path,  success: "Affectation est créé avec succès"
+      end
     end
   end
 
   def pre_disaffectation
+  end
 
+  def collaborateurDesaffectation
   end
 
   # PATCH/PUT /affectations/1 or /affectations/1.json
@@ -60,7 +77,20 @@ class AffectationsController < ApplicationController
     @affectation.disaffected!
     @affectation.is_active = false
     if @affectation.save
-      redirect_to affectations_path, notice: "Le Collaborateur  est désaffecté avec succès."
+      redirect_to affectations_path, success: "Le Collaborateur  est désaffecté avec succès."
+    end
+  end
+
+
+  def disaffectation_through_project
+    @affectation = Affectation.find_by(user_id: params[:user_id], project_id:  params[:project_id])
+    @affectation.is_active = false
+    @affectation.date_disacffectation = Date.today
+    @affectation.disaffected!
+    puts @affectation.status
+    puts @affectation.is_active
+    if @affectation.save
+      redirect_to projects_path,  success: "Le Collaborateur  est désaffecté avec succès."
     end
   end
 

@@ -39,16 +39,18 @@
                     <i class="mdi mdi-plus mr-1"> Nouveau</i>
                   <% end %>
 
-                  <%= form_tag affectations_path, :method => 'get',  class: "form-inline mr-3" do %>
-                    <div class="form-group">
-                      <%= link_to 'Exporter', affectations_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
-                    </div>
-                  <% end %>
-
                   <% if  params.has_key?(:status)%>
                     <a class="btn btn-info" href="<%= affectations_path %>"> <i class="mdi mdi-filter mr-1"></i> Affectations</a>
                   <% else %>
                     <a class="btn btn-info" href="<%= affectations_path(status: 'disaffected') %>"> <i class="mdi mdi-filter mr-1"></i>Desaffectations</a>
+                  <% end %>
+
+                  <%= form_tag affectations_path, :method => 'get',  class: "form-inline mr-3" do %>
+                    <% if @affectations.count > 0 %>
+                      <div class="form-group">
+                        <%= link_to 'Exporter', affectations_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                      </div>
+                    <% end %>
                   <% end %>
                 </div>
               <% end %>

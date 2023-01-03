@@ -6,6 +6,7 @@ class NotesController < ApplicationController
     @q = Note.ransack(params[:q])
     @costs = Cost.where(is_active: true).where(status: 'created')
     @users = User.all
+    @projects = Project.all
     @notes =  @q.result(distinct: true)
   end
 
@@ -14,11 +15,11 @@ class NotesController < ApplicationController
 
   def new
     @note = Note.new
-
   end
 
   def create
     @note = Note.new(note_params)
+
     if ['Super Admin', 'Rh'].include? current_user.role.title
     else
       @note.user_id = current_user.id

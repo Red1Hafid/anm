@@ -39,6 +39,9 @@ class User < ApplicationRecord
   has_one :bank
   has_many :notes
 
+  has_many :affectations
+  has_many :projects , through: :affectations
+
   def self.search(params)  
     p = params[:search]   
     where("first_name LIKE ? OR last_name LIKE ?", "%#{params[:search]}%","%#{params[:search]}%") if params[:search].present? 

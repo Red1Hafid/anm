@@ -106,6 +106,7 @@ Rails.application.routes.draw do
   get 'findprojectid/:name' => 'projects#find_project_id', as: 'find_project_id'
   get 'deleteproject/:id' => 'costs#delete_project', as: 'delete_project'
   get 'unarchiveproject/:id' => 'projects#unarchive_project', as: 'unarchive_project'
+  get 'disaffectation/:user_id/:project_id' => 'affectations#disaffectation_through_project', as: 'project_disaffectation'
 
   resources :affectations
   get 'disaffectation/:id' => 'affectations#pre_disaffectation', as: 'pre_disaffectation'

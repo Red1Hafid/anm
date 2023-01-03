@@ -15,6 +15,7 @@ class ProjectsController < ApplicationController
 
   # GET /projects/1 or /projects/1.json
   def show
+    @affectations = Affectation.where(project_id: @project.id, is_active: true, status: 1)
   end
 
   # GET /projects/new

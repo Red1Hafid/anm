@@ -110,11 +110,11 @@
                         <% end %>
 
                        <% if project.status != 'deleted' %>
-                          <%= link_to delete_project_path(project.id), data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                          <%= link_to delete_project_path(project.id), data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Archiver", class: "action-icon" do %>
                             <i class="mdi mdi-archive-arrow-down"></i>
                           <% end %>
                           <% else %>
-                          <%= link_to unarchive_project_path(project.id), data: { confirm: 'Etes vous sur?', title: 'Confirme la désarchivage?' }, title: "Suprimer", class: "action-icon" do %>
+                          <%= link_to unarchive_project_path(project.id), data: { confirm: 'Etes vous sur?', title: 'Confirme la désarchivage?' }, title: "Désarchiver", class: "action-icon" do %>
                             <i class="mdi mdi-archive-arrow-up"></i>
                           <% end %>
                         <% end %>
@@ -128,10 +128,6 @@
                             <%= link_to enable_project_path(project), data: { confirm: 'Etes vous sur d activer?', title: 'Confirme le changement du status?' }, title: "changement du status", class: "action-icon" do %>
                               <i class="mdi mdi-lock-open"></i>
                             <% end %>
-                          <% end %>
-                          <% else %>
-                          <%= link_to project, method: :delete,data: { confirm: 'Etes vous sur de disativer?', title: 'Confirme le changement du status?' }, title: "changement du status", class: "action-icon" do %>
-                            <i class="mdi mdi-delete"></i>
                           <% end %>
                         <% end %>
 

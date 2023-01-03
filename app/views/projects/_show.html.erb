@@ -28,27 +28,35 @@
               <div class="w-100 my-1 text-capitalize"><%= @project.project_type %></div>
             </div>
           </div>
-          <div class="text-center w-100 font-weight-bolder mt-2"> Collaborateurs Concernés</div>
-          <div class="row border py-2 px-2 mt-2">
-            <% if @project.users.count > 0 %>
-              <div class="row w-100">
-                <%@project.users.each do |user| %>
-                  <div class="col-6">
-                    <span class="font-weight-bolder"> Nom et Prénom: </span>
-                  </div>
-                  <div class="col-6">
-                    <span><%= user.first_name %>  <%= user.last_name %></span>
-                  </div>
-
-                <% end %>
-              </div>
-            <% else %>
+         <% if @project.is_active %>
+            <div class="text-center w-100 font-weight-bolder mt-2"> Collaborateurs Concernés</div>
+            <div class="row border py-2 px-2 mt-2">
+              <% if @affectations.count > 0 %>
+                <div class="row w-100">
+                  <% @affectations.each do |affectation| %>
+                    <% if affectation.status == "affected" && affectation.is_active == true %>
+                      <div class="col-4">
+                        <span class="font-weight-bolder"> Nom et Prénom: </span>
+                      </div>
+                      <div class="col-4">
+                        <span><%= affectation.user.first_name %>  <%= affectation.user.last_name %></span>
+                      </div>
+                      <div class="col-4 d-flex justify-content-end">
+                        <%= link_to project_disaffectation_path(affectation.user.id, @project.id), class: "action-icon" do %>
+                          <i class="mdi mdi-sync-off"></i>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+              <% else %>
                 <div class="w-100 my-1 text-center font-weight-bold text-warning">
                   Ce projet n'est affecté à aucun collaborateur
                   <i class="mdi mdi-exclamation-thick"></i>
                 </div>
-            <% end %>
-          </div>
+              <% end %>
+            </div>
+         <% end %>
         </div>
 
         <div class="modal-footer">
@@ -57,3 +65,8 @@
     </div>
   </div>
 </div>
+
+<script>
+   function onchanged() {
+   }
+</script>
