@@ -34,7 +34,6 @@ class CostsController < ApplicationController
 
   def find_cost_id
     name = params[:name].split.first
-    puts name
     cost = Cost.find_by(name: name)
     render :json => cost.id
   end

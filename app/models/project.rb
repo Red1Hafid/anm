@@ -1,6 +1,8 @@
 class Project < ApplicationRecord
   validates :name, presence: true, format: {with: /[a-zA-Z]/}, uniqueness: true
 
+  has_many :notes
+
   has_many :affectations
   has_many :users, through: :affectations
 

@@ -98,7 +98,6 @@ Rails.application.routes.draw do
 
   resources :notes
 
-
   resources :projects
   get 'deleteproject/:id' => 'projects#delete_project', as: 'delete_c'
   get 'disableproject/:id' => 'projects#disable_project', as: 'disable_project'

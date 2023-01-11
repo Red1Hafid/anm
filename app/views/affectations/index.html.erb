@@ -116,6 +116,17 @@
                           <%= link_to pre_disaffectation_path(affectation),  remote: true, class: "action-icon" do %>
                             <i class="mdi mdi-sync-off"></i>
                           <% end %>
+
+                          <% else %>
+                            <button type="button" class="border-0 bg-transparent action-icon" data-toggle="modal" data-target="#new_affectation" data-object="<%= affectation.to_json %>" onclick="set_input(<%= affectation.to_json %>)">
+                              <i data-feather="minimize-2" ></i>
+                            </button>
+
+                          <!--
+                          <%= link_to new_affectation_path(affectation), :id => 'affectation', "data-toggle" => "modal", 'data-target' => '#new_affectation', 'data-object' => affectation , :locals => {:affectation => affectation}  do %>
+                            <i data-feather="minimize-2" ></i>
+                          <% end %>
+                          .-->
                         <% end %>
 
                       </td>
@@ -150,11 +161,11 @@
           <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
             <div class="form-group mb-3">
               <%= f.input :user_id, label: "Collaborateurs", input_html: { id: 'user', :style => "display:none;" } %>
-              <select data-toggle="select2" onchange='set_user_id();'>
+              <select id="user_select"  data-toggle="select2" onchange='set_user_id();'>
                 <option></option>
                 <optgroup label="Collaborateurs">
                   <%= @users.each do |user| %>
-                    <option><%= user.first_name %> <%= user.last_name %></option>
+                    <option value="<%= user.id %>"> <%= user.first_name %> <%= user.last_name %></option>
                   <% end %>
                 </optgroup>
               </select>
@@ -163,11 +174,11 @@
 
           <div class="form-group mb-3">
             <%= f.input :project_id, label: "Projet", input_html: { id: 'projects', :style => "display:none;" } %>
-            <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange='find_project();'>
+            <select class="form-control select2-multiple" id="project_select" data-toggle="select2" multiple="multiple" onchange='find_project();'>
               <optgroup label="Projets">
                 <% if @projects %>
                   <%= @projects.each do |project| %>
-                    <option><%= project.name %> </option>
+                    <option value="<%= project.id %>"><%= project.name %> </option>
                   <% end %>
                 <% end %>
               </optgroup>
@@ -217,7 +228,7 @@
 
     }
 
-    function find_project(){
+    function find_project(project_id){
 
         var project = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText;
         console.log(project);
@@ -225,10 +236,25 @@
             $.when(
                 $.getJSON(url+project.slice(1))
             ).done( function(json) {
-
                 $('#projects').val(json);
-
             });
+    }
+
+    function set_input(affectation) {
+        if(affectation) {
+            $('#user_select option')
+                .removeAttr('selected')
+                .filter('[value='+ affectation.user_id+']')
+                .attr('selected', true)
+            $('#user_select option').change()
+
+
+            $('#project_select option')
+                .removeAttr('selected')
+                .filter('[value='+ affectation.project_id+']')
+                .attr('selected', true)
+            $('#project_select option').change()
+        }
     }
 
 </script>

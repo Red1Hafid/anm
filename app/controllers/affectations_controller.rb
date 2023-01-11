@@ -32,16 +32,8 @@ class AffectationsController < ApplicationController
   # POST /affectations or /affectations.json
   def create
     @affectation = Affectation.new(affectation_params)
-    affs = Affectation.all.where(is_active: true)
 
-    present = false
-     affs.each do |aff|
-       if aff.user_id == @affectation.user_id
-         if aff.project_id == @affectation.project_id
-           present = true
-         end
-       end
-     end
+    present = Affectation.custom_finder(@affectation.user_id, @affectation.project_id)
 
     if  present
       redirect_to affectations_path,  warning: "Affectation est déja crèes"

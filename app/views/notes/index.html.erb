@@ -176,6 +176,8 @@
             </select>
           </div>
 
+          <%= f.association :project, label: "projet", label_method: :name, collection: Project.all, value_method: :id, class: 'form-control', include_blank: false %>
+
 
           <div class="form-group">
             <%= f.input :total, label: 'Montant', placeholder: "Entrer le Montant", class: 'form-control' %>

@@ -6,7 +6,7 @@ class NotesController < ApplicationController
     @q = Note.ransack(params[:q])
     @costs = Cost.where(is_active: true).where(status: 'created')
     @users = User.all
-    @projects = Project.all
+    @projects = Project.all.where(status: 1)
     @notes =  @q.result(distinct: true)
   end
 
@@ -25,20 +25,19 @@ class NotesController < ApplicationController
       @note.user_id = current_user.id
     end
     @cost = Cost.find(@note.cost_id)
+    message = ""
     if (Date.today.mjd - @note.facture_date.to_date.mjd) > 31
-      redirect_to notes_path, warning: "Le retard est supérieur à un mois"
-      else
-    if @note.total > @cost.max_value
-      redirect_to notes_path, warning: "Le cout du Note est plus grand que le max de frais"
+      message = "Le retard est supérieur à un mois"
     else
-        if params[:documment].present?
-          Note.update_note
+        if @note.total > @cost.max_value
+          message = "Le cout du Note est plus grand que le max de frais"
         end
-        if @note.save
-          flash[:notice] = "La Note est créée avec succès."
-          redirect_to notes_path, success: "La Note est créée avec succès"
-        end
-      end
+    end
+    if @note.save
+      flash[:notice] = "La Note est créée avec succès."
+      redirect_to notes_path, success: "La Note est créée avec succès"
+    else
+      redirect_to notes_path, warning: message
     end
   end
 
@@ -71,6 +70,6 @@ class NotesController < ApplicationController
     end
 
   def note_params
-    params.require(:note).permit(:name, :facture_date, :total, :user_id, :cost_id, :documment)
+    params.require(:note).permit(:name, :facture_date, :total, :user_id, :cost_id, :project_id, :documment)
   end
 end

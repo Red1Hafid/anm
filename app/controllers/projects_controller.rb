@@ -42,7 +42,7 @@ class ProjectsController < ApplicationController
   end
 
   def find_project_id
-    name = params[:name]
+    name = params[:name].split.first
     project = Project.find_by(name: name)
     render :json => project.id
   end
