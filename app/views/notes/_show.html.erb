@@ -1,0 +1,36 @@
+<div class="modal fade" id="show_note" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content py-2">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myLargeModalLabel">Détails de la note</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <div class="modal-body px-3">
+        <div class="row border py-2 mx-3">
+          <div class="col-sm">
+            <span class="font-weight-bold text-capitalize d-block my-1"> Nom: </span>
+            <span class="font-weight-bold text-capitalize d-block my-1"> Collaborateur: </span>
+            <span class="font-weight-bold text-capitalize d-block my-1"> Date: </span>
+            <span class="font-weight-bold text-capitalize d-block my-1"> Montant: </span>
+            <span class="font-weight-bold text-capitalize d-block my-1"> pièce jointe: </span>
+          </div>
+          <div class="col-sm">
+            <div class="w-100 text-capitalize my-1"> <%= @note.name %></div>
+            <div class="w-100 text-capitalize my-1"> <%= @note.user.first_name%> <%= " " %> <%= @note.user.last_name %></div>
+            <div class="w-100 text-capitalize my-1">  <%= @note.created_at.strftime('%d/%m/%Y') %></div>
+            <div class="w-100 text-capitalize my-1"> <%= @note.total %>  Dh</div>
+            <div>
+              <% if @note.documment.attached?  %>
+                <%= link_to 'Voir pdf', rails_blob_path(@note.documment, disposition: "attachment") %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

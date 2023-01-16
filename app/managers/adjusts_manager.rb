@@ -120,4 +120,51 @@ class AdjustsManager
    
         return count_furlough
     end
+
+    def self.tata
+      
+       #toto = Furlough.group(:furlough_type_id).count
+
+       toto = Furlough.joins(:furlough_type).group("furlough_types.name").count
+
+       #toto = FurloughType.joins(:furloughs).group("furlough_types.name").count
+       
+       #-------------------------- 
+       #arr = []
+
+       #Furlough.all.each do |furlough|
+        #arr.push([furlough.id, furlough.furlough_type.name])
+       #end
+
+       #arr.sort do |a,b|
+        #a <=> b
+       #end
+
+       # [[1, "Mariage (Collab) - CEFMC"], [3, "Mariage (Collab) - CEFMC"], [4, "Congé annuel - CPA"], [5, "Maternité - CEFMA"], [6, "Congé annuel - CPA"]] 
+       
+       #Solution
+
+       #furloughs = Furlough.pluck(:id, :furlough_type_id)
+
+       #----------------------------------
+
+       #FurloughType.includes(:furloughs).each do |f|
+        #f.furloughs.each do |c|
+            #puts c.start
+        #end
+       #end
+
+       #------------------------------
+
+       #respond_to do |format|
+        #if @user_conf.update(user_conf_params)
+          #format.html { redirect_to user_conf_url(@user_conf), notice: "User conf was successfully updated." }
+         # format.json { render :show, status: :ok, location: @user_conf }
+        #else
+          #format.html { render :edit, status: :unprocessable_entity }
+          #format.json { render json: @user_conf.errors, status: :unprocessable_entity }
+        #end
+      #end
+     
+    end
 end

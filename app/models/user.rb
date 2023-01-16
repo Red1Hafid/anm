@@ -1,5 +1,8 @@
 class User < ApplicationRecord
   require 'csv'
+
+  serialize :manager_titles, Array
+  
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable, and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -34,6 +37,7 @@ class User < ApplicationRecord
   belongs_to :role
   has_many :furloughs
   has_one :bank
+  has_many :notes
 
   def self.search(params)  
     p = params[:search]   

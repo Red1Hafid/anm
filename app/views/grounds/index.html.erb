@@ -121,10 +121,13 @@
                 
                 <div class="modal-body">
                     <div class="form-group mb-3">
+                        <%= f.input :code, label: 'Code', placeholder: "Entrer un motif", class: 'form-control' %>
+                    </div>
+                    <div class="form-group mb-3">
                         <%= f.input :description, label: 'Motif', placeholder: "Entrer un motif", class: 'form-control' %>
                     </div>
                     <div class="form-group">
-                        <%= f.association :stop_action, label: 'Action', label_method: :name, collection: StopAction.all.order(created_at: :asc), value_method: :id, class: 'form-control', include_blank: false %> 
+                        <%#= f.association :stop_action, label: 'Action', label_method: :name, collection: StopAction.all.order(created_at: :asc), value_method: :id, class: 'form-control', include_blank: false %> 
                     </div>
                 </div>
             

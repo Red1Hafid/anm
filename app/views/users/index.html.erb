@@ -155,13 +155,6 @@
                                     <% end %> 
                                 </tbody>
                             </table>
-                            <div class="row">
-                                <div class="col-sm-12 col-md-7>
-                                    <div class="dataTables_paginate paging_simple_numbers">
-                                        <%= paginate @users %>
-                                    </div> <!-- end col-->
-                                </div>
-                            </div>
                             <!-- end row -->
                         </div>
                     </div> <!-- end card-body-->
@@ -237,9 +230,11 @@
                                 <select data-toggle="select2" onchange='set_user_line_manager();'>
                                     <option></option>
                                     <optgroup label="Gestionnaire hiérarchque">
+                                    <% if @line_managers %>
                                         <%= @line_managers.each do |user| %>
                                             <option><%= user.first_name %> <%= user.last_name %></option>
                                         <% end %>
+                                    <% end %>
                                     </optgroup>
                                 </select>
                             </div>
@@ -248,9 +243,11 @@
                                 <%= f.input :fonctionnal_manager_id, label: "Gestionnaire fonctionnel", input_html: { id: 'fonctional_managers', :style => "display:none;" } %>
                                 <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange='set_user_fonctionnal_manager();'>
                                     <optgroup label="Gestionnaire fonctionnel">
+                                    <% if @fonctional_managers %>
                                         <%= @fonctional_managers.each do |user| %>
                                             <option><%= user.first_name %> <%= user.last_name %></option>
-                                        <% end %>           
+                                        <% end %>  
+                                    <% end %>         
                                     </optgroup>
                                 </select>
                             </div> 
@@ -300,8 +297,8 @@
         var user_name = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText;
 
         if (user_name == ""){
-             $('#fonctional_managers').val("");
-           
+
+            $('#fonctional_managers').val("");
         }else{
            var url = '<%= domainename + 'findfonctionalmanagerid/' %>';
             $.when(

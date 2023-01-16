@@ -2,4 +2,5 @@
 //= require rails-ujs
 //= require jquery-ui
 //= require toastr.min
+//= require trix
 //= require_tree .
