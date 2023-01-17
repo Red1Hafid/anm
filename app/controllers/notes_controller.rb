@@ -5,9 +5,14 @@ class NotesController < ApplicationController
     @setting = Setting.find(1)
     @q = Note.ransack(params[:q])
     @costs = Cost.where(is_active: true).where(status: 'created')
-    @users = User.all
+    @users = User.where.not(role_id: 1)
     @projects = Project.all.where(status: 1)
     @notes =  @q.result(distinct: true)
+  end
+
+  def mes_notes
+    @setting = Setting.find(1)
+    @notes = Note.mes_notes(current_user.id)
   end
 
   def show

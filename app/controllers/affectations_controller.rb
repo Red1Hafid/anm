@@ -6,10 +6,10 @@ class AffectationsController < ApplicationController
     @setting = Setting.find(1)
     if params[:status].present?
       @q = Affectation.ransack(params[:q])
-      @affectations = @q.result(distinct: true).where(status: 2)
+      @affectations = @q.result(distinct: true).filter_by_status(2)
     else
       @q = Affectation.ransack(params[:q])
-      @affectations = @q.result(distinct: true).where(status: 1)
+      @affectations = @q.result(distinct: true).filter_by_status(1)
     end
     @users = User.all
     @projects = Project.where(is_active: true).where(status: 'created')
@@ -41,6 +41,17 @@ class AffectationsController < ApplicationController
       if @affectation.save
         redirect_to affectations_path,  success: "Affectation est créé avec succès"
       end
+    end
+  end
+
+  def mes_affectations
+    @setting = Setting.find(1)
+    if params[:status].present?
+      @q = Affectation.ransack(params[:q])
+      @affectations = Affectation.mes_affectation(current_user.id).filter_by_status(2)
+    else
+      @q = Affectation.ransack(params[:q])
+      @affectations = Affectation.mes_affectation(current_user.id).filter_by_status(1)
     end
   end
 

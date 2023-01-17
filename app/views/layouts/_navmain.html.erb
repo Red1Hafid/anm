@@ -46,6 +46,16 @@
               <i class="fe-file-text"></i>
               <span>Mes demandes d'attestaions</span>
             <% end %>
+
+            <%= link_to  mes_notes_path, class: "dropdown-item notify-item" do %>
+              <i class="fe-bookmark"></i>
+              <span>Mes notes</span>
+            <% end %>
+
+            <%= link_to  mes_affectations_path, class: "dropdown-item notify-item" do %>
+              <i class="fe-maximize-2"></i>
+              <span>Mes Affectations</span>
+            <% end %>
           <% end %>
           
           <%= link_to destroy_user_session_path, method: :get, class: "dropdown-item notify-item" do %>
@@ -73,13 +83,11 @@
       <% end %>
       <%= link_to root_path, class: "logo logo-light text-center" do %>
         <span class="logo-sm text-center">
-          <h3 style="color:grey;margin-top: 10%;">Go RH
-            <h3>
-            </span>
-            <span class="logo-lg text-center">
-              <h3 style="color:grey;margin-top: 10%;">Alithya Go RH
-                <h3>
-                </span>
+          <h3 style="color:grey;margin-top: 10%;">Go RH </h3>
+        </span>
+        <span class="logo-lg text-center">
+          <h3 style="color:grey;margin-top: 10%;">Alithya Go RH</h3>
+        </span>
       <% end %>
     </div>
       <ul class="list-unstyled topnav-menu topnav-menu-left m-0">

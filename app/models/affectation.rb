@@ -1,6 +1,9 @@
 class Affectation < ApplicationRecord
   validates :date_affectation, presence: true
 
+  scope :mes_affectation,  -> (userId) { where(user_id: userId) }
+  scope :filter_by_status, -> (status ){ where( status: status) }
+
   belongs_to :user
   belongs_to :project
 

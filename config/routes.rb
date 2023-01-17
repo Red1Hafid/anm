@@ -97,6 +97,7 @@ Rails.application.routes.draw do
 
 
   resources :notes
+  get 'mes-notes' => 'notes#mes_notes', as: 'mes_notes'
 
   resources :projects
   get 'deleteproject/:id' => 'projects#delete_project', as: 'delete_c'
@@ -110,6 +111,7 @@ Rails.application.routes.draw do
   resources :affectations
   get 'disaffectation/:id' => 'affectations#pre_disaffectation', as: 'pre_disaffectation'
   post 'disaffectation/:id' => 'affectations#disaffectation', as: 'disaffectation'
+  get 'mes-affectations' => 'affectations#mes_affectations', as: 'mes_affectations'
 
   resources :furlough_types do
     collection { post :import }
