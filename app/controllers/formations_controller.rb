@@ -62,6 +62,6 @@ class FormationsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def formation_params
-      params.require(:formation).permit(:total_hour, :start_date, :end_date, :description, :user_id, :formation_type_id)
+      params.require(:formation).permit(:total_hour, :start_date, :end_date, :description, :user_id, :formation_type_id, :is_done)
     end
 end

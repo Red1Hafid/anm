@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :interns
   resources :formations
   resources :formation_types
   resources :user_confs

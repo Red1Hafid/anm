@@ -19,71 +19,83 @@
         </div>     
         <!-- end page title --> 
 
-
         <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-2">  
-                            <div class="col-lg-12">
-                                <div class="text-lg-right">  
-                                    <%= link_to '#new_formation', class: "btn btn-secondary waves-effect waves-light mb-2 mr-2", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_formation'  do %>
-                                        <i class="mdi mdi-plus mr-1"> Nouvelle demande de formation</i>
-                                    <% end %>                               
+            <div class="col-sm-12">
+                <div class="card-box">
+                    <div class="mb-2">
+                        <div class="row">
+                            <div class="col-12 text-sm-center form-inline">
+                                <div class="form-group mr-2">
+                                    <%= link_to '#new_formation', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_formation'  do %>
+                                        <i class="mdi mdi-plus mr-1">Nouvelle demande de formation</i>
+                                    <% end %>  
+                                </div>
+                                <div class="form-group">
+                                    <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
                                 </div>
                             </div>
-
                         </div>
+                    </div>
 
-                        <div class="table-responsive">
-                            <table data-toggle="table"
-                                    data-show-columns="false"
-                                    data-page-list="[5, 10, 20]"
-                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
-                                    data-buttons-class="xs btn-light"
-                                    data-pagination="true" class="table-borderless">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th data-field="collaborateur">Colaborateur</th>
-                                        <th data-field="type_formation">Type de formation</th>
-                                        <th data-field="formation">formation</th>
-                                        <th data-field="nbr_hour">Heures de formation</th>
-                                        <th data-field="start_date">date de début</th>
-                                        <th data-field="start_fin">date de fin</th>
-                                        <th style="width: 125px;">Actions</th>
-                                    </tr>
-                                </thead>
+                    <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+                        <thead>
+                        <tr>
+                            <th data-sort-initial="true" data-toggle="true">Nom</th>
+                            <th>Prénom</th>
+                            <th data-hide="phone, tablet">Type formation</th>
+                            <th data-hide="phone, tablet">formation</th>
+                            <th data-hide="phone, tablet">Heures</th>
+                            <th data-hide="phone, tablet">date début</th>
+                            <th data-hide="phone, tablet">date fin</th>
+                            <th data-hide="phone, tablet">Statut</th>
 
-                                <tbody>
-                                    <% @formations.each do |formation| %>
-                                        <tr>                                         
-                                            <td> <%= formation.user.first_name %> <%= formation.user.last_name %></td>
-                                            <td><%= formation.formation_type.description %></td>    
-                                            <td><%= formation.description %></td>     
-                                            <td><%= formation.total_hour %></td>       
-                                            <td><%= formation.start_date %></td> 
-                                            <td><%= formation.end_date %></td> 
-                                            <td>
-                                              <%= link_to formation_path(formation), remote: true, title: "Voir", class: "action-icon" do %>
-                                                  <i class="mdi mdi-eye"></i>
-                                              <% end %> 
-                                              <%= link_to edit_formation_path(formation), remote: true, title: "Modifier", class: "action-icon" do %>
-                                                  <i class="mdi mdi-border-color"></i>
-                                              <% end %> 
-                                              <%= link_to formation, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
-                                                  <i class="mdi mdi-delete"></i>
-                                              <% end %> 
-                                            </td>                                            
-                                        </tr> 
-                                    <% end %> 
-                                </tbody>
-                            </table>
-                            <!-- end row -->
-                        </div>
-                    </div> <!-- end card-body-->
-                </div> <!-- end card-->
+                            
+                            <th data-hide="phone, tablet">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <% @formations.each do |formation| %>
+                                <tr>
+                                    <td><%= formation.user.last_name %></td>
+                                    <td><%= formation.user.first_name %></td>
+                                    <td><%= formation.formation_type.description %></td>
+                                    <td><%= formation.description %></td>
+                                    <td><%= formation.total_hour %></td>       
+                                    <td><%= formation.start_date %></td> 
+                                    <td><%= formation.end_date %></td> 
+                                    <% if formation.is_done == true %>
+                                        <td><span class="badge label-table badge-success">Terminé</span></td>
+                                    <% else %>
+                                        <td><span class="badge label-table badge-danger">Pas encore</span></td>
+                                    <% end %>
+                                    <td>
+                                        <%= link_to formation_path(formation), remote: true, title: "Voir", class: "action-icon" do %>
+                                            <i class="mdi mdi-eye"></i>
+                                        <% end %> 
+                                        <%= link_to edit_formation_path(formation), remote: true, title: "Modifier", class: "action-icon" do %>
+                                            <i class="mdi mdi-border-color"></i>
+                                        <% end %> 
+                                        <%= link_to formation, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                            <i class="mdi mdi-delete"></i>
+                                        <% end %> 
+                                    </td>           
+                                </tr>
+                            <% end %>
+                        </tbody>
+                        <tfoot>
+                        <tr class="active">
+                            <td colspan="6">
+                                <div class="text-right">
+                                    <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                                </div>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div> <!-- end card-box -->
             </div> <!-- end col -->
         </div>
+        <!-- end row -->
     </div>
 </div> <!-- content -->
 

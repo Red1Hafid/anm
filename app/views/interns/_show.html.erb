@@ -1,0 +1,105 @@
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="show_intern" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Detail du stagiaire</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+                            
+            <div class="modal-body">
+                <div class="col-lg-12">
+                    <div class="card-box">
+                        <div class="media mb-3">
+                            
+                            <%= image_tag 'avatar-profile.png', class: "d-flex mr-3 rounded-circle avatar-lg" %>
+                           
+                            <div class="media-body">
+                                <h4 class="mt-0 mb-1">Stagiaire</h4>
+                                <p class="text-muted"><%= @intern.first_name %> <%= @intern.last_name %></p>
+                                <%# if @user.is_active %>
+                                    <span class="badge badge-soft-succes badge-pill"></span> Actif
+                                <%# else %>
+                                   <!--  <span class="badge badge-soft-succes badge-pill"></span> Inactif -->
+                                <%# end %>
+                                
+                            </div>
+                        </div>
+
+                        <div class="">
+                            <h4 class="font-13 mt-0 text-uppercase mb-1">Email :</h4>
+                            <p class="mb-3"><%= @intern.email %></p>
+
+                            <h4 class="font-13 mt-0 text-uppercase mb-1">Téléphone :</h4>
+                            <p class="mb-3"><%= @intern.gsm %></p>
+
+                            <h4 class="font-13 mt-0 text-uppercase mb-11">Dernière année universitaire :</h4>
+                            <p class="mb-3"><%= @intern.college_year %></p>
+
+                            <h4 class="font-13 mt-0 text-uppercase mb-11"><%= @intern.technical_skills.count %> Compétences Techniques :</h4>
+                            <p>
+                                <% @intern.technical_skills.each do |skill| %>
+                                     <span class="badge label-table badge-success"><%= skill %></span>
+                                <% end %>
+                            </p>
+                            
+                            <% if @intern.language_skills.count > 1 %>
+                                <h4 class="font-13 mt-0 text-uppercase mb-11"><%= @intern.language_skills.count %> Compétence Linguistique </h4>
+                            <% else %>
+                                <h4 class="font-13 mt-0 text-uppercase mb-11"><%= @intern.language_skills.count %> Compétences Linguistiques </h4>
+                            <% end %>
+                            
+                            <p>
+                                <% @intern.language_skills.each do |language| %>
+                                     <span class="badge label-table badge-success"><%= language %></span>
+                                <% end %>
+                            </p>
+
+                            <h4 class="font-13 mt-0 text-uppercase mb-1">Stage souhaité :</h4>
+                            <p class="mb-3"><%= @intern.desired_internship %></p>
+
+                            <% if @intern.past_interview == true %>
+                                    <h4 class="font-13 mt-0 text-uppercase mb-1">Statut profil du stagiaire</h4>
+                                    <p>
+                                        <span class="badge label-table badge-success">Le stagiaire à déja passé l'entretien</span>
+                                        
+                                        <% if @intern.is_passable == true %>
+                                            <span class="badge label-table badge-success">Bon profil </span>
+                                        <% else %>
+                                            <span class="badge label-table badge-danger">Non accepable </span>
+                                        <% end %>   
+                                    </p>
+                            <% else %>
+                                <p><span class="badge label-table badge-danger">Le stagiaire n'a pas encore passer l'entretien</span></p>
+                            <% end %>
+
+                                <h4 class="font-13 mt-0 text-uppercase mb-1">Remarque sur l'entretien :</h4>
+                                <p class="mb-3"><%= @intern.opinion_interview %></p>
+
+                                <h4 class="font-13 mt-0 text-uppercase mb-1">Stage Potentiel:</h4>
+                                <p class="mb-3"><%= @intern.potential_internship %></p>
+                        </div>
+                    </div>
+
+                    <div class="card-box", style= "background-color: Cornsilk ; !important">
+
+                        <div class="widget-chart text-center" dir="ltr", style= "background-color: Cornsilk ; !important">
+                            
+                            <div id="total-revenue" class="mt-0"  data-colors="#f1556c"></div>
+                            <h4 class="mt-0 mb-1">Remarque sur la période de stage </h4>
+
+                            <p><%= @intern.opinion_internship %></p>
+
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning waves-effect waves-light" data-dismiss="modal">Fermer</button>
+            </div>
+          
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

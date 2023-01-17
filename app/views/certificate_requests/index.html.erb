@@ -19,96 +19,99 @@
         </div>     
         <!-- end page title --> 
 
-
         <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-2">  
-                            <div class="col-lg-12">
-                                <div class="text-lg-right">  
-                                    <%= link_to '#new_request', class: "btn btn-secondary waves-effect waves-light mb-2 mr-2", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_request'  do %>
-                                        <i class="mdi mdi-plus mr-1"> Nouvelle demande</i>
-                                    <% end %>                               
+            <div class="col-sm-12">
+                <div class="card-box">
+                    <div class="mb-2">
+                        <div class="row">
+                            <div class="col-12 text-sm-center form-inline">
+                                <div class="form-group mr-2">
+                                    <%= link_to '#new_request', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_request'  do %>
+                                        <i class="mdi mdi-plus mr-1"> Nouvelle demande d'attestation</i>
+                                    <% end %> 
+                                </div>
+                                <div class="form-group">
+                                    <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
                                 </div>
                             </div>
-
                         </div>
+                    </div>
 
-                        <div class="table-responsive">
-                            <table data-toggle="table"
-                                    data-show-columns="false"
-                                    data-page-list="[5, 10, 20]"
-                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
-                                    data-buttons-class="xs btn-light"
-                                    data-pagination="true" class="table-borderless">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th data-field="">Nom complet</th>
-                                        <th data-field="type_attestation">Type d'attestation</th>
-                                        <th data-field="date_demande">Date du demande</th>
-                                        <th data-field="status">Statut</th>
-                                        <th data-field="attestation">Attestation</th>
-                                        <th style="width: 125px;">Actions</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <% @certificate_requests.each do |certificate_request| %>
-                                        <tr>                                         
-                                            <td> <%= certificate_request.user.first_name %> <%= certificate_request.user.last_name %></td>
-                                            <td><%= certificate_request.template_attestation.name %></td>              
-                                            <td><%= certificate_request.date_signature %></td>
-                                            <td><% if certificate_request.created? %>
-                                                  <div class="badge font-14 badge badge-warning p-1">Nouvelle demande</div>
-                                                <% elsif certificate_request.valide? %> 
-                                                  <div class="badge font-14 badge badge-success p-1">Demande traité</div> 
-                                                <% elsif certificate_request.invalide? %>
-                                                   <div class="badge font-14 badge badge-danger p-1">Demande refusé</div>
-                                                <% end %>
-                                            </td>
-                                            <td><% if certificate_request.certificate.attached? %>
-                                                    <%= link_to 'Télécharger pdf', rails_blob_path(certificate_request.certificate, disposition: "attachment") %>
-                                                <% end %>
-                                            </td>
-                                            <td>
-                                                <% if certificate_request.created? %>
-                                                    <%= link_to edit_certificate_request_path(certificate_request), remote: true, title: "Modifier", class: "action-icon" do %>
-                                                        <i class="mdi mdi-border-color"></i>
-                                                    <% end %> 
-                                                    <%= link_to validate_certificate_path(certificate_request), title: "Valider", data: { confirm: 'Etes vous sur?', title: 'Confirme la validation?' }, class: "action-icon" do %>
-                                                        <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
-                                                    <% end %>
-                                                    <%= link_to certificate_request, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
-                                                        <i class="mdi mdi-delete"></i>
-                                                    <% end %> 
-                                                    <%= link_to pre_refus_certificate_path(certificate_request), title: "refuser l'attestation", remote: true, class: "action-icon" do %>
-                                                        <i class="mdi mdi-close-octagon"></i>
-                                                    <% end %> 
-                                                    <%= link_to print_attestation_path(certificate_request, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
-                                                        <i class="mdi mdi-printer"></i>
-                                                    <% end %>     
-                                                <% elsif certificate_request.valide? %>
-                                                    <%= link_to pre_certificate_path(certificate_request), title: "modifier l'attestation", remote: true, class: "action-icon" do %>
-                                                        <i class="mdi mdi-file-edit"></i>
-                                                    <% end %> 
-                                                     <%= link_to print_attestation_path(certificate_request, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
-                                                        <i class="mdi mdi-printer"></i>
-                                                    <% end %> 
-                                                <% else %> 
-                                                  
-                                                <% end %>
-                                            </td>                                            
-                                        </tr> 
-                                    <% end %> 
-                                </tbody>
-                            </table>
-                            <!-- end row -->
-                        </div>
-                    </div> <!-- end card-body-->
-                </div> <!-- end card-->
+                    <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+                        <thead>
+                        <tr>
+                            <th data-sort-initial="true" data-toggle="true">Nom complet</th>
+                            <th>Type d'attestation</th>
+                            <th data-hide="phone, tablet">Date du demande</th>
+                            <th data-hide="phone, tablet">Statut</th>
+                            <th data-hide="phone, tablet">Attestation</th>
+                            
+                            <th data-hide="phone, tablet">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <% @certificate_requests.each do |certificate_request| %>
+                                <tr>
+                                    <td> <%= certificate_request.user.first_name %> <%= certificate_request.user.last_name %></td>
+                                    <td><%= certificate_request.template_attestation.name %></td>              
+                                    <td><%= certificate_request.date_signature %></td>
+                                    <td><% if certificate_request.created? %>
+                                            <div class="badge font-14 badge badge-warning p-1">Nouvelle demande</div>
+                                        <% elsif certificate_request.valide? %> 
+                                            <div class="badge font-14 badge badge-success p-1">Demande traité</div> 
+                                        <% elsif certificate_request.invalide? %>
+                                            <div class="badge font-14 badge badge-danger p-1">Demande refusé</div>
+                                        <% end %>
+                                    </td>
+                                    <td><% if certificate_request.certificate.attached? %>
+                                            <%= link_to 'Télécharger pdf', rails_blob_path(certificate_request.certificate, disposition: "attachment") %>
+                                        <% end %>
+                                    </td>
+                                    <td>
+                                        <% if certificate_request.created? %>
+                                            <%= link_to edit_certificate_request_path(certificate_request), remote: true, title: "Modifier", class: "action-icon" do %>
+                                                <i class="mdi mdi-border-color"></i>
+                                            <% end %> 
+                                            <%= link_to validate_certificate_path(certificate_request), title: "Valider", data: { confirm: 'Etes vous sur?', title: 'Confirme la validation?' }, class: "action-icon" do %>
+                                                <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                            <% end %>
+                                            <%= link_to certificate_request, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                                <i class="mdi mdi-delete"></i>
+                                            <% end %> 
+                                            <%= link_to pre_refus_certificate_path(certificate_request), title: "refuser l'attestation", remote: true, class: "action-icon" do %>
+                                                <i class="mdi mdi-close-octagon"></i>
+                                            <% end %> 
+                                            <%= link_to print_attestation_path(certificate_request, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
+                                                <i class="mdi mdi-printer"></i>
+                                            <% end %>     
+                                        <% elsif certificate_request.valide? %>
+                                            <%= link_to pre_certificate_path(certificate_request), title: "modifier l'attestation", remote: true, class: "action-icon" do %>
+                                                <i class="mdi mdi-file-edit"></i>
+                                            <% end %> 
+                                                <%= link_to print_attestation_path(certificate_request, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
+                                                <i class="mdi mdi-printer"></i>
+                                            <% end %> 
+                                        <% else %> 
+                                            
+                                        <% end %>
+                                    </td>
+                                </tr>
+                            <% end %>
+                        </tbody>
+                        <tfoot>
+                        <tr class="active">
+                            <td colspan="6">
+                                <div class="text-right">
+                                    <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                                </div>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div> <!-- end card-box -->
             </div> <!-- end col -->
         </div>
+        <!-- end row -->
     </div>
 </div> <!-- content -->
 
