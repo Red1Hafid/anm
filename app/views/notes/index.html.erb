@@ -39,10 +39,10 @@
                     <i class="mdi mdi-plus mr-1"> Nouveau</i>
                   <% end %>
 
-                  <%= form_tag furloughs_path, :method => 'get',  class: "form-inline" do %>
+                  <%= form_tag notes_path, :method => 'get',  class: "form-inline" do %>
                      <% if @notes.count > 0 %>
                         <div class="form-group">
-                          <%= link_to 'Exporter', notes_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                          <%= link_to '+Rapport', notes_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
                         </div>
                     <% end %>
                   <% end %>
@@ -79,8 +79,10 @@
                       </td>
 
                       <td>
-                        <%= note.user.first_name %>
-                        <%= note.user.last_name %>
+                        <% if note.user %>
+                          <%= note.user.first_name %>
+                          <%= note.user.last_name %>
+                        <% end %>
                       </td>
 
                       <td>
@@ -88,7 +90,9 @@
                       </td>
 
                       <td>
-                        <%= note.cost.name %>
+                        <% if note.cost %>
+                           <%= note.cost.name %>
+                        <% end %>
                       </td>
 
                       <td>
@@ -151,8 +155,8 @@
 
           <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
             <div class="form-group mb-3">
-              <%= f.input :user_id, label: "Collaborateurs", input_html: { id: 'user', :style => "display:none;" } %>
-              <select data-toggle="select2" onchange='set_user_id();'>
+              <%= f.input :user_id, label: "Collaborateurs", input_html: { id: 'user', :style => "display:block;" }%>
+              <select data-toggle="select2" onchange='find_projects();'>
                 <option></option>
                 <optgroup label="Collaborateurs">
                   <%= @users.each do |user| %>
@@ -176,7 +180,16 @@
             </select>
           </div>
 
-          <%= f.association :project, label: "projet", label_method: :name, collection: Project.all, value_method: :id, class: 'form-control', include_blank: false %>
+          <div class="form-group mb-3">
+            <label for=""> Projets select</label>
+            <%= f.input :project_id, label: "Les Projets", input_html: { id: 'project', :style => "display:block;" } %>
+            <select id="projects_select" class="form-control" onchange="set_project_id();">
+              <option disabled selected value> -- select an option -- </option>
+            </select>
+          </div>
+
+
+          <%#= f.association :project, label: "projet", label_method: :name, collection: Project.all, value_method: :id, class: 'form-control', include_blank: false %>
 
 
           <div class="form-group">
@@ -213,24 +226,30 @@
 </div><!-- /.modal -->
 
 <script>
-    function set_user_id(){
+  function find_projects() {
 
-        var user_email = document.getElementsByClassName("select2")[0].innerText;
+        var user_name = document.getElementsByClassName("select2")[0].innerText;
 
-        console.log(user_email);
+        console.log(user_name);
 
-        var url = '<%= domainename + 'finduserid/' %>';
+        var url = '<%= domainename + 'projects-by-user/' %>';
         $.when(
-            $.getJSON(url+user_email)
+            $.getJSON(url+user_name)
         ).done( function(json) {
-
-            $('#user').val(json);
-
+            $('#user').val(json.user_id)
+            $('#projects_select').empty();
+            $('#projects_select')
+                .append(`<option disabled selected value> -- select an option -- </option>`);
+            for (var index = 0; index < json.projects.length; index++) {
+                $('#projects_select')
+                    .append(`<option value="${json.projects[index]}">
+                                         ${json.projects[index]}
+                                    </option>`);
+            }
+            console.log(json.projects)
         });
-
     }
-
- function set_cost_id() {
+  function set_cost_id() {
      var cost = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText.slice(1);
      console.log(cost);
 
@@ -242,11 +261,23 @@
          $.when(
              $.getJSON(url+cost)
          ).done( function(json) {
-
              $('#cost').val(json);
-
          });
      }
+
  }
+
+  function set_project_id() {
+      var project_name = document.getElementById("projects_select");
+      var value = project_name.value
+      console.log(value);
+      var url = '<%= domainename + 'findprojectid/' %>';
+      $.when(
+          $.getJSON(url+value)
+      ).done( function(json) {
+          $('#project').val(json);
+          console.log(json)
+      });
+  }
 
 </script>

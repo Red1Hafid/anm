@@ -53,7 +53,9 @@
                       </td>
 
                       <td>
-                        <%= note.cost.name %>
+                        <% if note.cost %>
+                          <%= note.cost.name %>
+                        <% end %>
                       </td>
 
                       <td>

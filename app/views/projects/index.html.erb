@@ -43,6 +43,15 @@
                   <% else %>
                     <a class="btn btn-info" href="<%= projects_path(status: 'deleted') %>"> <i class="mdi mdi-filter mr-1"></i>projects Archivé</a>
                   <% end %>
+
+                  <%= form_tag projects_path, :method => 'get',  class: "form-inline" do %>
+                    <% if @projects.count > 0 %>
+                      <div class="form-group">
+                        <%= link_to '+Rapport', projects_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
                 </div>
               <% end %>
             </div>
@@ -57,6 +66,7 @@
                 >
                   <thead class="thead-light">
                   <tr>
+                    <th data-field="reference">Project Reference</th>
                     <th data-field="name">Nom</th>
                     <th data-field="percentage">Description</th>
                     <th data-field="max_value">Chiffre d affaire</th>
@@ -69,6 +79,9 @@
                   <tbody>
                   <% @projects.each do |project| %>
                     <tr>
+                      <td>
+                        <%= project.reference.upcase %>
+                      </td>
                       <td>
                         <%= project.name %>
                       </td>

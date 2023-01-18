@@ -112,6 +112,7 @@ Rails.application.routes.draw do
   get 'disaffectation/:id' => 'affectations#pre_disaffectation', as: 'pre_disaffectation'
   post 'disaffectation/:id' => 'affectations#disaffectation', as: 'disaffectation'
   get 'mes-affectations' => 'affectations#mes_affectations', as: 'mes_affectations'
+  get 'projects-by-user/:name' => 'notes#project_users', as: 'project_users'
 
   resources :furlough_types do
     collection { post :import }

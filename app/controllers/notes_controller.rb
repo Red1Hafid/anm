@@ -3,16 +3,35 @@ class NotesController < ApplicationController
 
   def index
     @setting = Setting.find(1)
-    @q = Note.ransack(params[:q])
-    @costs = Cost.where(is_active: true).where(status: 'created')
+    @q = Note.includes(:user, :cost).ransack(params[:q])
+    @costs = Cost.filter_by_active.filter_by_status(1)
     @users = User.where.not(role_id: 1)
-    @projects = Project.all.where(status: 1)
+    @projects = Project.filter_by_status(1)
+    if params[:user_id]
+      @projects = Project.where(user_id: params[:user_id])
+    end
     @notes =  @q.result(distinct: true)
   end
 
   def mes_notes
     @setting = Setting.find(1)
     @notes = Note.mes_notes(current_user.id)
+  end
+
+  def project_users
+    first_name = params[:name].split.first
+    last_name = params[:name].split.last
+    @user = User.find_by(first_name: first_name, last_name: last_name)
+    result = {}
+    result[:user_id] = @user.id
+    @projects = @user.projects
+    result[:projects] = @projects.pluck(:name)
+
+    puts "----------------------------------"
+    puts result
+    puts "----------------------------------"
+
+    render :json => result
   end
 
   def show

@@ -5,10 +5,10 @@ class CostsController < ApplicationController
     @setting = Setting.find(1)
     if params[:status].present?
       @q = Cost.ransack(params[:q])
-      @costs = @q.result(distinct: true).where(status: 2)
+      @costs = @q.result(distinct: true).filter_by_status(2)
     else
       @q = Cost.ransack(params[:q])
-      @costs = @q.result(distinct: true).where(status: 1)
+      @costs = @q.result(distinct: true).filter_by_status(1)
     end
   end
 

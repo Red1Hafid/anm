@@ -28,7 +28,6 @@
                   <%= link_to '#new_affectation', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_affectation'  do %>
                     <i class="mdi mdi-plus mr-1"> Nouveau</i>
                   <% end %>
-
                   <% if  params.has_key?(:status)%>
                     <a class="btn btn-info" href="<%= mes_affectations_path %>"> <i class="mdi mdi-filter mr-1"></i> Affectations</a>
                   <% else %>
@@ -102,3 +101,87 @@
     <div id='remote-container'></div>
   </div>
 </div>
+
+
+
+<div class="modal fade" id="new_affectation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myLargeModalLabel">Ajouts des affectations</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <%= simple_form_for(Affectation.new, as: :affectation, method: :post, html: { class: "form-horizontal" }) do |f| %>
+        <div class="modal-body">
+          <%= f.error_notification %>
+          <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+          <div class="form-group mb-3">
+            <%= f.input :project_id, label: "Projet", input_html: { id: 'projects', :style => "display:none;" } %>
+            <select class="form-control select2-multiple" id="project_select" data-toggle="select2" multiple="multiple" onchange='find_project();'>
+              <optgroup label="Projets">
+                <% if @projects %>
+                  <%= @projects.each do |project| %>
+                    <option value="<%= project.id %>"><%= project.name %> </option>
+                  <% end %>
+                <% end %>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Commentaires</label>
+            <%= f.text_area :comments, label: 'Commentaires', placeholder: "Commentaires", class: 'form-control' %>
+          </div>
+
+          <div class="form-group">
+            <%= f.input :date_affectation, as: :date, html5: true, label: 'Date Affectation', placeholder: "Entrer la date", class: 'form-control' %>
+          </div>
+
+
+        </div>
+
+        <div class="modal-footer d-flex justify-content-between">
+          <div>
+            <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+          </div>
+          <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+        </div>
+
+      <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+</div><!-- /.modal -->
+
+<script>
+    function find_project(project_id){
+
+        var project = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText;
+        console.log(project);
+        var url = '<%= domainename + 'findprojectid/' %>';
+        $.when(
+            $.getJSON(url+project.slice(1))
+        ).done( function(json) {
+            $('#projects').val(json);
+        });
+    }
+
+    function set_input(affectation) {
+        if(affectation) {
+            $('#user_select option')
+                .removeAttr('selected')
+                .filter('[value='+ affectation.user_id+']')
+                .attr('selected', true)
+            $('#user_select option').change()
+
+
+            $('#project_select option')
+                .removeAttr('selected')
+                .filter('[value='+ affectation.project_id+']')
+                .attr('selected', true)
+            $('#project_select option').change()
+        }
+    }
+
+</script>

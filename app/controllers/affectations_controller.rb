@@ -5,10 +5,10 @@ class AffectationsController < ApplicationController
   def index
     @setting = Setting.find(1)
     if params[:status].present?
-      @q = Affectation.ransack(params[:q])
+      @q = Affectation.includes(:project, :user).ransack(params[:q])
       @affectations = @q.result(distinct: true).filter_by_status(2)
     else
-      @q = Affectation.ransack(params[:q])
+      @q = Affectation.includes(:project, :user).ransack(params[:q])
       @affectations = @q.result(distinct: true).filter_by_status(1)
     end
     @users = User.all
@@ -25,6 +25,9 @@ class AffectationsController < ApplicationController
     @projects = Project.where(is_active: true).where(status: 'created')
   end
 
+  def pre_mes_affectations_new
+  end
+
   # GET /affectations/1/edit
   def edit
   end
@@ -32,19 +35,34 @@ class AffectationsController < ApplicationController
   # POST /affectations or /affectations.json
   def create
     @affectation = Affectation.new(affectation_params)
-
-    present = Affectation.custom_finder(@affectation.user_id, @affectation.project_id)
-
+    if @affectation.user_id.present? && @affectation.user_id != current_user.id
+      present = Affectation.custom_finder(@affectation.user_id, @affectation.project_id)
+      is_administration = false
+    else
+      @affectation.user_id = current_user.id
+      present = Affectation.custom_finder(current_user.id, @affectation.project_id)
+      is_administration = true
+    end
     if  present
-      redirect_to affectations_path,  warning: "Affectation est déja crèes"
+      if is_administration
+        redirect_to mes_affectations_path,  warning: "Affectation est déja crèes"
+      else
+        redirect_to affectations_path,  warning: "Affectation est déja crèes"
+      end
     else
       if @affectation.save
-        redirect_to affectations_path,  success: "Affectation est créé avec succès"
+        if is_administration
+          redirect_to mes_affectations_path,  success: "Affectation est créé avec succès"
+        else
+          redirect_to affectations_path,  success: "Affectation est créé avec succès"
+        end
+
       end
     end
   end
 
   def mes_affectations
+    @projects = Project.where(is_active: true).where(status: 'created')
     @setting = Setting.find(1)
     if params[:status].present?
       @q = Affectation.ransack(params[:q])

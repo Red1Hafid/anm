@@ -4,10 +4,12 @@ class Cost < ApplicationRecord
   has_many :notes
   has_many :users, through: :notes
 
+  scope :filter_by_status, -> (status) { where('costs.status = ?', status) }
+  scope :filter_by_active, -> { where(is_active: true) }
+
   enum status: {
     created: 1,
     deleted: 2,
   }
 
-  scope :filter_by_status, -> (status) { where('costs.status = ?', status) }
 end
