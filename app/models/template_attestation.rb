@@ -1,3 +1,0 @@
-class TemplateAttestation < ApplicationRecord
-
-end

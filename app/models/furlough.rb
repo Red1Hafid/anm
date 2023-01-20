@@ -1,6 +1,4 @@
 class Furlough < ApplicationRecord
-  serialize :notes, Array
-  
   #validates :reference_furlough, uniqueness: true
   #validates :reference_furlough, presence: true
   

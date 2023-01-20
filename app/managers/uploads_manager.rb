@@ -723,12 +723,9 @@ class UploadsManager
         authorization__hour_duration = Autorization.get_hour_authorization_duration(date, start_hour, end_hour)
 
         if authorization__hour_duration >= 3
-          stay_hours = authorization__hour_duration
           if hash['Type de récupération'] == ""
             @messages.push("Si l'autorisation dépasse ou égale 3 heures la colonne Type de récupération ne doit pas étre vide")
           end
-        else
-          stay_hours = 0.0
         end
 
         if user.nil?
@@ -760,7 +757,6 @@ class UploadsManager
             date: date,
             start_hour: start_hour,
             end_hour: end_hour,
-            stay_hour: stay_hours,
             status: status,
             comment: hash['Motif'],
             department: hash['Département'],

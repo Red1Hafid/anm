@@ -76,7 +76,7 @@ class UsersController < ApplicationController
       @user.save
       if user_params[:manager_titles]
         if user_params[:manager_titles].include? "Gestionnaire fonctionnel"
-          FonctionalManager.create(matricule: @user.matricule, first_name: @user.first_name, last_name: @user.last_name)
+          FonctionalManager.create(first_name: @user.first_name, last_name: @user.last_name)
         end
       end
 
@@ -212,13 +212,13 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:matricule, :first_name, :last_name, :email,
+    params.require(:user).permit(:first_name, :last_name, :email,
         :role_id, :started_at,:personnal_email, :job_title, :gender, :area_code,:family_status,:home_adress,
         :phone_number,:phone_number_fix, :avatar, :line_manager_id, :fonctionnal_manager_id, :active,:status, :sex, manager_titles: [])
   end
 
   def fonctional_extern_params
-    params.require(:user).permit(:matricule, :first_name, :last_name, :email, :job_title, :gender, :area_code, :phone_number)
+    params.require(:user).permit(:first_name, :last_name, :email, :job_title, :gender, :area_code, :phone_number)
     end
 
   def u_user_params

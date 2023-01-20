@@ -22,204 +22,209 @@
         <!-- end page title --> 
 
         <div class="row">
-            <div class="col-sm-12">
-                <div class="card-box">
-                    <div class="mb-2">
-                        <div class="row">
-                            <div class="col-10 text-sm-center form-inline">
-                                <div class="form-group mr-2">
-                                    <%= link_to '#new_autorization', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_autorization'  do %>
-                                        <i class="mdi mdi-plus mr-1">Nouvelle demande d'autorisation</i>
-                                    <% end %>  
-                                </div>
-                                <div class="form-group">
-                                    <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
-                                </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            
+                            <div class="col-lg-4">
+                                <div class="btn-group dropright">
+                                    <button type="button" class="btn btn-info waves-effect waves-light dropdown-toggle mb-2 mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Filtrer par status
+                                    </button>
+                                    <div class="dropdown-menu" style="">
+                                        <a class="dropdown-item" href="<%= additional_hours_path() %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-green"></i>Tous</a>
+                                        <a class="dropdown-item" href="<%= additional_hours_path(additional_hour_type: 'Nouveau') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-green"></i>Nouveau</a>
+                                        <a class="dropdown-item" href="<%= additional_hours_path(additional_hour_type: 'Soumis') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-danger"></i>approuvé</a>
+                                    </div>
+                                </div> 
                             </div>
-                            <div class="col-2 text-sm-center form-inline">
-                                <div class="form-group">
-                                    <%= link_to pre_export_authorizations_path(), remote: true, class: "btn btn-warning" do %>
-                                        <i class="mdi mdi-plus mr-1">Rapport</i>
-                                    <% end %>  
-                                </div>
+                        
+                            <div class="col-lg-4">
+                                <%= link_to '#new_autorization', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_autorization'  do %>
+                                    <i class="mdi mdi-plus mr-1">Demande d'autorisation</i>
+                                <% end %>  
                             </div>
+
+                            <div class="col-lg-4">
+                                <%= link_to pre_export_authorizations_path(), remote: true, class: "btn btn-warning waves-effect waves-light mr-3" do %>
+                                    <i class="mdi mdi-plus mr-1">Rapport</i>
+                                <% end %>  
+                            </div>
+                         
                         </div>
-                    </div>
 
-                    <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
-                        <thead>
-                            <tr>
-                                <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                    <th data-sort-initial="true" data-toggle="true">Collaborateurs</th>
-                                <% else %>
-                                        <% if !current_user.manager_titles.nil? %>
-                                            <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
-                                                <th data-sort-initial="true" data-toggle="true">Collaborateurs</th>
-                                            <% end %>
+                        <div class="table-responsive">
+                            <table data-toggle="table"
+                                    data-show-columns="false"
+                                    data-page-list="[5, 10, 20]"
+                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                    data-buttons-class="xs btn-light"
+                                    data-pagination="true" class="table-borderless">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                            <th data-field="collaborator">Collaborateurs</th>
+                                        <% else %>
+                                                <% if !current_user.manager_titles.nil? %>
+                                                   <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
+                                                     <th data-field="collaborator">Collaborateurs</th>
+                                                   <% end %>
+                                                <% end %>
                                         <% end %>
-                                <% end %>
-                                <th>Date de sortie</th>
-                                <th data-hide="phone, tablet">Heure de début</th>
-                                <th data-hide="phone, tablet">Heure de fin</th>
-                                <th data-hide="phone, tablet">Statut</th>
-                                <th data-hide="phone, tablet">Reste à régulariser</th>
-                                <th data-hide="phone, tablet">Etat</th>
-                                
-                                <th data-hide="phone, tablet">Actions</th>
+                                        <th data-field="date">Date de sortie</th>
+                                        <th data-field="start_hour">Heure de début</th>
+                                        <th data-field="end_hour">Heure de fin</th>
+                                        <th data-field="status">Statut</th>
+                                        <th data-field="stay">Reste à régulariser</th>
+                                        <th data-field="etat">Etat</th>
+                                        <th style="width: 125px;">Actions</th>
+                                    </tr>
+                                </thead>
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% @autorizations.each do |autorization| %>
-                                <tr>
-                                    <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                        <td><%= "#{autorization.user.last_name} #{autorization.user.first_name}" %></td>
-                                    <% else %>
-                                        <% if !current_user.manager_titles.nil? %>
-                                            <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
+                                <tbody>
+                                    <% @autorizations.each do |autorization| %>
+                                        <tr> 
+                                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
                                                 <td><%= "#{autorization.user.last_name} #{autorization.user.first_name}" %></td>
+                                            <% else %>
+                                                <% if !current_user.manager_titles.nil? %>
+                                                   <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
+                                                     <td><%= "#{autorization.user.last_name} #{autorization.user.first_name}" %></td>
+                                                   <% end %>
+                                                <% end %>
                                             <% end %>
-                                        <% end %>
-                                    <% end %>
-                                    <td><%= autorization.date %></td>
-                                    <td><%= autorization.start_hour %></td>
-                                        <td><%= autorization.end_hour %></td>
-                                    <td>
-                                        <% if autorization.created? %>
-                                            <div class="badge font-14 badge badge-info p-1">Enregisté</div>
-                                        <% elsif autorization.soumis? %> 
-                                            <div class="badge font-14 badge badge-warning p-1">Soumis</div>  
-                                        <% elsif autorization.aprouved? %> 
-                                            <div class="badge font-14 badge badge-success p-1">Validé</div>   
-                                        <% elsif autorization.encours? %> 
-                                            <div class="badge font-14 badge badge-pink p-1">En cours</div>    
-                                        <% elsif autorization.refuse? %> 
-                                            <div class="badge font-14 badge badge-danger p-1">Refusé</div> 
-                                        <% end %>
-                                    </td>
-                                    <td><%= autorization.stay_hour %></td>
-                                    <td>
-                                        <% if autorization.is_ok == true %>
-                                            <div class="badge font-14 badge badge-secondary p-1">Fermé</div>
-                                        <% else %> 
-                                            <div class="badge font-14 badge badge-warning p-1">Ouvert</div>  
-                                        <% end %>
-                                    </td>
-                                    <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                        <td>
-                                            <%= link_to autorization_path(autorization), remote: true, class: "action-icon" do %>
-                                                <i class="mdi mdi-eye"></i>
-                                            <% end %>
-
-                                            <% if autorization.soumis? %>
-                                                <%= link_to validate_autorization_path(autorization), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Valider", class: "action-icon" do %>
-                                                    <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                            <td><%= autorization.date %></td>
+                                            <td><%= autorization.start_hour %></td>
+                                             <td><%= autorization.end_hour %></td>
+                                            <td>
+                                                <% if autorization.created? %>
+                                                  <div class="badge font-14 badge badge-info p-1">Enregisté</div>
+                                                <% elsif autorization.soumis? %> 
+                                                    <div class="badge font-14 badge badge-warning p-1">Soumis</div>  
+                                                <% elsif autorization.aprouved? %> 
+                                                    <div class="badge font-14 badge badge-success p-1">Validé</div>   
+                                                <% elsif autorization.encours? %> 
+                                                    <div class="badge font-14 badge badge-pink p-1">En cours</div>    
+                                                <% elsif autorization.refuse? %> 
+                                                    <div class="badge font-14 badge badge-danger p-1">Refusé</div> 
                                                 <% end %>
-
-                                                <%= link_to refuse_autorization_path(autorization), title: "Refuser", remote: true, class: "action-icon" do %>
-                                                    <i class="mdi mdi-close-octagon"></i>
-                                                <% end %> 
-                                            <% elsif autorization.encours? %>
-                                                <%= link_to validate_autorization_path(autorization), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Valider", class: "action-icon" do %>
-                                                    <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                            </td>
+                                            <td><%= autorization.stay_hour %></td>
+                                            <td>
+                                                <% if autorization.is_ok == true %>
+                                                  <div class="badge font-14 badge badge-secondary p-1">Fermé</div>
+                                                <% else %> 
+                                                    <div class="badge font-14 badge badge-warning p-1">Ouvert</div>  
                                                 <% end %>
-
-                                                <%= link_to edit_autorization_path(autorization), remote: true, class: "action-icon" do %>
-                                                    <i class="mdi mdi-border-color"></i>
-                                                <% end %>
-
-                                                <%= link_to refuse_autorization_path(autorization), title: "Refuser", remote: true, class: "action-icon" do %>
-                                                    <i class="mdi mdi-close-octagon"></i>
-                                                <% end %> 
-
-
-                                                <%= link_to autorization, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
-                                                        <i class="mdi mdi-delete"></i>
-                                                <% end %> 
-
-                                            <% elsif autorization.aprouved? %>
-                                                <% if autorization.is_ok == false #&& is_recovred_by_balance(autorization) == true %>
-                                                    <% if autorization.stay_hour > 0 %>
-                                                        <%= link_to pre_recovered_path(autorization), remote: true, title: "Traiter", class: "action-icon" do %>
-                                                                <i class="mdi mdi-checkbox-multiple-marked-outline"></i>
-                                                        <% end %>
+                                            </td>
+                                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                                                <td>
+                                                    <%= link_to autorization_path(autorization), remote: true, class: "action-icon" do %>
+                                                        <i class="mdi mdi-eye"></i>
                                                     <% end %>
-                                                <% end %>
 
-                                                <%= link_to to_print_authorisation_path(autorization, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
-                                                    <i class="mdi mdi-printer"></i>
-                                                <% end %>
-                                            <% end %>
-                                        </td>      
-                                    <% else %>
-                                        <td>
-                                            <%= link_to autorization_path(autorization), remote: true, class: "action-icon" do %>
-                                                <i class="mdi mdi-eye"></i>
-                                            <% end %>
-
-                                            <% if autorization.created? %>
-                                                <%= link_to edit_autorization_path(autorization), remote: true, class: "action-icon" do %>
-                                                    <i class="mdi mdi-border-color"></i>
-                                                <% end %>
-
-                                                <%= link_to soumettre_autorization_path(autorization), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Soumettre", class: "action-icon" do %>
-                                                    <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
-                                                <% end %>
-
-                                                <%= link_to autorization, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
-                                                        <i class="mdi mdi-delete"></i>
-                                                <% end %> 
-
-                                            <% elsif autorization.aprouved? %>
-                                                <%= link_to to_print_authorisation_path(autorization, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
-                                                        <i class="mdi mdi-printer"></i>
-                                                    <% end %>
-                                            <% end %>
-                                            <% if !current_user.manager_titles.nil? %>
-                                                <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
                                                     <% if autorization.soumis? %>
                                                         <%= link_to validate_autorization_path(autorization), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Valider", class: "action-icon" do %>
                                                             <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
                                                         <% end %>
-                                                    <% end %>
 
-                                                    <% if autorization.encours? %>
+                                                        <%= link_to refuse_autorization_path(autorization), title: "Refuser", remote: true, class: "action-icon" do %>
+                                                            <i class="mdi mdi-close-octagon"></i>
+                                                        <% end %> 
+                                                    <% elsif autorization.encours? %>
                                                         <%= link_to validate_autorization_path(autorization), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Valider", class: "action-icon" do %>
                                                             <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
                                                         <% end %>
-                                                    <% end %>
 
-                                                    <% if autorization.aprouved? && autorization.recovery_method == "0" %>
-                                                        <% if autorization.is_ok == false #&& is_recovred_by_balance(autorization) == true %>
+                                                        <%= link_to edit_autorization_path(autorization), remote: true, class: "action-icon" do %>
+                                                            <i class="mdi mdi-border-color"></i>
+                                                        <% end %>
+
+                                                        <%= link_to refuse_autorization_path(autorization), title: "Refuser", remote: true, class: "action-icon" do %>
+                                                            <i class="mdi mdi-close-octagon"></i>
+                                                        <% end %> 
+
+
+                                                        <%= link_to autorization, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                                                                <i class="mdi mdi-delete"></i>
+                                                        <% end %> 
+
+                                                    <% elsif autorization.aprouved? %>
+                                                       <% if autorization.is_ok == false #&& is_recovred_by_balance(autorization) == true %>
                                                             <% if autorization.stay_hour > 0 %>
                                                                 <%= link_to pre_recovered_path(autorization), remote: true, title: "Traiter", class: "action-icon" do %>
                                                                         <i class="mdi mdi-checkbox-multiple-marked-outline"></i>
                                                                 <% end %>
                                                             <% end %>
                                                         <% end %>
-                                                    <% end %>
-                                                <% end %>
-                                            <% end %>
 
-                                        </td>  
-                                    <% end %>             
-                                </tr>
-                            <% end %>
-                        </tbody>
-                        <tfoot>
-                        <tr class="active">
-                            <td colspan="6">
-                                <div class="text-right">
-                                    <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
-                                </div>
-                            </td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div> <!-- end card-box -->
+                                                        <%= link_to to_print_authorisation_path(autorization, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
+                                                            <i class="mdi mdi-printer"></i>
+                                                        <% end %>
+                                                    <% end %>
+                                                </td>      
+                                            <% else %>
+                                                <td>
+                                                    <%= link_to autorization_path(autorization), remote: true, class: "action-icon" do %>
+                                                        <i class="mdi mdi-eye"></i>
+                                                    <% end %>
+
+                                                    <% if autorization.created? %>
+                                                        <%= link_to edit_autorization_path(autorization), remote: true, class: "action-icon" do %>
+                                                            <i class="mdi mdi-border-color"></i>
+                                                        <% end %>
+
+                                                        <%= link_to soumettre_autorization_path(autorization), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Soumettre", class: "action-icon" do %>
+                                                            <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                                        <% end %>
+
+                                                        <%= link_to autorization, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                                                                <i class="mdi mdi-delete"></i>
+                                                        <% end %> 
+
+                                                    <% elsif autorization.aprouved? %>
+                                                        <%= link_to to_print_authorisation_path(autorization, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
+                                                                <i class="mdi mdi-printer"></i>
+                                                            <% end %>
+                                                    <% end %>
+                                                    <% if !current_user.manager_titles.nil? %>
+                                                        <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
+                                                            <% if autorization.soumis? %>
+                                                                <%= link_to validate_autorization_path(autorization), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Valider", class: "action-icon" do %>
+                                                                    <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                                                <% end %>
+                                                            <% end %>
+
+                                                            <% if autorization.encours? %>
+                                                                <%= link_to validate_autorization_path(autorization), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Valider", class: "action-icon" do %>
+                                                                    <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                                                <% end %>
+                                                            <% end %>
+
+                                                            <% if autorization.aprouved? && autorization.recovery_method == "0" %>
+                                                                <% if autorization.is_ok == false #&& is_recovred_by_balance(autorization) == true %>
+                                                                    <% if autorization.stay_hour > 0 %>
+                                                                        <%= link_to pre_recovered_path(autorization), remote: true, title: "Traiter", class: "action-icon" do %>
+                                                                                <i class="mdi mdi-checkbox-multiple-marked-outline"></i>
+                                                                        <% end %>
+                                                                    <% end %>
+                                                                <% end %>
+                                                            <% end %>
+                                                        <% end %>
+                                                    <% end %>
+        
+                                                </td>  
+                                            <% end %>                                       
+                                        </tr> 
+                                    <% end %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
             </div> <!-- end col -->
         </div>
-        <!-- end row -->
     </div>
     <!-- end row -->
 

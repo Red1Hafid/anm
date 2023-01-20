@@ -1,6 +1,4 @@
 class Autorization < ApplicationRecord
-  serialize :history, Array
-
   belongs_to :user
 
   enum status: {
@@ -24,9 +22,9 @@ class Autorization < ApplicationRecord
 
   def self.get_hour_authorization_duration(d1, h1, h2)
 
-    if (Furlough.is_week_day(d1.to_date) == true || Off.is_off(d1.to_date) == true)
+    if (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true)
       count_hour_furlough = 0
-    elsif (Furlough.is_week_day(d1.to_date) == false || Off.is_off(d1.to_date) == false) 
+    elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false) 
       if (h1.split(/: */).first.to_i < 13) && (h2.split(/: */).first.to_i > 13)
         count_hour_furlough =  h2.split(/: */).first.to_i - h1.split(/: */).first.to_i - 2
       elsif (h1.split(/: */).first.to_i > 13) && (h2.split(/: */).first.to_i < 13)
