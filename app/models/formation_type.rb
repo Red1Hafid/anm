@@ -1,2 +1,0 @@
-class FormationType < ApplicationRecord
-end

@@ -23,8 +23,8 @@ class GroundsController < ApplicationController
     end
   
     def create
-      @ground = Ground.create!(ground_params.merge(stop_action_id: 5))
-      #@ground.save
+      @ground = Ground.new(ground_params)
+      @ground.save
       role = Role.find(current_user.role_id)
       @journal = Journal.new
       @journal.content = "le #{role.title} (#{current_user.first_name} #{current_user.last_name}) à crée un nouveau motif - loger le : #{Time.now}"
@@ -81,7 +81,7 @@ class GroundsController < ApplicationController
     end
 
     def ground_params
-      params.require(:ground).permit(:code, :description)
+      params.require(:ground).permit(:code, :description, :stop_action_id)
     end
 end
   

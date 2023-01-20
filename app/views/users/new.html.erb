@@ -76,11 +76,9 @@
                                 <select data-toggle="select2" onchange='set_user_line_manager();'>
                                     <option></option>
                                     <optgroup label="Géstionnaires hiérarchque">
-                                    <% if @line_managers %>
                                         <%= @line_managers.each do |user| %>
                                             <option><%= user.first_name %> <%= user.last_name %></option>
                                         <% end %>
-                                    <% end %>
                                     </optgroup>
                                 </select>
                             </div>
@@ -89,11 +87,10 @@
                                 <%= f.input :fonctionnal_manager_id, label: "Géstionnaires fonctionnel", input_html: { id: 'fonctional_managers', :style => "display:none;" }%>
                                 <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange='set_user_fonctionnal_manager();'>
                                     <optgroup label="Géstionnaires fonctionnel">
-                                    <% if @fonctional_managers %>
                                         <%= @fonctional_managers.each do |user| %>
                                             <option><%= user.first_name %> <%= user.last_name %></option>
                                         <% end %>
-                                    <% end %>
+                                        
                                     </optgroup>
                                 </select>
                             </div> 

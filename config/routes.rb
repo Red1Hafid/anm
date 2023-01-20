@@ -1,15 +1,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  resources :interns
-  resources :formations
-  resources :formation_types
-  resources :user_confs
-  resources :certificate_requests
-  resources :template_attestations
   resources :absences
   resources :absence_types
-
   get 'settings/index'
   mount Sidekiq::Web => "/sidekiq", as: :sidekiq
 
@@ -34,8 +27,6 @@ Rails.application.routes.draw do
 
   root 'welcomes#index'
   get '/export' => 'welcomes#export', as: 'export'
-  get '/en-cours-developement' => 'welcomes#en_cours_devlopement', as: 'en_cours_devlopement'
-
 
   get '/congés', to: 'welcomes#furloughs_calendar', as: :conges
   get '/calendar', to: 'calendars#index', as: :calendar
@@ -73,9 +64,7 @@ Rails.application.routes.draw do
   post 'adjust/:id' => 'offs#adjust', as: 'adjust'
 
   get '/start_load' =>  'load_updated_files#start_load', as: 'start_load'
-
-
-
+  
   
 
   #for js routes
@@ -87,39 +76,11 @@ Rails.application.routes.draw do
   resources :stop_actions
   resources :grounds
 
-  resources :costs
-  get 'archivedcost' => 'costs#archived_cost', as: 'archived_cost'
-  get 'disablecost/:id' => 'costs#disable_cost', as: 'disable_cost'
-  get 'enablecost/:id' => 'costs#enable_cost', as: 'enable_cost'
-  get 'findcostid/:name' => 'costs#find_cost_id', as: 'find_cost_id'
-  get 'deletecost/:id' => 'costs#delete_cost', as: 'delete_cost'
-  get 'unarchivecost/:id' => 'costs#unarchive_cost', as: 'unarchive_cost'
-
-
-  resources :notes
-  get 'mes-notes' => 'notes#mes_notes', as: 'mes_notes'
-
-  resources :projects
-  get 'deleteproject/:id' => 'projects#delete_project', as: 'delete_c'
-  get 'disableproject/:id' => 'projects#disable_project', as: 'disable_project'
-  get 'enableproject/:id' => 'projects#enable_project', as: 'enable_project'
-  get 'findprojectid/:name' => 'projects#find_project_id', as: 'find_project_id'
-  get 'deleteproject/:id' => 'costs#delete_project', as: 'delete_project'
-  get 'unarchiveproject/:id' => 'projects#unarchive_project', as: 'unarchive_project'
-  get 'disaffectation/:user_id/:project_id' => 'affectations#disaffectation_through_project', as: 'project_disaffectation'
-
-  resources :affectations
-  get 'disaffectation/:id' => 'affectations#pre_disaffectation', as: 'pre_disaffectation'
-  post 'disaffectation/:id' => 'affectations#disaffectation', as: 'disaffectation'
-  get 'mes-affectations' => 'affectations#mes_affectations', as: 'mes_affectations'
-  get 'projects-by-user/:name' => 'notes#project_users', as: 'project_users'
-
   resources :furlough_types do
     collection { post :import }
   end
   get 'enablefurloughtype/:id' => 'furlough_types#enable_furlough_type', as: 'enable_furlough_type'
   get 'disablefurloughtype/:id' => 'furlough_types#disable_furlough_type', as: 'disable_furlough_type'
-
 
   resources :offs do
     collection { post :import }
@@ -136,7 +97,6 @@ Rails.application.routes.draw do
   resources :grounds do
     collection { post :import }
   end
-
 
   resources :journals
   resources :fonctional_manager_externs
@@ -165,16 +125,6 @@ Rails.application.routes.draw do
   get 'export-absences-lolo' => 'absences#export_absences', as: 'export_absences'
   get 'export-heures-sup' => 'additional_hours#pre_export_additional_hours', as: 'pre_export_additional_hours'
   get 'export-heures-sup-lolo' => 'additional_hours#export_additional_hours', as: 'export_additional_hours'
-
-
-  get 'printAttestation/:id' => 'certificate_requests#to_print', as: 'print_attestation'
-
-  get 'mes-demandes-attestations' => 'certificate_requests#certificate_requests_administration', as: 'certificate_requests_administration'
-  get 'validate-attestation/:id' => 'certificate_requests#validate_certificate', as: 'validate_certificate'
-  get 'certificate/:id' => 'certificate_requests#pre_certificate', as: 'pre_certificate'
-  post 'certificate/:id' => 'certificate_requests#certificate', as: 'certificate'
-  get 'refus-certificate/:id' => 'certificate_requests#pre_refus_certificate', as: 'pre_refus_certificate'
-  post 'refuscertificate/:id' => 'certificate_requests#refus_certificate', as: 'refus_certificate'
 
   
 end

@@ -10,7 +10,7 @@ gem "rails", "~> 7.0.3"
 gem "sprockets-rails"
 
 # Use postgresql as the database for Active Record
-gem "mysql2"
+gem "pg", "~> 1.1"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
@@ -39,15 +39,13 @@ gem 'cancancan', '~> 1.15'
 gem 'simple_form', '~> 5.1'
 gem 'sass-rails'
 gem 'rubyzip', '>= 1.2.1'
-gem 'caxlsx'
-gem 'caxlsx_rails'
+gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
+gem 'axlsx_rails'
 gem 'kaminari', '~> 1.2', '>= 1.2.2'
 gem 'bootstrap4-kaminari-views'
 gem 'jquery-rails'
 gem 'jquery-ui-rails', '~> 6.0', '>= 6.0.1'
 gem 'sidekiq', '~> 6.4', '>= 6.4.2'
-gem 'redis-namespace'
-gem 'sidekiq-status'
 gem 'sidekiq-scheduler', '~> 4.0'
 gem 'prawn', '~> 2.4'
 gem 'prawn-table', '~> 0.2.2'
@@ -55,7 +53,6 @@ gem 'ransack'
 gem 'coffee-rails', '~> 5.0.0'
 gem 'week_of_month', '~> 1.2', '>= 1.2.6'
 gem 'simple_calendar', '~> 2.4', '>= 2.4.3'
-gem 'trix-rails', require: 'trix'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
