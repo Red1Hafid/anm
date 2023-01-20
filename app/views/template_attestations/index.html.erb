@@ -1,0 +1,76 @@
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">Templates des documents</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Liste des templates d'attestations</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+          <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+
+                             <div class="col-lg-12">  
+                                <%= link_to new_template_attestation_path, class: "btn btn-secondary waves-effect waves-light mr-3" do %>
+                                    <i class="mdi mdi-plus mr-1"> Nouvelle attestation</i>
+                                <% end %>    
+                            </div>
+
+                        </div>    
+
+                        <div class="table-responsive">
+                            <table data-toggle="table"
+                                    data-show-columns="false"
+                                    data-page-list="[5, 10, 20]"
+                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                    data-buttons-class="xs btn-light"
+                                    data-pagination="true" class="table-borderless">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th data-field="code_attestation">Code attestation</th>
+                                        <th data-field="">attestation</th>
+                                        <th style="width: 125px;">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <% @template_attestations.each do |template_attestation| %>
+                                        <tr>     
+                                            <td><%= template_attestation.code %></td>                                     
+                                            <td> <%= template_attestation.name %></td>
+                                            <td>
+                                                <%= link_to edit_template_attestation_path(template_attestation), title: "Modifier", class: "action-icon" do %>
+                                                     <i class="mdi mdi-border-color"></i>
+                                                <% end %> 
+                                                <%= link_to template_attestation, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                                    <i class="mdi mdi-delete"></i>
+                                                <% end %>  
+                                            </td>                                                      
+                                        </tr> 
+                                    <% end %> 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+    </div>
+</div> <!-- content -->
+

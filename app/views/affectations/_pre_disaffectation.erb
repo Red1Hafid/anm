@@ -1,0 +1,28 @@
+<!-- Modal -->
+<div class="modal fade" id="disaffectation" role="dialog">
+  <%= simple_form_for(@affectation, as: :affectation, method: :post, url: disaffectation_path) do |f| %>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myLargeModalLabel">Désaffectation</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <%= f.input :date_disacffectation, as: :date, html5: true, label: 'Date Désaffectation ', placeholder: "Entrer la date", class: 'form-control' %>
+          </div>
+
+          <div class="form-group">
+            <label>Commentaires</label>
+            <%= f.text_area :desaffectation_comments, label: 'Désaffectation Commentaires', placeholder: "Commentaires", class: 'form-control' %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= f.button :submit, 'Désaffecter', data: { confirm: 'Etes vous sur?' }, class: 'btn btn-raised btn-success' %>
+          <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+

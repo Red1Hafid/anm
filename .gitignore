@@ -34,3 +34,4 @@ Gemfile.lock
 
 .env
 *.csv
+.idea

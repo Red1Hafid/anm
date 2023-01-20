@@ -1,0 +1,187 @@
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="page-title-box">
+          <div class="page-title-right">
+            <ol class="breadcrumb m-0">
+              <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+              <li class="breadcrumb-item active">Actions</li>
+            </ol>
+          </div>
+          <h4 class="page-title">Mes affectations</h4>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-3">
+
+              <div class="col-lg-8">
+              </div>
+
+              <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                <div class="col-lg-4 d-flex justify-content-end">
+                  <%= link_to '#new_affectation', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_affectation'  do %>
+                    <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                  <% end %>
+                  <% if  params.has_key?(:status)%>
+                    <a class="btn btn-info" href="<%= mes_affectations_path %>"> <i class="mdi mdi-filter mr-1"></i> Affectations</a>
+                  <% else %>
+                    <a class="btn btn-info" href="<%= mes_affectations_path(status: 'disaffected') %>"> <i class="mdi mdi-filter mr-1"></i>Desaffectations</a>
+                  <% end %>
+
+                  <%= form_tag affectations_path, :method => 'get',  class: "form-inline mr-3" do %>
+                    <% if @affectations.count > 0 %>
+                      <div class="form-group">
+                        <%= link_to 'Exporter', affectations_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <div class="row mb-3">
+              <div class="table-responsive">
+                <table data-toggle="table"
+                       data-show-columns="false"
+                       data-pagination="true"
+                       data-buttons-class="xs btn-light"
+                       class="table-borderless"
+                       data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                >
+                  <thead class="thead-light">
+                  <tr>
+                    <th data-field="project_id">Project</th>
+                    <th data-field="comments">Commentaires</th>
+                    <th data-field="date_affectation">Date d'affectation</th>
+                    <th class="action">Actions</th>
+                  </tr>
+
+                  </thead>
+                  <tbody>
+                  <% @affectations.each do |affectation| %>
+                    <tr>
+                      <td>
+                        <% if affectation.project %>
+                          <%= affectation.project.name %>
+                        <% end %>
+                      </td>
+
+                      <td>
+                        <% if affectation.comments %>
+                          <%= affectation.comments %>
+                          <% else %>
+                            Nan
+                        <% end %>
+                      </td>
+
+                      <td>
+                        <%= affectation.date_affectation %>
+                      </td>
+
+                      <td class="action">
+                        <%= link_to affectation_path(affectation), remote: true, class: "action-icon" do %>
+                          <i class="mdi mdi-eye"></i>
+                        <% end %>
+                      </td>
+                    </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id='remote-container'></div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="new_affectation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myLargeModalLabel">Ajouts des affectations</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <%= simple_form_for(Affectation.new, as: :affectation, method: :post, html: { class: "form-horizontal" }) do |f| %>
+        <div class="modal-body">
+          <%= f.error_notification %>
+          <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+          <div class="form-group mb-3">
+            <%= f.input :project_id, label: "Projet", input_html: { id: 'projects', :style => "display:none;" } %>
+            <select class="form-control select2-multiple" id="project_select" data-toggle="select2" multiple="multiple" onchange='find_project();'>
+              <optgroup label="Projets">
+                <% if @projects %>
+                  <%= @projects.each do |project| %>
+                    <option value="<%= project.id %>"><%= project.name %> </option>
+                  <% end %>
+                <% end %>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Commentaires</label>
+            <%= f.text_area :comments, label: 'Commentaires', placeholder: "Commentaires", class: 'form-control' %>
+          </div>
+
+          <div class="form-group">
+            <%= f.input :date_affectation, as: :date, html5: true, label: 'Date Affectation', placeholder: "Entrer la date", class: 'form-control' %>
+          </div>
+
+
+        </div>
+
+        <div class="modal-footer d-flex justify-content-between">
+          <div>
+            <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+          </div>
+          <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+        </div>
+
+      <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+</div><!-- /.modal -->
+
+<script>
+    function find_project(project_id){
+
+        var project = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText;
+        console.log(project);
+        var url = '<%= domainename + 'findprojectid/' %>';
+        $.when(
+            $.getJSON(url+project.slice(1))
+        ).done( function(json) {
+            $('#projects').val(json);
+        });
+    }
+
+    function set_input(affectation) {
+        if(affectation) {
+            $('#user_select option')
+                .removeAttr('selected')
+                .filter('[value='+ affectation.user_id+']')
+                .attr('selected', true)
+            $('#user_select option').change()
+
+
+            $('#project_select option')
+                .removeAttr('selected')
+                .filter('[value='+ affectation.project_id+']')
+                .attr('selected', true)
+            $('#project_select option').change()
+        }
+    }
+
+</script>

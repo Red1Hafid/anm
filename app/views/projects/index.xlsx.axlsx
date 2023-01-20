@@ -1,0 +1,10 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Projects") do |sheet|
+  # Create the header row
+  sheet.add_row ["nom", "reference", "description" , "unit affaire", "Nom de client", "Active?"]
+  # Create entries for each item
+  @projects.each do |project|
+    sheet.add_row [project.name, project.reference, project.description, project.unit_affaire, project.client , project.is_active]
+  end
+end

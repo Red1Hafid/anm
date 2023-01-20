@@ -1,0 +1,41 @@
+<!-- Modal -->
+<div class="modal fade" id="edit_cost" role="dialog">
+  <%= simple_form_for(@cost) do |f| %>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <%= f.error_notification %>
+              <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+              <div class="form-group">
+                <%= f.input :name, label: 'Name', placeholder: "Entrer le Nom de Category", class: 'form-control'%>
+              </div>
+
+              <div class="form-group">
+                <%= f.label :percentage %>
+                <%= f.select :percentage, [['25%',25],['50%',50],['75%',75],['100%',100]] , {}, { :class => 'form-control' }%>
+              </div>
+
+              <div class="form-group">
+                <%= f.input :max_value, label: 'Coût maximum', placeholder: "Entrer le coût maximum", class: 'form-control' %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer d-flex justify-content-between">
+          <div>
+            <%= f.submit class: 'btn btn-outline-success'%>
+          </div>
+          <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button></div>
+      </div>
+    </div>
+
+  <% end %>
+
+  <%=  link_to "costs index", costs_path %>
+</div>

@@ -1,0 +1,178 @@
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="page-title-box">
+          <div class="page-title-right">
+            <ol class="breadcrumb m-0">
+              <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+              <li class="breadcrumb-item active">Actions</li>
+            </ol>
+          </div>
+          <h4 class="page-title">Liste des Categories</h4>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-3">
+
+              <div class="col-lg-8">
+                <%= search_form_for @q, class: "form-inline" do |f| %>
+                  <div class="form-group">
+                    <div class="col-lg-8">
+                      <%= f.search_field :name_or_percentage_cont, class:"form-control" %>
+                    </div>
+                    <div class="col-lg-4">
+                      <%= f.submit 'Chercher',  class: "btn btn-warning waves-effect waves-light ml-1" %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+
+              <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                <div class="col-lg-4 d-flex justify-content-end align-items-center">
+                  <%= link_to '#new_cost', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_cost'  do %>
+                    <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                  <% end %>
+
+                  <% if  params.has_key?(:status)%>
+                    <a class="btn btn-info" href="<%= costs_path %>"> <i class="mdi mdi-filter mr-1"></i> Categories</a>
+                  <% else %>
+                    <a class="btn btn-info" href="<%= costs_path(status: 'deleted') %>"> <i class="mdi mdi-filter mr-1"></i>Categories Archivé</a>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <div class="row mb-3">
+              <div class="table-responsive">
+                <table data-toggle="table"
+                       data-show-columns="false"
+                       data-pagination="true"
+                       data-buttons-class="xs btn-light"
+                       class="table-borderless"
+                       data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                >
+                  <thead class="thead-light">
+                    <tr>
+                      <th data-field="name">Name</th>
+                      <th data-field="percentage">Percentage</th>
+                      <th data-field="max_value">Coût maximum</th>
+                      <th data-field="is_active">Status</th>
+                      <th class="action">Actions</th>
+                    </tr>
+
+                  </thead>
+                  <tbody>
+                  <% @costs.each do |cost| %>
+                    <tr>
+                      <td>
+                        <%= cost.name %>
+                      </td>
+                      <td>
+                        <% if cost.percentage %>
+                        <%= cost.percentage %>%
+                          <% else %>
+                            NaN
+                          <% end %>
+                      </td>
+                      <td>
+                        <% if cost.max_value %>
+                          <%= cost.max_value %>  Dh
+                        <% else %>
+                          NaN
+                        <% end %>
+                      </td>
+                      <td>
+                        <% if cost.is_active %>
+                          <span class="badge badge-success">Actif</span>
+                          <% else %>
+                          <span class="badge badge-dark">Désactiver</span>
+                        <% end %>
+                      </td>
+                      <td class="action">
+                        <%= link_to cost_path(cost), remote: true, class: "action-icon" do %>
+                          <i class="mdi mdi-eye"></i>
+                        <% end %>
+
+                        <%= link_to  edit_cost_path(cost), remote: true, class: "action-icon" do %>
+                          <i class="mdi mdi-border-color"></i>
+                        <% end %>
+
+                        <% if cost.status != 'deleted' %>
+                          <%= link_to delete_cost_path(cost.id), data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                            <i class="mdi mdi-archive-arrow-down"></i>
+                          <% end %>
+                        <% else %>
+                          <%= link_to unarchive_cost_path(cost.id), data: { confirm: 'Etes vous sur?', title: 'Confirme le désarchivage?' }, title: "Suprimer", class: "action-icon" do %>
+                            <i class="mdi mdi-archive-arrow-up"></i>
+                          <% end %>
+                        <% end %>
+
+                        <% if cost.is_active == true %>
+                            <%= link_to disable_cost_path(cost), data: { confirm: 'Etes vous sur de disativer?', title: 'Confirme le changement du status?' }, title: "changement du status", class: "action-icon" do %>
+                            <i class="mdi mdi-lock"></i>
+                            <% end %>
+                          <% else %>
+                            <%= link_to enable_cost_path(cost), data: { confirm: 'Etes vous sur d activer?', title: 'Confirme le changement du status?' }, title: "changement du status", class: "action-icon" do %>
+                              <i class="mdi mdi-lock-open"></i>
+                            <% end %>
+                        <% end %>
+
+                      </td>
+                    </tr>
+                  <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id='remote-container'></div>
+</div>
+
+
+<div class="modal fade" id="new_cost" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myLargeModalLabel">Ajout des Categories</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <%= simple_form_for(Cost.new, as: :cost, method: :post, html: { class: "form-horizontal" }) do |f| %>
+        <div class="modal-body">
+          <%= f.error_notification %>
+          <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+          <div class="form-group">
+            <%= f.input :name, label: 'Name', placeholder: "Entrer le nom", class: 'form-control' %>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :percentage %>
+            <%= f.select :percentage, [['25%',25],['50%',50],['75%',75],['100%',100]] , {include_blank: true }, { :class => 'form-control' }%>
+          </div>
+
+          <div class="form-group">
+            <%= f.input :max_value, label: 'Coût maximum', placeholder: "Entrer le coût maximum", class: 'form-control' %>
+          </div>
+
+        </div>
+
+        <div class="modal-footer d-flex justify-content-between">
+          <div>
+            <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+          </div>
+          <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+        </div>
+
+      <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+</div><!-- /.modal -->

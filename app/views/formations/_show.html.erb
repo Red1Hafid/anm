@@ -1,0 +1,40 @@
+<!-- Modal -->
+<div class="modal fade" id="show_formation" role="dialog">
+    <%= simple_form_for @formation do |f| %>
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Detail de formation</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            Type de formation : <%= @formation.formation_type.description %>
+                        </div>
+                        <div class="form-group">
+                            Collaborateur : <%= @formation.user.first_name %> <%= @formation.user.last_name %>
+                        </div>
+                        <div class="form-group">
+                            Formation : <%= @formation.description %>
+                        </div>
+                        <div class="form-group">
+                            Total des heures du formation : <%= @formation.total_hour %>
+                        </div>
+                        <div class="form-group">
+                            Date de début de formation : <%= @formation.start_date %>
+                        </div>
+                        <div class="form-group">
+                            Date de fin de formation : <%= @formation.end_date %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>

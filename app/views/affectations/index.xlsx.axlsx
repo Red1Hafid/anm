@@ -1,0 +1,10 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Affectation") do |sheet|
+  # Create the header row
+  sheet.add_row ["nom", "collaborateur", "Project" , "date d'affectation"]
+  # Create entries for each item
+  @affectations.each do |affectation|
+    sheet.add_row [affectation.user.first_name + " " + affectation.user.last_name, affectation.project.name, affectation.date_affectation ]
+  end
+end

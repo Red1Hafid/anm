@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  total_hour: 1.5
+  start_date: 2022-12-15
+  end_date: 2022-12-15
+  description: MyString
+  user: one
+  formation_type: one
+
+two:
+  total_hour: 1.5
+  start_date: 2022-12-15
+  end_date: 2022-12-15
+  description: MyString
+  user: two
+  formation_type: two

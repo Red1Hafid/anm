@@ -1,0 +1,127 @@
+<div class="content">
+
+    <!-- Start Content-->
+    <div class="container-fluid">
+        
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box">
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+                            <li class="breadcrumb-item active">Demandes d'attestations</li>
+                        </ol>
+                    </div>
+                    <h4 class="page-title">Liste des demandes d'attestations</h4>
+                </div>
+            </div>
+        </div>     
+        <!-- end page title --> 
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-2">     
+
+                            <div class="col-lg-12">
+                                <div class="text-lg-right">  
+                                    <%= link_to '#new_request', class: "btn btn-secondary waves-effect waves-light mb-2 mr-2", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_request'  do %>
+                                        <i class="mdi mdi-plus mr-1"> Nouvelle demande</i>
+                                    <% end %>                               
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="table-responsive">
+                            <table data-toggle="table"
+                                    data-show-columns="false"
+                                    data-page-list="[5, 10, 20]"
+                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                                    data-buttons-class="xs btn-light"
+                                    data-pagination="true" class="table-borderless">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th data-field="attestation">Attestation</th>
+                                        <th data-field="date_demande">Date du demande</th>
+                                        <th data-field="status">Statut</th>
+                                        <th style="width: 125px;">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <% @certificate_requests_administration.each do |certificate_request| %>
+                                        <tr>                                         
+                                            <td><%= certificate_request.template_attestation.name %></td>              
+                                            <td><%= certificate_request.date_signature %></td>
+                                            <td><% if certificate_request.created? %>
+                                                  <div class="badge font-14 badge badge-info p-1">Nouvelle demande</div>
+                                                <% elsif certificate_request.valide? %> 
+                                                  <div class="badge font-14 badge badge-success p-1">Demande traité</div> 
+                                                <% elsif certificate_request.invalide? %>
+                                                   <div class="badge font-14 badge badge-warning p-1">Demande refusé</div>
+                                                <% end %>
+                                            </td>
+                                            <td>
+                                                <% if certificate_request.created? %>
+                                                    <%= link_to certificate_request_path(certificate_request), remote: true, title: "Voir", class: "action-icon" do %>
+                                                        <i class="mdi mdi-eye"></i>
+                                                    <% end %>
+                                                    <%= link_to edit_certificate_request_path(certificate_request), remote: true, title: "Modifier", class: "action-icon" do %>
+                                                        <i class="mdi mdi-border-color"></i>
+                                                    <% end %> 
+                                                    <%= link_to certificate_request, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                                        <i class="mdi mdi-delete"></i>
+                                                    <% end %> 
+                                                   
+                                                <% elsif certificate_request.valide? %>
+                                                    <%= link_to print_attestation_path(certificate_request, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
+                                                        <i class="mdi mdi-printer"></i>
+                                                    <% end %> 
+                                                <% else %>
+
+                                                <% end %>
+                                            </td>                                            
+                                        </tr> 
+                                    <% end %> 
+                                </tbody>
+                            </table>
+                            <!-- end row -->
+                        </div>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col -->
+        </div>
+    </div>
+</div> <!-- content -->
+
+<!--  Modal content for the Large example -->
+<div class="modal fade" id="new_request" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Nouvelle demande</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <%= simple_form_for(CertificateRequest.new, as: :certificate_request, method: :post, html: { class: "form-horizontal" }) do |f| %>
+                
+                <div class="modal-body">
+
+                    <div class="form-group mb-3">
+                      <%= f.association :template_attestation, label: "Type d'attestation", label_method: :name, collection: TemplateAttestation.all.order(created_at: :desc), value_method: :id, class: 'form-control', include_blank: false %>
+                    </div>       
+                </div>
+                <div class="modal-footer">
+                    <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+                </div>
+            <% end %>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id='remote-container'></div>
+

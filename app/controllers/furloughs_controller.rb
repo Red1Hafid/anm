@@ -230,7 +230,7 @@ class FurloughsController < ApplicationController
     @journal.user_id = current_user.id
     @journal.status = "Approuvé"
     @journal.save
-    FurloughMailer.with(furlough: @furlough).approuve_furlough_email.deliver_later
+    #FurloughMailer.with(furlough: @furlough).approuve_furlough_email.deliver_later
     redirect_to furloughs_path
   end
 
@@ -256,7 +256,7 @@ class FurloughsController < ApplicationController
     @journal.user_id = current_user.id
     @journal.status = "Approuvé"
     @journal.save
-    FurloughMailer.with(furlough: @furlough).approuve_furlough_email.deliver_later
+    #FurloughMailer.with(furlough: @furlough).approuve_furlough_email.deliver_later
     redirect_to furloughs_path
   end
 
@@ -285,7 +285,7 @@ class FurloughsController < ApplicationController
     @journal.user_id = current_user.id
     @journal.status = "Refusé"
     @journal.save
-    FurloughMailer.with(furlough: @furlough).refuse_furlough_email.deliver_later
+    #FurloughMailer.with(furlough: @furlough).refuse_furlough_email.deliver_later
     redirect_to furloughs_path
   end
 
@@ -313,7 +313,7 @@ class FurloughsController < ApplicationController
     @journal.user_id = current_user.id
     @journal.status = "Cancel"
     @journal.save
-    FurloughMailer.with(furlough: @furlough).cancel_furlough_email.deliver_later
+    #FurloughMailer.with(furlough: @furlough).cancel_furlough_email.deliver_later
     redirect_to furloughs_path
   
   end
@@ -335,7 +335,7 @@ class FurloughsController < ApplicationController
       AdditionalHour.update_etat_additional_hours(specification, @furlough)
     end
     @furlough.save
-    FurloughMailer.with(furlough: @furlough).new_furlough_email.deliver_later
+    #FurloughMailer.with(furlough: @furlough).new_furlough_email.deliver_later
     role = Role.find(current_user.role_id)
     @journal = Journal.new
     @journal.content = "le #{role.title} (#{current_user.first_name} #{current_user.last_name}) à soumis un congé á partir de #{@furlough.start} jusqu'a #{@furlough.end} - loger le : #{Time.now}"
@@ -378,7 +378,7 @@ class FurloughsController < ApplicationController
       bank.update(balance_furlough: balance)
     end
     @furlough.update(end: furlough_stop_params[:stop_date], hour_end: furlough_stop_params[:hour_stop], stop_comment: furlough_stop_params[:stop_comment], status: "Arrêté")
-    FurloughMailer.with(furlough: @furlough).stop_furlough_email.deliver_later
+    #FurloughMailer.with(furlough: @furlough).stop_furlough_email.deliver_later
     role = Role.find(current_user.role_id)
     @journal = Journal.new
     @journal.content = "le #{role.title} (#{current_user.first_name} #{current_user.last_name}) à arrêter le congé avec la référence #{@furlough.reference_furlough} pour le collaborateur #{@furlough.user.first_name} #{@furlough.user.last_name} - loger le : #{Time.now}"

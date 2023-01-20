@@ -1,0 +1,26 @@
+<!-- Modal -->
+<div class="modal fade" id="certificate" role="dialog">
+    <%= simple_form_for(@certificate_request, as: :certificate_request, method: :post, url: certificate_path) do |f| %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h4 class="modal-title" id="myLargeModalLabel">Construire l'attestation</h4>
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <%#= f.object.certificate.filename %>
+                        <%= f.file_field :certificate %>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <%= f.button :submit, "Valider l'attestation", data: { confirm: 'Etes vous sur?' }, class: 'btn btn-raised btn-success' %>
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+

@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @template_attestation %>
+
+<div>
+  <%= link_to "Edit this template attestation", edit_template_attestation_path(@template_attestation) %> |
+  <%= link_to "Back to template attestations", template_attestations_path %>
+
+  <%= button_to "Destroy this template attestation", @template_attestation, method: :delete %>
+</div>

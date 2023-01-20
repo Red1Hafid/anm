@@ -29,20 +29,16 @@ class AbsencesController < ApplicationController
   # POST /absences or /absences.json
   def create
     @absence = Absence.new(absence_params)
-
     if @absence.save
       redirect_to absences_path, notice: "Absence was successfully created." 
     end
-    
   end
 
   # PATCH/PUT /absences/1 or /absences/1.json
   def update
-   
-      if @absence.update(absence_params)
-        redirect_to absences_path, notice: "Absence was successfully updated." 
-      end
-  
+    if @absence.update(absence_params)
+      redirect_to absences_path, notice: "Absence was successfully updated." 
+    end
   end
 
   # DELETE /absences/1 or /absences/1.json
