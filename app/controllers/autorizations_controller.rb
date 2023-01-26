@@ -4,23 +4,23 @@ class AutorizationsController < ApplicationController
   # GET /autorizations or /autorizations.json
   def index
     if ["Super Admin", "Rh"].include? current_user.role.title 
-      @autorizations = Autorization.all.where.not(status: 1)
+      @autorizations = Autorization.where.not(status: 1)
     else
       if !current_user.manager_titles.nil?
         if current_user.manager_titles.include? "Gestionnaire hiérarchique"
           user_ids = User.where(line_manager_id: current_user.id).pluck(:id)
-          @autorizations = Autorization.all.where(user_id: user_ids)
+          @autorizations = Autorization.where(user_id: user_ids)
         else
-          @autorizations = Autorization.all.where(user_id: current_user.id)
+          @autorizations = Autorization.where(user_id: current_user.id)
         end 
       else
-        @autorizations = Autorization.all.where(user_id: current_user.id)
+        @autorizations = Autorization.where(user_id: current_user.id)
       end
     end
 
       @setting = Setting.find(1)
       users_not_actif_ids = User.where(is_active: false).pluck(:id)
-      @users = User.all.where.not(id: users_not_actif_ids)
+      @users = User.where.not(id: users_not_actif_ids)
   end
 
   def authorizations_administration 
@@ -48,37 +48,32 @@ class AutorizationsController < ApplicationController
     @autorization = Autorization.new(autorization_params) 
     authorization_duration = Autorization.get_hour_authorization_duration(@autorization.date, @autorization.start_hour, @autorization.end_hour).to_f
     @autorization.stay_hour = authorization_duration
+    @autorization.time_taken = authorization_duration
     if ["Super Admin", "Rh"].include? current_user.role.title 
       if @autorization.user_id == current_user.id
-        @autorization.stay_hour = authorization_duration
         if @autorization.save
-          redirect_to authorizations_administration_path, notice: "Autorization was successfully created." 
+          redirect_to authorizations_administration_path, notice: "Autorisation was successfully created." 
         end
       else
         @autorization.encours!
-        @autorization.stay_hour = authorization_duration
         if @autorization.save
-          redirect_to autorizations_path, notice: "Autorization was successfully created." 
+          redirect_to autorizations_path, notice: "Autorisation was successfully created." 
         end
       end
-     
     else
       if !current_user.manager_titles.nil?
         if current_user.manager_titles.include? "Gestionnaire hiérarchique"
-          @autorization.stay_hour = authorization_duration
           if @autorization.save
-            redirect_to authorizations_administration_path, notice: "Autorization was successfully created." 
+            redirect_to authorizations_administration_path, notice: "Autorisation was successfully created." 
           end
         else
-          @autorization.stay_hour = authorization_duration
           if @autorization.save
-            redirect_to autorizations_path, notice: "Autorization was successfully created." 
+            redirect_to autorizations_path, notice: "Autorisation was successfully created." 
           end
         end
       else
-        @autorization.stay_hour = authorization_duration
         if @autorization.save
-          redirect_to autorizations_path, notice: "Autorization was successfully created." 
+          redirect_to autorizations_path, notice: "Autorisation was successfully created." 
         end
       end
     end
@@ -86,31 +81,32 @@ class AutorizationsController < ApplicationController
 
   # PATCH/PUT /autorizations/1 or /autorizations/1.json
   def update
+    authorization_duration = Autorization.get_hour_authorization_duration(autorization_params[:date], autorization_params[:start_hour], autorization_params[:end_hour]).to_f
     if ["Super Admin", "Rh"].include? current_user.role.title 
       if @autorization.user_id == current_user.id
-        if @autorization.update(autorization_params)
-          redirect_to authorizations_administration_path, notice: "Autorization was successfully updated." 
+        if @autorization.update(autorization_params.merge(stay_hour: authorization_duration, time_taken: authorization_duration))
+          redirect_to authorizations_administration_path, notice: "Autorisation was successfully updated." 
         end
       else
-        if @autorization.update(autorization_params)
-          redirect_to autorizations_path, notice: "Autorization was successfully updated." 
+        if @autorization.update(autorization_params.merge(stay_hour: authorization_duration, time_taken: authorization_duration))
+          redirect_to autorizations_path, notice: "Autorisation was successfully updated." 
         end
       end
      
     else
       if !current_user.manager_titles.nil?
         if current_user.manager_titles.include? "Gestionnaire hiérarchique"
-          if @autorization.update(autorization_params)
-            redirect_to authorizations_administration_path, notice: "Autorization was successfully updated." 
+          if @autorization.update(autorization_params.merge(stay_hour: authorization_duration, time_taken: authorization_duration))
+            redirect_to authorizations_administration_path, notice: "Autorisation was successfully updated." 
           end
         else
-          if @autorization.update(autorization_params)
-            redirect_to autorizations_path, notice: "Autorization was successfully updated." 
+          if @autorization.update(autorization_paramsn.merge(stay_hour: authorization_duration, time_taken: authorization_duration))
+            redirect_to autorizations_path, notice: "Autorisation was successfully updated." 
           end
         end
       else
-        if @autorization.update(autorization_params)
-          redirect_to autorizations_path, notice: "Autorization was successfully updated." 
+        if @autorization.update(autorization_params.merge(stay_hour: authorization_duration, time_taken: authorization_duration))
+          redirect_to autorizations_path, notice: "Autorisation was successfully updated." 
         end
       end
     end
@@ -125,7 +121,9 @@ class AutorizationsController < ApplicationController
   end
 
   def validate_autorization
+    authorization_duration = Autorization.get_hour_authorization_duration(@autorization.date, @autorization.start_hour, @autorization.end_hour).to_f
     @autorization.aprouved!
+    @autorization.is_ok = true if authorization_duration <= 2
     user_authorization = User.find(@autorization.user_id)
     if !user_authorization.line_manager_id.nil?
       g_h = User.find(user_authorization.line_manager_id)
@@ -154,6 +152,7 @@ class AutorizationsController < ApplicationController
 
   def refuse_autorization
     @autorization.refuse!
+    @autorization.is_ok = true
     if @autorization.save
       redirect_to autorizations_path, notice: "Autorization was successfully refused." 
     end
@@ -173,122 +172,45 @@ class AutorizationsController < ApplicationController
   def pre_recovered
   end
 
-  def recovered_second
-    @setting = Setting.find(1)
-    bank = Bank.find_by(user_id: @autorization.user_id)
-    furlough_balance = (bank.balance_furlough * @setting.day_work_hour).round(2)
-    additional_hours_balance = bank.balance_open_additional_hour_off_days
-    hour_stayed = @autorization.stay_hour
-
-    if additional_hours_balance > 0
-      if additional_hours_balance > hour_stayed
-        additional_hours_balance -= hour_stayed
-        hour_stayed = 0
-        bank.update(balance_open_additional_hour_off_days: additional_hours_balance)
-        @autorization.update(stay_hour: 0)
-        @autorization.update(is_ok: true)
-      else
-        hour_stayed -= additional_hours_balance
-        bank.update(balance_open_additional_hour_off_days: 0)
-        @autorization.update(stay_hour: hour_stayed)
-      end
-    end
-
-    if (furlough_balance > 0) && (hour_stayed > 0)
-      if furlough_balance > hour_stayed
-        furlough_balance -= hour_stayed
-        furlough_balance_d = (furlough_balance / @setting.day_work_hour)
-        bank.update(balance_furlough: furlough_balance_d)
-        @autorization.update(stay_hour: 0)
-        @autorization.update(is_ok: true)
-      else
-        hour_stayed -= furlough_balance
-        bank.update(balance_furlough: 0.0)
-        @autorization.update(stay_hour: hour_stayed)
-      end
-    end
-    
-    if @autorization.stay_hour > 0
-      redirect_to autorizations_path, warning: "It remains " + hour_stayed.to_s + " that must be managed manually."
-    else
-      redirect_to autorizations_path, success: "Autorization was successfully processed."
-    end 
-  end
-
   def recovered
     @setting = Setting.find(1)
     bank = Bank.find_by(user_id: @autorization.user_id)
-    furlough_balance = (bank.balance_furlough * @setting.day_work_hour)
-    additional_hours_balance = bank.balance_open_additional_hour_off_days
-    hour_stayed = @autorization.stay_hour
-    stay_hour = @autorization.stay_hour
     volume = recorvred_params[:volume].to_f
-    
-    if @autorization.recovery_method == "1"
 
-      if hour_stayed >= volume
-
-        if additional_hours_balance > 0
-          if additional_hours_balance > volume
-            additional_hours_balance -= volume
-            hour_stayed -= volume
-            volume = 0.0
-            bank.update(balance_open_additional_hour_off_days: additional_hours_balance) 
-            @autorization.update(stay_hour: hour_stayed)
-          else
-            hour_stayed -= additional_hours_balance
-            volume -= additional_hours_balance
-            bank.update(balance_open_additional_hour_off_days: 0)
-            @autorization.update(stay_hour: hour_stayed)
-          end
-        end
-
-        if (furlough_balance > 0) && (hour_stayed > 0)
-          if furlough_balance > volume
-            furlough_balance -= volume
-            hour_stayed -= volume
-            furlough_balance_d = (furlough_balance / @setting.day_work_hour)
-            bank.update(balance_furlough: furlough_balance_d)
-            @autorization.update(stay_hour: hour_stayed)
-          else
-            hour_stayed -= furlough_balance
-            bank.update(balance_furlough: 0.0)
-            @autorization.update(stay_hour: hour_stayed)
-          end
-        end
-        
-        if @autorization.stay_hour > 0
-          stay_after_update = stay_hour - recorvred_params[:volume].to_f 
-          debit_volume = stay_hour - stay_after_update
-          history = recorvred_params[:history_date].to_s + " recouvrement de " + debit_volume.to_s + " h"
-          @autorization.history.push(history)
-          @autorization.save
-
-          redirect_to autorizations_path, warning: "It remains " + hour_stayed.to_s + " that must be managed manually."
+    if @autorization.stay_hour >= volume
+      if @autorization.recovery_method == "1"
+        if volume <=  bank.balance_open_additional_hour_off_days
+          bank.update(balance_open_additional_hour_off_days: bank.balance_open_additional_hour_off_days - volume)
+          @autorization.update(stay_hour: @autorization.stay_hour - volume, history: @autorization.history.push(recorvred_params[:history_date].to_s + " recouvrement de " + volume.to_s + " h"))
+          volume = 0.0
         else
-          @autorization.update(is_ok: true)
-          history = recorvred_params[:history_date].to_s + " recouvrement de " + volume.to_s + " h"
-          @autorization.history.push(history)
-          @autorization.save
-     
-          redirect_to autorizations_path, success: "Autorization was successfully processed."
-        end 
+          history_volume = 0.0
+          volume -= bank.balance_open_additional_hour_off_days
+          history_volume += bank.balance_open_additional_hour_off_days
+          bank.update(balance_open_additional_hour_off_days: 0) 
+          if volume > 0
+            if (volume / @setting.day_work_hour) <= bank.balance_furlough 
+              bank.update(balance_furlough: bank.balance_furlough - (volume / @setting.day_work_hour))
+              history_volume += volume
+              @autorization.update(stay_hour: @autorization.stay_hour - history_volume, history: @autorization.history.push(recorvred_params[:history_date].to_s + " recouvrement de " + history_volume.to_s + " h"))
+            else
+              history_volume += bank.balance_furlough * @setting.day_work_hour
+              @autorization.update(stay_hour: @autorization.stay_hour - history_volume, history: @autorization.history.push(recorvred_params[:history_date].to_s + " recouvrement de " + history_volume.to_s + " h"))
+              bank.update(balance_furlough: 0.0)
+            end
+          end
+        end
       else
-        redirect_to autorizations_path, warning: "Invalid volume (" + volume.to_s + ")"
+        @autorization.update(stay_hour: @autorization.stay_hour - volume, history: @autorization.history.push(recorvred_params[:history_date].to_s + " recouvrement de " + volume.to_s + " h"))
+      end
+      if @autorization.stay_hour > 0
+        redirect_to autorizations_path, warning: "It remains " + @autorization.stay_hour.to_s + " that must be managed manually."
+      else
+        @autorization.update(is_ok: true)
+        redirect_to autorizations_path, success: "Autorization was successfully processed."
       end
     else
-      if hour_stayed >= volume
-        hour_stayed -= volume
-        @autorization.update(stay_hour: hour_stayed)
-        if hour_stayed == 0.0
-          @autorization.update(is_ok: true)
-          redirect_to autorizations_path, success: "Autorization was successfully processed."
-        else
-          redirect_to autorizations_path, warning: "It remains " + hour_stayed.to_s
-        end
-      else
-        redirect_to autorizations_path, warning: "Invalid volume (" + volume.to_s + ")"
-      end
+      redirect_to autorizations_path, warning: "Invalid volume (" + volume.to_s + ")"
     end
   end
 
@@ -371,16 +293,11 @@ class AutorizationsController < ApplicationController
         @autorizations = @autorizations.filter_by_recovery_method(recovery_method) 
       end
     end
-
-    puts "---------"
-    puts @autorizations
     
-
     filename = "Rapport-autorisations-" + Date.today.to_s + ".xlsx" 
     respond_to do |format|
       format.xlsx { headers["Content-Disposition"] = "attachment; filename=\"#{filename}\"" }
     end
-
   end
 
   private

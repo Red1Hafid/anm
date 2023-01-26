@@ -22,11 +22,15 @@
                         <div class="form-group">
                             Heur de fin : <%= @autorization.end_hour %>
                         </div>
+                         <div class="form-group">
+                            Heures prise : <%= @autorization.time_taken %>
+                        </div>
                         <div class="form-group">
                             Raison : <%= @autorization.comment %>
                         </div>
                         <div class="form-group">
                             Historique de recouvrement: <br>
+                            method de recouverement :  <%= @autorization.recovery_method %> <br>
                             <% @autorization.history.each do |h| %>
                                 <%= h %> <br>
                             <% end %>

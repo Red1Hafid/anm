@@ -119,7 +119,7 @@
                                             <td><%= additional_hour.period %></td>
                                             <td><%= additional_hour.total_additional_hour_in_week %></td>
                                             <% if params[:additional_hour_type] == 'HSJFT' %>
-                                                <td><%= additional_hour.consumed_hours.sum %></td>
+                                                <td><%= additional_hour.consumed_hours.sum if additional_hour.consumed_hours %></td>
                                                 <td><%= additional_hour.stay_hours %></td>
                                             <% end %>
                                             <td>

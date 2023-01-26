@@ -147,9 +147,7 @@
                                     <% end %>
                                 <% else %>
                                     <div class="col-lg-4">
-                                        <%= link_to pre_export_absences_path(), remote: true, class: "btn btn-warning waves-effect waves-light mr-3" do %>
-                                            <i class="mdi mdi-plus mr-1">Rapport</i>
-                                        <% end %>  
+                                        <%= link_to 'Exporter', pre_export_absences_path(), remote: true, class: "btn btn-warning waves-effect waves-light mr-3" %>  
                                     </div>
                                     <br>
                                     <div class="table-responsive">

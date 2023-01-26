@@ -36,13 +36,6 @@
                                     <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
                                 </div>
                             </div>
-                            <div class="col-2 text-sm-center form-inline">
-                                <div class="form-group">
-                                    <%= link_to pre_export_authorizations_path(), remote: true, class: "btn btn-warning" do %>
-                                        <i class="mdi mdi-plus mr-1">Rapport</i>
-                                    <% end %>  
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -137,15 +130,13 @@
                                                         <i class="mdi mdi-delete"></i>
                                                 <% end %> 
 
-                                            <% elsif autorization.aprouved? %>
-                                                <% if autorization.is_ok == false #&& is_recovred_by_balance(autorization) == true %>
-                                                    <% if autorization.stay_hour > 0 %>
-                                                        <%= link_to pre_recovered_path(autorization), remote: true, title: "Traiter", class: "action-icon" do %>
-                                                                <i class="mdi mdi-checkbox-multiple-marked-outline"></i>
-                                                        <% end %>
+                                            <% elsif autorization.aprouved? && autorization.is_ok == false %>
+                                                <% if autorization.time_taken > 2 %>
+                                                    <%= link_to pre_recovered_path(autorization), remote: true, title: "Traiter", class: "action-icon" do %>
+                                                            <i class="mdi mdi-checkbox-multiple-marked-outline"></i>
                                                     <% end %>
                                                 <% end %>
-
+                                               
                                                 <%= link_to to_print_authorisation_path(autorization, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
                                                     <i class="mdi mdi-printer"></i>
                                                 <% end %>
@@ -190,17 +181,14 @@
                                                     <% end %>
 
                                                     <% if autorization.aprouved? && autorization.recovery_method == "0" %>
-                                                        <% if autorization.is_ok == false #&& is_recovred_by_balance(autorization) == true %>
-                                                            <% if autorization.stay_hour > 0 %>
-                                                                <%= link_to pre_recovered_path(autorization), remote: true, title: "Traiter", class: "action-icon" do %>
-                                                                        <i class="mdi mdi-checkbox-multiple-marked-outline"></i>
-                                                                <% end %>
-                                                            <% end %>
+                                                        <% if autorization.is_ok == false && autorization.time_taken > 2 %>
+                                                            <%= link_to pre_recovered_path(autorization), remote: true, title: "Traiter", class: "action-icon" do %>
+                                                                    <i class="mdi mdi-checkbox-multiple-marked-outline"></i>
+                                                            <% end %> 
                                                         <% end %>
                                                     <% end %>
                                                 <% end %>
                                             <% end %>
-
                                         </td>  
                                     <% end %>             
                                 </tr>
@@ -208,9 +196,12 @@
                         </tbody>
                         <tfoot>
                         <tr class="active">
-                            <td colspan="6">
+                            <td colspan="8">
                                 <div class="text-right">
                                     <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                                </div>
+                                <div class="text-left">
+                                    <%= link_to 'Exporter', pre_export_authorizations_path(), remote: true, class: "btn btn-warning waves-effect waves-light ml-1" %> 
                                 </div>
                             </td>
                         </tr>

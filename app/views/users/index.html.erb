@@ -21,146 +21,128 @@
         </div>     
         <!-- end page title --> 
 
-
         <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-2">     
-                            <div class="col-lg-4"> 
-                                <%= search_form_for @q, class: "form-inline" do |f| %>
-                                    <div class="form-group">
-                                        <div class="col-lg-8">
-                                            <%= f.search_field :first_name_or_last_name_or_job_title_or_full_cont, class:"form-control" %>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <%= f.submit 'Chercher',  class: "btn btn-warning waves-effect waves-light ml-1" %> 
-                                        </div>   
-                                    </div>
-                                <% end %>
-                            </div>
-
-                            <div class="col-lg-2">
-                                <div class="text-lg-right">  
-                                    <%= link_to '#new_utilisateur', class: "btn btn-secondary waves-effect waves-light mb-2 mr-2", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_utilisateur'  do %>
-                                        <i class="mdi mdi-plus mr-1"> Nouveau</i>
-                                    <% end %>                               
+            <div class="col-sm-12">
+                <div class="card-box">
+                    <div class="mb-2">
+                        <div class="bg-light d-flex justify-content-between">
+                            <div class="text-sm-center form-inline">
+                                <div class="form-group mr-2">
+                                    <%= link_to '#new_utilisateur', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_utilisateur'  do %>
+                                        <i class="mdi mdi-plus mr-1"> Nouveau Collaborateur</i>
+                                    <% end %>    
                                 </div>
+                                <div class="form-group mr-2">
+                                    <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
+                                </div> 
                             </div>
-
-                            <div class="col-lg-4">
-                                <div class="text-lg-right mt-3 mt-lg-0">
-                                    <div class="btn-group dropright">
-                                        <button type="button" class="btn btn-info waves-effect waves-light dropdown-toggle mb-2 mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Filtrer par roles
-                                        </button>
-                                        <div class="dropdown-menu" style="">
-                                            <a class="dropdown-item" href="<%= users_path(type: 'Rh') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-info"></i>Rh</a>
-                                            <a class="dropdown-item" href="<%= users_path(type: 'Collaborateur') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-success"></i>Collaborateur</a>
-                                        </div>
+                            <div class="text-sm-center">  
+                                <div class="btn-group dropleft">
+                                    <button type="button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Filtrer par roles
+                                    </button>
+                                    <div class="dropdown-menu" style="">
+                                        <a class="dropdown-item" href="<%= users_path() %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-secondary"></i>Tous</a>
+                                        <a class="dropdown-item" href="<%= users_path(type: 'Rh') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-secondary"></i>Rh</a>
+                                        <a class="dropdown-item" href="<%= users_path(type: 'Collaborateur') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-secondary"></i>Collaborateur</a>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="col-lg-2"> 
-                                <%= form_tag users_path, :method => 'get',  class: "form-inline" do %>
-                                    <div class="form-group"> 
-                                        <%= link_to 'Exporter', users_path(type: "#{params[:type]}", format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
-                                    </div>
-                                <% end %>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="table-responsive">
-                            <table data-toggle="table"
-                                    data-show-columns="false"
-                                    data-page-list="[5, 10, 20]"
-                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
-                                    data-buttons-class="xs btn-light"
-                                    data-pagination="true" class="table-borderless">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th data-field="mat">Matricule</th>
-                                        <th data-field="">Nom complet</th>
-                                        <th data-field="email">Poste</th>
-                                        <th data-field="manager">Est Gestionnaire</th>
-                                        <th data-field="role">Role</th>
-                                        <th data-field="started_at_date">Date d'intégration</th>
-                                        <th data-field="status">Statut</th>
-                                        <th style="width: 125px;">Actions</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <% @users.each do |user| %>
-                                        <tr>          
-                                            <td> <%= user.matricule %></td>                                
-                                            <td> <%= user.first_name %> <%= user.last_name %>
-                                            </td>
-                                            <td><%= user.job_title %></td>
-                                            <% if user.manager_titles.nil? %>
-                                                <td></td>
+                    <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size=<%= (@setting.number_items_of_page).to_s %>>
+                        <thead>
+                        <tr>
+                            <th data-sort-initial="true" data-toggle="true">Nom complet</th>
+                            <th>Poste</th>
+                            <th data-hide="phone, tablet">Est Gestionnaire ?</th>
+                            <th data-hide="phone, tablet">Role</th>
+                            <th data-hide="phone, tablet">Statut</th>
+                            
+                            <th data-hide="phone, tablet">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <% @users.each do |user| %>
+                                <tr>                                         
+                                    <td> <%= user.first_name %> <%= user.last_name %>
+                                    </td>
+                                    <td><%= user.job_title %></td>
+                                    <td>
+                                        <% user.manager_titles.each do |manager_title| %>
+                                            <% if manager_title == "Gestionnaire fonctionnel" %>
+                                                <span class="badge label-table badge-info"><%= manager_title %></span>
                                             <% else %>
-                                                <% if user.manager_titles.count != 0 %>
-                                                    <td> <%= user.manager_titles %></td>
-                                                <% else %>
-                                                    <td></td>
-                                                <% end %>
+                                                <span class="badge label-table badge-secondary"><%= manager_title %></span>
                                             <% end %>
-                                            
-                                            <td><%= user.role.title %></td>
-                                            <td><%= user.started_at %></td>
-                                            <td><% if user.created? %>
-                                                  <div class="badge font-14 badge badge-info p-1">Nouveau</div>
-                                                <% elsif user.actif? %> 
-                                                  <div class="badge font-14 badge badge-success p-1">Actif</div> 
-                                                <% elsif user.suspended? %>
-                                                   <div class="badge font-14 badge badge-warning p-1">Suspendu</div>
-                                                <% else %>
-                                                   <div class="badge font-14 badge badge-danger p-1">Désactivé</div>
-                                                <% end %>
-                                            </td>
-                                            <td>
-                                                <% if user.created? %>
-                                                    <%= link_to user_path(user), remote: true, title: "Voir", class: "action-icon" do %>
-                                                        <i class="mdi mdi-eye"></i>
-                                                    <% end %>
-                                                    <%= link_to edit_user_path(user), remote: true, title: "Modifier", class: "action-icon" do %>
-                                                        <i class="mdi mdi-border-color"></i>
-                                                    <% end %> 
-                                                    <%= link_to user, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
-                                                        <i class="mdi mdi-delete"></i>
-                                                    <% end %> 
                                                    
-                                                <% else %>
-                    
-                                                     <%= link_to user_path(user), remote: true, title: "Voir", class: "action-icon" do %>
-                                                        <i class="mdi mdi-eye"></i>
-                                                    <% end %>
-                                                    <%= link_to edit_user_path(user), remote: true, title: "Modifier", class: "action-icon" do %>
-                                                        <i class="mdi mdi-border-color"></i>
-                                                    <% end %> 
-                                                    <% if user.actif? %>
-                                                        <%= link_to pre_disable_path(user), title: "Désactiver", class: "action-icon" do %>
-                                                            <i class="mdi mdi-close-octagon"></i>
-                                                        <% end %> 
-                                                    <% elsif user.desabled? %>
-                                                        <%= link_to enable_path(user), data: { confirm: 'Etes vous sur?', title: 'Confirm action', commit: 'YES', cancel: 'NO' }, title: "Activer", class: "action-icon" do %>
-                                                            <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
-                                                        <% end %> 
-                                                    <% end %> 
-                                                <% end %>
-                                            </td>                                            
-                                        </tr> 
-                                    <% end %> 
-                                </tbody>
-                            </table>
-                            <!-- end row -->
-                        </div>
-                    </div> <!-- end card-body-->
-                </div> <!-- end card-->
+                                        <% end %>
+                                    </td>
+                                    <td><%= user.role.title %></td>
+                                    <td><% if user.created? %>
+                                            <div class="badge font-14 badge badge-info p-1">Nouveau</div>
+                                        <% elsif user.actif? %> 
+                                            <div class="badge font-14 badge badge-success p-1">Actif</div> 
+                                        <% elsif user.suspended? %>
+                                            <div class="badge font-14 badge badge-warning p-1">Suspendu</div>
+                                        <% else %>
+                                            <div class="badge font-14 badge badge-danger p-1">Désactivé</div>
+                                        <% end %>
+                                    </td>
+                                    <td>
+                                        <% if user.created? %>
+                                            <%= link_to user_path(user), remote: true, title: "Voir", class: "action-icon" do %>
+                                                <i class="mdi mdi-eye"></i>
+                                            <% end %>
+                                            <%= link_to edit_user_path(user), remote: true, title: "Modifier", class: "action-icon" do %>
+                                                <i class="mdi mdi-border-color"></i>
+                                            <% end %> 
+                                            <%= link_to user, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                                <i class="mdi mdi-delete"></i>
+                                            <% end %> 
+                                            
+                                        <% else %>
+            
+                                                <%= link_to user_path(user), remote: true, title: "Voir", class: "action-icon" do %>
+                                                <i class="mdi mdi-eye"></i>
+                                            <% end %>
+                                            <%= link_to edit_user_path(user), remote: true, title: "Modifier", class: "action-icon" do %>
+                                                <i class="mdi mdi-border-color"></i>
+                                            <% end %> 
+                                            <% if user.actif? %>
+                                                <%= link_to pre_disable_path(user), title: "Désactiver", class: "action-icon" do %>
+                                                    <i class="mdi mdi-close-octagon"></i>
+                                                <% end %> 
+                                            <% elsif user.desabled? %>
+                                                <%= link_to enable_path(user), data: { confirm: 'Etes vous sur?', title: 'Confirm action', commit: 'YES', cancel: 'NO' }, title: "Activer", class: "action-icon" do %>
+                                                    <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                                <% end %> 
+                                            <% end %> 
+                                        <% end %>
+                                    </td>                                            
+                                </tr> 
+                            <% end %> 
+                        </tbody>
+                        <tfoot>
+                            <tr class="active">
+                                <td colspan="6">
+                                    <div class="text-right">
+                                        <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                                    </div>
+                                    <div class="text-left"> 
+                                        <%= form_tag users_path, :method => 'get',  class: "form-inline" do %>
+                                            <%= link_to 'Exporter', users_path(type: "#{params[:type]}", format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                                        <% end %>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div> <!-- end card-box -->
             </div> <!-- end col -->
         </div>
+        <!-- end row -->
     </div>
 </div> <!-- content -->
 
