@@ -47,88 +47,79 @@
                 </div>
               <% end %>
             </div>
-            <div class="row mb-3">
-              <div class="table-responsive">
-                <table data-toggle="table"
-                       data-show-columns="false"
-                       data-pagination="true"
-                       data-buttons-class="xs btn-light"
-                       class="table-borderless"
-                       data-page-size=<%= (@setting.number_items_of_page).to_s %>
-                >
-                  <thead class="thead-light">
-                    <tr>
-                      <th data-field="name">Name</th>
-                      <th data-field="percentage">Percentage</th>
-                      <th data-field="max_value">Coût maximum</th>
-                      <th data-field="is_active">Status</th>
-                      <th class="action">Actions</th>
-                    </tr>
-
-                  </thead>
-                  <tbody>
-                  <% @costs.each do |cost| %>
-                    <tr>
-                      <td>
-                        <%= cost.name %>
-                      </td>
-                      <td>
-                        <% if cost.percentage %>
+            <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+              <thead>
+              <tr>
+                <th data-sort-initial="true" data-toggle="true">Nom</th>
+                <th data-hide="phone, tablet">Percentage</th>
+                <th data-hide="phone, tablet">Coût maximum</th>
+                <th data-hide="phone, tablet">Status</th>
+                <th data-hide="phone, tablet">Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @costs.each do |cost| %>
+                <tr>
+                  <td> <%= cost.name %> </td>
+                  <td> <% if cost.percentage %>
                         <%= cost.percentage %>%
-                          <% else %>
-                            NaN
-                          <% end %>
-                      </td>
-                      <td>
-                        <% if cost.max_value %>
-                          <%= cost.max_value %>  Dh
-                        <% else %>
-                          NaN
-                        <% end %>
-                      </td>
-                      <td>
-                        <% if cost.is_active %>
-                          <span class="badge badge-success">Actif</span>
-                          <% else %>
-                          <span class="badge badge-dark">Désactiver</span>
-                        <% end %>
-                      </td>
-                      <td class="action">
-                        <%= link_to cost_path(cost), remote: true, class: "action-icon" do %>
-                          <i class="mdi mdi-eye"></i>
-                        <% end %>
+                      <% else %>
+                        NaN
+                      <% end %></td>
+                  <td> <% if cost.max_value %>
+                      <%= cost.max_value %>  Dh
+                    <% else %>
+                      NaN
+                    <% end %></td>
+                  <td>
+                      <% if cost.is_active %>
+                        <span class="badge badge-success">Actif</span>
+                      <% else %>
+                        <span class="badge badge-dark">Désactiver</span>
+                      <% end %>
+                  </td>
+                  <td class="action">
+                      <%= link_to cost_path(cost), remote: true, class: "action-icon" do %>
+                        <i class="mdi mdi-eye"></i>
+                      <% end %>
 
-                        <%= link_to  edit_cost_path(cost), remote: true, class: "action-icon" do %>
-                          <i class="mdi mdi-border-color"></i>
-                        <% end %>
+                      <%= link_to  edit_cost_path(cost), remote: true, class: "action-icon" do %>
+                        <i class="mdi mdi-border-color"></i>
+                      <% end %>
 
-                        <% if cost.status != 'deleted' %>
-                          <%= link_to delete_cost_path(cost.id), data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
-                            <i class="mdi mdi-archive-arrow-down"></i>
-                          <% end %>
-                        <% else %>
-                          <%= link_to unarchive_cost_path(cost.id), data: { confirm: 'Etes vous sur?', title: 'Confirme le désarchivage?' }, title: "Suprimer", class: "action-icon" do %>
-                            <i class="mdi mdi-archive-arrow-up"></i>
-                          <% end %>
+                      <% if cost.status != 'deleted' %>
+                        <%= link_to delete_cost_path(cost.id), data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                          <i class="mdi mdi-archive-arrow-down"></i>
                         <% end %>
-
-                        <% if cost.is_active == true %>
-                            <%= link_to disable_cost_path(cost), data: { confirm: 'Etes vous sur de disativer?', title: 'Confirme le changement du status?' }, title: "changement du status", class: "action-icon" do %>
-                            <i class="mdi mdi-lock"></i>
-                            <% end %>
-                          <% else %>
-                            <%= link_to enable_cost_path(cost), data: { confirm: 'Etes vous sur d activer?', title: 'Confirme le changement du status?' }, title: "changement du status", class: "action-icon" do %>
-                              <i class="mdi mdi-lock-open"></i>
-                            <% end %>
+                      <% else %>
+                        <%= link_to unarchive_cost_path(cost.id), data: { confirm: 'Etes vous sur?', title: 'Confirme le désarchivage?' }, title: "Suprimer", class: "action-icon" do %>
+                          <i class="mdi mdi-archive-arrow-up"></i>
                         <% end %>
+                      <% end %>
 
-                      </td>
-                    </tr>
-                  <% end %>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                      <% if cost.is_active == true %>
+                      <%= link_to disable_cost_path(cost), data: { confirm: 'Etes vous sur de disativer?', title: 'Confirme le changement du status?' }, title: "changement du status", class: "action-icon" do %>
+                        <i class="mdi mdi-lock"></i>
+                      <% end %>
+                    <% else %>
+                      <%= link_to enable_cost_path(cost), data: { confirm: 'Etes vous sur d activer?', title: 'Confirme le changement du status?' }, title: "changement du status", class: "action-icon" do %>
+                        <i class="mdi mdi-lock-open"></i>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+              <tfoot>
+              <tr class="active">
+                <td colspan="8">
+                  <div class="text-right">
+                    <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                  </div>
+                </td>
+              </tr>
+              </tfoot>
+            </table>
           </div>
         </div>
       </div>
