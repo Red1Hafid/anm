@@ -54,43 +54,43 @@
                             </div>
                         </div>
 
-                        
-                        <div class="table-responsive">
-                            <table data-toggle="table"
-                                    data-show-columns="false"
-                                    data-page-list="[5, 10, 20]"
-                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
-                                    data-buttons-class="xs btn-light"
-                                    data-pagination="true" class="table-borderless">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th data-field="name">Type d'absence </th>
-                                        <th data-field="code">Code </th>
-                                        <th style="width: 125px;">Actions</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <% @absence_types.each do |absence_type| %>
-                                        <tr>  
-                                            <td><%= absence_type.name %></td>
-                                            <td><%= absence_type.code %></td>
-                                            <td>
-                                                <%= link_to absence_type_path(absence_type), remote: true, title: "Voir", class: "action-icon" do %>
-                                                    <i class="mdi mdi-eye"></i>
-                                                <% end %>
-                                                <%= link_to edit_absence_type_path(absence_type), remote: true, title: "Modifier", class: "action-icon" do %>
-                                                    <i class="mdi mdi-border-color"></i>
-                                                <% end %>  
-                                                <%= link_to absence_type, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
-                                                    <i class="mdi mdi-delete"></i>
-                                                <% end %>                                           
-                                            </td>                                            
-                                        </tr> 
-                                    <% end %>
-                                </tbody>
-                            </table>
-                        </div>
+                      <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+                        <thead>
+                          <tr>
+                            <th data-sort-initial="true" data-toggle="true">Type d'absence </th>
+                            <th data-hide="phone, tablet">Code </th>
+                            <th data-hide="phone, tablet">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <% @absence_types.each do |absence_type| %>
+                          <tr>
+                            <td><%= absence_type.name %></td>
+                            <td><%= absence_type.code %></td>
+                            <td>
+                              <%= link_to absence_type_path(absence_type), remote: true, title: "Voir", class: "action-icon" do %>
+                                <i class="mdi mdi-eye"></i>
+                              <% end %>
+                              <%= link_to edit_absence_type_path(absence_type), remote: true, title: "Modifier", class: "action-icon" do %>
+                                <i class="mdi mdi-border-color"></i>
+                              <% end %>
+                              <%= link_to absence_type, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                                <i class="mdi mdi-delete"></i>
+                              <% end %>
+                            </td>
+                          </tr>
+                        <% end %>
+                        </tbody>
+                        <tfoot>
+                        <tr class="active">
+                          <td colspan="8">
+                            <div class="text-right">
+                              <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                            </div>
+                          </td>
+                        </tr>
+                        </tfoot>
+                      </table>
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->
