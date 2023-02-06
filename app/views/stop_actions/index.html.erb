@@ -57,49 +57,50 @@
                                 </div>
                             <% end %>
                         </div>
-                            
-                        <div class="table-responsive">
-                            <table data-toggle="table"
-                                    data-show-columns="false"
-                                    data-page-list="[5, 10, 20]"
-                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
-                                    data-buttons-class="xs btn-light"
-                                    data-pagination="true" class="table-borderless">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th data-field="code">Code</th>
-                                        <th data-field="actions">Actions</th>
-                                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                          <th style="width: 125px;">Actions</th>
-                                        <% end %>
-                                    </tr>
-                                </thead>
 
-                                <tbody>
-                                    <% @stop_actions.each do |stop_action| %>
-                                        <tr>  
-                                            <td><%= stop_action.code %></td>
-                                            <td><%= stop_action.name %></td>
-                                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                                <td>
-                                                    <%= link_to stop_action_path(stop_action), remote: true, class: "action-icon" do %>
-                                                        <i class="mdi mdi-eye"></i>
-                                                    <% end %>
+                      <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+                        <thead>
+                        <tr>
+                          <th data-sort-initial="true" data-toggle="true">Code</th>
+                          <th data-hide="phone, tablet">Actions</th>
+                          <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                            <th data-hide="phone, tablet">Actions</th>
+                          <% end %>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% @stop_actions.each do |stop_action| %>
+                          <tr>
+                            <td><%= stop_action.code %></td>
+                            <td><%= stop_action.name %></td>
+                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                              <td>
+                                <%= link_to stop_action_path(stop_action), remote: true, class: "action-icon" do %>
+                                  <i class="mdi mdi-eye"></i>
+                                <% end %>
 
-                                                    <%= link_to edit_stop_action_path(stop_action), remote: true, class: "action-icon" do %>
-                                                        <i class="mdi mdi-border-color"></i>
-                                                    <% end %>
+                                <%= link_to edit_stop_action_path(stop_action), remote: true, class: "action-icon" do %>
+                                  <i class="mdi mdi-border-color"></i>
+                                <% end %>
 
-                                                    <%= link_to stop_action, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
-                                                            <i class="mdi mdi-delete"></i>
-                                                    <% end %> 
-                                                </td> 
-                                            <% end %>                                        
-                                        </tr> 
-                                    <% end %>
-                                </tbody>
-                            </table>
-                        </div>
+                                <%= link_to stop_action, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                                  <i class="mdi mdi-delete"></i>
+                                <% end %>
+                              </td>
+                            <% end %>
+                          </tr>
+                        <% end %>
+                        </tbody>
+                        <tfoot>
+                        <tr class="active">
+                          <td colspan="8">
+                            <div class="text-right">
+                              <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                            </div>
+                          </td>
+                        </tr>
+                        </tfoot>
+                      </table>
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->
