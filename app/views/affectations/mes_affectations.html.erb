@@ -15,86 +15,114 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="row mb-3">
-
-              <div class="col-lg-8">
-              </div>
-
-              <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                <div class="col-lg-4 d-flex justify-content-end">
-                  <%= link_to '#new_affectation', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_affectation'  do %>
-                    <i class="mdi mdi-plus mr-1"> Nouveau</i>
+      <div class="col-sm-12">
+        <div class="card-box">
+          <div class="mb-2">
+            <div class="bg-light d-flex justify-content-between">
+              <div class="text-sm-center form-inline">
+                <div class="form-group mr-2">
+                  <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                    <%= link_to '#new_affectation', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_affectation'  do %>
+                      <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                    <% end %>
                   <% end %>
+                </div>
+                <div class="form-group">
                   <% if  params.has_key?(:status)%>
                     <a class="btn btn-info" href="<%= mes_affectations_path %>"> <i class="mdi mdi-filter mr-1"></i> Affectations</a>
                   <% else %>
                     <a class="btn btn-info" href="<%= mes_affectations_path(status: 'disaffected') %>"> <i class="mdi mdi-filter mr-1"></i>Desaffectations</a>
                   <% end %>
-
-                  <%= form_tag affectations_path, :method => 'get',  class: "form-inline mr-3" do %>
-                    <% if @affectations.count > 0 %>
-                      <div class="form-group">
-                        <%= link_to 'Exporter', affectations_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
-                      </div>
-                    <% end %>
-                  <% end %>
                 </div>
-              <% end %>
-            </div>
-            <div class="row mb-3">
-              <div class="table-responsive">
-                <table data-toggle="table"
-                       data-show-columns="false"
-                       data-pagination="true"
-                       data-buttons-class="xs btn-light"
-                       class="table-borderless"
-                       data-page-size=<%= (@setting.number_items_of_page).to_s %>
-                >
-                  <thead class="thead-light">
-                  <tr>
-                    <th data-field="project_id">Project</th>
-                    <th data-field="comments">Commentaires</th>
-                    <th data-field="date_affectation">Date d'affectation</th>
-                    <th class="action">Actions</th>
-                  </tr>
-
-                  </thead>
-                  <tbody>
-                  <% @affectations.each do |affectation| %>
-                    <tr>
-                      <td>
-                        <% if affectation.project %>
-                          <%= affectation.project.name %>
-                        <% end %>
-                      </td>
-
-                      <td>
-                        <% if affectation.comments %>
-                          <%= affectation.comments %>
-                          <% else %>
-                            Nan
-                        <% end %>
-                      </td>
-
-                      <td>
-                        <%= affectation.date_affectation %>
-                      </td>
-
-                      <td class="action">
-                        <%= link_to affectation_path(affectation), remote: true, class: "action-icon" do %>
-                          <i class="mdi mdi-eye"></i>
-                        <% end %>
-                      </td>
-                    </tr>
-                    <% end %>
-                  </tbody>
-                </table>
               </div>
             </div>
           </div>
+          <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+            <thead>
+            <tr>
+              <th data-sort-initial="true" data-toggle="true">collaborateur</th>
+              <th data-hide="phone, tablet">Project</th>
+              <th data-hide="phone, tablet">Commentaires</th>
+              <th data-hide="phone, tablet">Date d'affectation</th>
+              <th data-hide="phone, tablet">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @affectations.each do |affectation| %>
+              <tr>
+
+                <td>
+                  <% if affectation.user %>
+                    <%= affectation.user.first_name %>
+                    <%= affectation.user.last_name %>
+                  <% end %>
+                </td>
+
+                <td>
+                  <% if affectation.user %>
+                    <%= affectation.project.name %>
+                  <% end %>
+                </td>
+
+                <td>
+                  <% if affectation.comments %>
+                    <%= affectation.comments %>
+                  <% else %>
+                    Nan
+                  <% end %>
+                </td>
+
+                <td>
+                  <%= affectation.date_affectation %>
+                </td>
+
+                <td class="action">
+                  <%= link_to affectation_path(affectation), remote: true, class: "action-icon" do %>
+                    <i class="mdi mdi-eye"></i>
+                  <% end %>
+
+                  <% if affectation.is_active %>
+                    <%= link_to  edit_affectation_path(affectation), remote: true, class: "action-icon" do %>
+                      <i class="mdi mdi-border-color"></i>
+                    <% end %>
+
+                    <%= link_to pre_disaffectation_path(affectation),  remote: true, class: "action-icon" do %>
+                      <i class="mdi mdi-sync-off"></i>
+                    <% end %>
+
+                  <% else %>
+                    <button type="button" class="border-0 bg-transparent action-icon" data-toggle="modal" data-target="#new_affectation" data-object="<%= affectation.to_json %>" onclick="set_input(<%= affectation.to_json %>)">
+                      <i data-feather="minimize-2" ></i>
+                    </button>
+
+                    <!--
+                          <%= link_to new_affectation_path(affectation), :id => 'affectation', "data-toggle" => "modal", 'data-target' => '#new_affectation', 'data-object' => affectation , :locals => {:affectation => affectation}  do %>
+                            <i data-feather="minimize-2" ></i>
+                          <% end %>
+                          .-->
+                  <% end %>
+
+                </td>
+              </tr>
+            <% end %>
+            </tbody>
+            <tfoot>
+            <tr class="active">
+              <td colspan="8">
+                <div class="text-right">
+                  <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                </div>
+                <%= form_tag mes_affectations_path, :method => 'get',  class: "form-inline mr-3" do %>
+                  <% if @affectations.count > 0 %>
+                    <div class="form-group">
+                      <%= link_to 'Exporter', affectations_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                    </div>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
         </div>
       </div>
     </div>
