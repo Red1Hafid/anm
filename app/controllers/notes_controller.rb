@@ -3,7 +3,11 @@ class NotesController < ApplicationController
 
   def index
     @setting = Setting.find(1)
-    @q = Note.includes(:user, :cost).ransack(params[:q])
+    if ["Super Admin", "Rh"].include? current_user.role.title
+      @q = Note.includes(:user, :cost).ransack(params[:q])
+    else
+      @q = Note.includes(:user, :cost).where(user_id: current_user).ransack(params[:q])
+    end
     @costs = Cost.filter_by_active.filter_by_status(1)
     @users = User.where.not(role_id: 1)
     @projects = Project.filter_by_status(1)
