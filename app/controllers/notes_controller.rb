@@ -14,8 +14,10 @@ class NotesController < ApplicationController
   end
 
   def mes_notes
-    @setting = Setting.find(1)
+    @user =  @user = User.find_by(id: current_user.id)
+    @user_projects = @user.projects
     @notes = Note.mes_notes(current_user.id)
+    @costs = Cost.filter_by_active.filter_by_status(1)
   end
 
   def project_users
@@ -26,10 +28,6 @@ class NotesController < ApplicationController
     result[:user_id] = @user.id
     @projects = @user.projects
     result[:projects] = @projects.pluck(:name)
-
-    puts "----------------------------------"
-    puts result
-    puts "----------------------------------"
 
     render :json => result
   end
@@ -43,10 +41,11 @@ class NotesController < ApplicationController
 
   def create
     @note = Note.new(note_params)
-
-    if ['Super Admin', 'Rh'].include? current_user.role.title
+    if  @note.user_id.present? && @note.user_id != current_user.id
+      is_administration = false
     else
       @note.user_id = current_user.id
+      is_administration = true
     end
     @cost = Cost.find(@note.cost_id)
     message = ""
@@ -58,10 +57,17 @@ class NotesController < ApplicationController
         end
     end
     if @note.save
-      flash[:notice] = "La Note est créée avec succès."
-      redirect_to notes_path, success: "La Note est créée avec succès"
+      if is_administration
+        redirect_to mes_notes_path, success: "La Note est créée avec succès"
+      else
+        redirect_to notes_path, success: "La Note est créée avec succès"
+      end
     else
-      redirect_to notes_path, warning: message
+      if is_administration
+        redirect_to mes_notes_path, warning: message
+      else
+        redirect_to notes_path, warning: message
+      end
     end
   end
 

@@ -18,70 +18,80 @@
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <div class="row mb-3">
-            </div>
-            <div class="row mb-3">
-              <div class="table-responsive">
-                <table data-toggle="table"
-                       data-show-columns="false"
-                       data-pagination="true"
-                       data-buttons-class="xs btn-light"
-                       class="table-borderless"
-                       data-page-size=<%= (@setting.number_items_of_page).to_s %>
-                >
-                  <thead class="thead-light">
-                  <tr>
-                    <th data-field="name">Name</th>
-                    <th data-field="total">Montant</th>
-                    <th data-field="cost_id">Type de Categories</th>
-                    <th data-field="facture_date">Date de Facture</th>
-                    <th data-field="documment">
-                      Pièce jointe</th>
-                    <th class="action">Actions</th>
-                  </tr>
-
-                  </thead>
-                  <tbody>
-                  <% @notes.each do |note| %>
-                    <tr>
-                      <td>
-                        <%= note.name %>
-                      </td>
-
-                      <td>
-                        <%= note.total %>  Dh
-                      </td>
-
-                      <td>
-                        <% if note.cost %>
-                          <%= note.cost.name %>
-                        <% end %>
-                      </td>
-
-                      <td>
-                        <%= note.facture_date.strftime('%d/%m/%Y')  %>
-                      </td>
-
-                      <td>
-                        <% if note.documment.attached?  %>
-                          <%= link_to 'Voir pdf', rails_blob_path(note.documment, disposition: "attachment") %>
-                          <% else %>
-                           aucun document joint
-                        <% end %>
-                      </td>
-
-                      <td class="action">
-                        <%= link_to note_path(note), remote: true, class: "action-icon" do %>
-                          <i class="mdi mdi-eye"></i>
-                        <% end %>
-
-                      </td>
-                    </tr>
+            <div class="bg-light d-flex justify-content-between mb-2">
+              <div class="text-sm-center form-inline">
+                <div class="form-group mr-2">
+                  <%= link_to '#new_note', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_note'  do %>
+                    <i class="mdi mdi-plus mr-1"> Nouveau Note </i>
                   <% end %>
-                  </tbody>
-                </table>
+                </div>
+                <div class="form-group">
+                  <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
+                </div>
               </div>
             </div>
+            <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+              <thead>
+              <tr>
+                <th data-sort-initial="true" data-toggle="true">Nom</th>
+                <th data-hide="phone, tablet">collaborateur</th>
+                <th data-hide="phone, tablet">Montant</th>
+                <th data-hide="phone, tablet">Type de Categories</th>
+                <th data-hide="phone, tablet">Date de Facture</th>
+                <th data-hide="phone, tablet">Pièce jointe</th>
+                <th data-sort-initial="true" data-toggle="true">Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @notes.each do |note| %>
+                <tr>
+                  <td>  <%= note.name %></td>
+                  <td> <% if note.user %>
+                      <%= note.user.first_name %>
+                      <%= note.user.last_name %>
+                    <% end %></td>
+                  <td>  <%= note.total %>  Dh</td>
+                  <td>  <% if note.cost %>
+                      <%= note.cost.name %>
+                    <% end %></td>
+                  <td><%= note.facture_date.strftime('%d/%m/%Y')  %></td>
+                  <td> <% if note.documment.attached?  %>
+                      <%= link_to 'Voir pdf', rails_blob_path(note.documment, disposition: "attachment") %>
+                    <% else %>
+                      aucun document joint
+                    <% end %></td>
+                  <td class="action">
+                    <%= link_to note_path(note), remote: true, title: "Voir", class: "action-icon" do %>
+                      <i class="mdi mdi-eye"></i>
+                    <% end %>
+                    <%= link_to edit_note_path(note), remote: true, title: "Modifier", class: "action-icon" do %>
+                      <i class="mdi mdi-border-color"></i>
+                    <% end %>
+                    <%= link_to note, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                      <i class="mdi mdi-delete"></i>
+                    <% end %>
+
+                  </td>
+                </tr>
+              <% end %>
+              </tbody>
+              <tfoot>
+              <tr class="active">
+                <td colspan="8">
+                  <div class="text-right">
+                    <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                  </div>
+                  <%= form_tag notes_path, :method => 'get',  class: "form-inline" do %>
+                    <% if @notes.count > 0 %>
+                      <div class="form-group">
+                        <%= link_to 'Exporter', notes_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </td>
+              </tr>
+              </tfoot>
+            </table>
           </div>
         </div>
       </div>
@@ -89,3 +99,87 @@
     <div id='remote-container'></div>
   </div>
 </div>
+
+<div class="modal fade" id="new_note" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myLargeModalLabel">Ajout des Notes des Categories</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <%= simple_form_for(Note.new, as: :note, method: :post, html: { class: "form-horizontal" }) do |f| %>
+        <div class="modal-body">
+          <%= f.error_notification %>
+          <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+          <div class="form-group">
+            <%= f.input :name, label: 'Name', placeholder: "Entrer le nom", class: 'form-control' %>
+          </div>
+
+          <div class="form-group mb-3">
+            <%= f.input :cost_id, label: "Les Categories", input_html: { id: 'cost', :style => "display:none;" } %>
+            <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange='set_cost_id();'>
+              <optgroup label="Les Frais">
+                <% if @costs %>
+                  <%= @costs.each do |cost| %>
+                    <option><%= cost.name %></option>
+                  <% end %>
+                <% end %>
+              </optgroup>
+            </select>
+          </div>
+
+          <%= f.association :project, label: "projet", label_method: :name, collection: @user_projects, value_method: :id, class: 'form-control', include_blank: false %>
+
+          <div class="form-group">
+            <%= f.input :total, label: 'Montant', placeholder: "Entrer le Montant", class: 'form-control' %>
+          </div>
+
+          <div class="form-group">
+            <%= f.input :facture_date, as: :date, html5: true, label: 'Date', placeholder: "Entrer la date", class: 'form-control' %>
+          </div>
+
+          <div class="col-12">
+            <% if f.object.documment  %>
+              <%= f.object.documment.filename %>
+              <%= f.file_field :documment %>
+              <h4><span class="badge badge-danger ml-1"></span></h4>
+            <% else %>
+              NaN
+            <% end %>
+          </div>
+
+        </div>
+
+        <div class="modal-footer d-flex justify-content-between">
+          <div>
+            <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+          </div>
+          <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+        </div>
+
+      <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<script>
+    function set_cost_id() {
+        var cost = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText.slice(1);
+        console.log(cost);
+
+        if(cost == "") {
+            $('#cost').val("");
+        }
+        else {
+            var url = '<%= domainename + 'findcostid/' %>';
+            $.when(
+                $.getJSON(url+cost)
+            ).done( function(json) {
+                $('#cost').val(json);
+            });
+        }
+
+    }
+
+</script>
