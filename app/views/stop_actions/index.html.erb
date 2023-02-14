@@ -24,84 +24,85 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                <div class="col-lg-6">
-                                    <%= form_tag import_stop_actions_path, multipart: true do %>
-                                        <%= file_field_tag :file, required: true %>
-                                        <%= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
-                                    <% end %>
-                                </div> 
-                            <% end %>
-                            
-                            <div class="col-lg-4">
-                                <%= form_tag stop_actions_path, :method => 'get',  class: "form-inline" do %>
-                                    <div class="form-group">
-                                        <% if params[:search].present? %>
-                                            <%= text_field_tag :search,nil, class:"form-control", value:"#{params[:search]}" %>
-                                        <% else %>
-                                            <%= text_field_tag :search,nil, class:"form-control", placeholder:"Trouvez une commande ... " %>
-                                        <% end %>
-                                        <button type="submit" class="btn btn-warning waves-effect waves-light ml-1"><i class="mdi mdi-magnify mr-1"></i> Chercher !</button>
-                                    </div>
-                                <% end %>
-                            </div> 
-
-                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                <div class="col-lg-2">  
-                                    <%= link_to '#new_stop_action', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_stop_action'  do %>
-                                        <i class="mdi mdi-plus mr-1"> Nouveau</i>
-                                    <% end %>    
-                                </div>
-                            <% end %>
-                        </div>
-
-                      <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
-                        <thead>
-                        <tr>
-                          <th data-sort-initial="true" data-toggle="true">Code</th>
-                          <th data-hide="phone, tablet">Actions</th>
-                          <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                            <th data-hide="phone, tablet">Actions</th>
+                <div class="card-box">
+                  <div class="bg-light d-flex justify-content-between mb-2">
+                    <div class="text-sm-center form-inline">
+                      <div class="form-group mr-2">
+                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                          <%= link_to '#new_stop_action', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_stop_action'  do %>
+                            <i class="mdi mdi-plus mr-1"> Nouveau</i>
                           <% end %>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <% @stop_actions.each do |stop_action| %>
-                          <tr>
-                            <td><%= stop_action.code %></td>
-                            <td><%= stop_action.name %></td>
-                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                              <td>
-                                <%= link_to stop_action_path(stop_action), remote: true, class: "action-icon" do %>
-                                  <i class="mdi mdi-eye"></i>
-                                <% end %>
-
-                                <%= link_to edit_stop_action_path(stop_action), remote: true, class: "action-icon" do %>
-                                  <i class="mdi mdi-border-color"></i>
-                                <% end %>
-
-                                <%= link_to stop_action, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
-                                  <i class="mdi mdi-delete"></i>
-                                <% end %>
-                              </td>
-                            <% end %>
-                          </tr>
                         <% end %>
-                        </tbody>
-                        <tfoot>
-                        <tr class="active">
-                          <td colspan="8">
-                            <div class="text-right">
-                              <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
-                            </div>
+                      </div>
+                      <div class="form-group mr-2">
+                        <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
+                      </div>
+                    </div>
+                    <div class="text-sm-center d-flex">
+                      <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                        <%= form_tag import_stop_actions_path, multipart: true do %>
+                          <%= file_field_tag :file, required: true %>
+                          <%= submit_tag 'Importer', class: "btn btn-success mr-1" %>
+                        <% end %>
+                      <% end %>
+                      <div class="btn-group dropleft">
+                        <button type="button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Filtrer par statut
+                        </button>
+                        <div class="dropdown-menu" style="">
+                          <a class="dropdown-item" href="<%= furloughs_path() %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-primary"></i>Tous</a>
+                          <a class="dropdown-item" href="<%= furloughs_path(status: 'Soumis') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-warning"></i>Soumis</a>
+                          <a class="dropdown-item" href="<%= furloughs_path(status: 'En cours') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-pink"></i>En cours</a>
+                          <a class="dropdown-item" href="<%= furloughs_path(status: 'Approuvé') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-success"></i>Approuvé</a>
+                          <a class="dropdown-item" href="<%= furloughs_path(status: 'Refusé') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-danger"></i>Refusé</a>
+                          <a class="dropdown-item" href="<%= furloughs_path(status: 'Annulé') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-secondary"></i>Annulé</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+                    <thead>
+                    <tr>
+                      <th data-sort-initial="true" data-toggle="true">Code</th>
+                      <th data-hide="phone, tablet">Actions</th>
+                      <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                        <th data-hide="phone, tablet">Actions</th>
+                      <% end %>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% @stop_actions.each do |stop_action| %>
+                      <tr>
+                        <td><%= stop_action.code %></td>
+                        <td><%= stop_action.name %></td>
+                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                          <td>
+                            <%= link_to stop_action_path(stop_action), remote: true, class: "action-icon" do %>
+                              <i class="mdi mdi-eye"></i>
+                            <% end %>
+
+                            <%= link_to edit_stop_action_path(stop_action), remote: true, class: "action-icon" do %>
+                              <i class="mdi mdi-border-color"></i>
+                            <% end %>
+
+                            <%= link_to stop_action, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                              <i class="mdi mdi-delete"></i>
+                            <% end %>
                           </td>
-                        </tr>
-                        </tfoot>
-                      </table>
-                    </div> <!-- end card-body-->
+                        <% end %>
+                      </tr>
+                    <% end %>
+                    </tbody>
+                    <tfoot>
+                    <tr class="active">
+                      <td colspan="8">
+                        <div class="text-right">
+                          <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                        </div>
+                      </td>
+                    </tr>
+                    </tfoot>
+                  </table>
                 </div> <!-- end card-->
             </div> <!-- end col -->
         </div>
