@@ -22,57 +22,58 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-2">  
-                            <div class="col-lg-12">
-                                <div class="text-lg-right">  
-                                    <%= link_to '#new_formation_type', class: "btn btn-secondary waves-effect waves-light mb-2 mr-2", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_formation_type'  do %>
-                                        <i class="mdi mdi-plus mr-1"> Nouveau type de formation</i>
-                                    <% end %>                               
-                                </div>
-                            </div>
-
-                        </div>
-
-                      <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
-                        <thead>
-                        <tr>
-                          <th data-sort-initial="true" data-toggle="true">Nom</th>
-                          <th data-hide="phone, tablet">Percentage</th>
-                          <th data-hide="phone, tablet">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <% @formation_types.each do |formation_type| %>
-                          <tr>
-                            <td> <%= formation_type.code %></td>
-                            <td><%= formation_type.description %></td>
-                            <td>
-                              <%= link_to formation_type_path(formation_type), remote: true, title: "Voir", class: "action-icon" do %>
-                                <i class="mdi mdi-eye"></i>
-                              <% end %>
-                              <%= link_to edit_formation_type_path(formation_type), remote: true, title: "Modifier", class: "action-icon" do %>
-                                <i class="mdi mdi-border-color"></i>
-                              <% end %>
-                              <%= link_to formation_type, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
-                                <i class="mdi mdi-delete"></i>
-                              <% end %>
-                            </td>
-                          </tr>
+                <div class="card-box">
+                  <div class="bg-light d-flex justify-content-between mb-2">
+                    <div class="text-sm-center form-inline">
+                      <div class="form-group mr-2">
+                        <%= link_to '#new_formation_type', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_formation_type'  do %>
+                          <i class="mdi mdi-plus mr-1"> Nouveau type de formation</i>
                         <% end %>
-                        </tbody>
-                        <tfoot>
-                        <tr class="active">
-                          <td colspan="8">
-                            <div class="text-right">
-                              <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
-                            </div>
-                          </td>
-                        </tr>
-                        </tfoot>
-                      </table>
-                    </div> <!-- end card-body-->
+                      </div>
+                      <div class="form-group">
+                        <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+                    <thead>
+                    <tr>
+                      <th data-sort-initial="true" data-toggle="true">Nom</th>
+                      <th data-hide="phone, tablet">Percentage</th>
+                      <th data-hide="phone, tablet">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% @formation_types.each do |formation_type| %>
+                      <tr>
+                        <td> <%= formation_type.code %></td>
+                        <td><%= formation_type.description %></td>
+                        <td>
+                          <%= link_to formation_type_path(formation_type), remote: true, title: "Voir", class: "action-icon" do %>
+                            <i class="mdi mdi-eye"></i>
+                          <% end %>
+                          <%= link_to edit_formation_type_path(formation_type), remote: true, title: "Modifier", class: "action-icon" do %>
+                            <i class="mdi mdi-border-color"></i>
+                          <% end %>
+                          <%= link_to formation_type, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                            <i class="mdi mdi-delete"></i>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                    </tbody>
+                    <tfoot>
+                    <tr class="active">
+                      <td colspan="8">
+                        <div class="text-right">
+                          <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                        </div>
+                      </td>
+                    </tr>
+                    </tfoot>
+                  </table>
                 </div> <!-- end card-->
             </div> <!-- end col -->
         </div>
