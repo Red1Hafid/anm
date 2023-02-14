@@ -62,7 +62,7 @@
                   </div>
                   <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
                     <thead>
-                    <tr>
+                     <tr>
                       <th data-sort-initial="true" data-toggle="true">Code</th>
                       <th data-hide="phone, tablet">Actions</th>
                       <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
@@ -71,7 +71,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <% @stop_actions.each do |stop_action| %>
+                     <% @stop_actions.each do |stop_action| %>
                       <tr>
                         <td><%= stop_action.code %></td>
                         <td><%= stop_action.name %></td>
