@@ -6,6 +6,7 @@ class NotesController < ApplicationController
     if ["Super Admin", "Rh"].include? current_user.role.title
       @q = Note.includes(:user, :cost).ransack(params[:q])
     else
+      @user_projects = User.find_by(id: current_user.id).projects
       @q = Note.includes(:user, :cost).where(user_id: current_user).ransack(params[:q])
     end
     @costs = Cost.filter_by_active.filter_by_status(1)
@@ -58,6 +59,9 @@ class NotesController < ApplicationController
     else
         if @note.total > @cost.max_value
           message = "Le cout du Note est plus grand que le max de frais"
+        end
+        if !Affectation.where(user_id: current_user.id)
+          message = "Your not affected to any project"
         end
     end
     if @note.save
