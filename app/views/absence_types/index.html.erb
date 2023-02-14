@@ -24,80 +24,81 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-lg-6">
-                                <%#= form_tag import_furlough_types_path, multipart: true do %>
-                                    <%#= file_field_tag :file, required: true %>
-                                    <%#= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
-                                <%# end %>
-                            </div> 
-                            
-                            <div class="col-lg-4">
-                                <%#= form_tag furlough_types_path, :method => 'get',  class: "form-inline" do %>
-                                    <div class="form-group">
-                                        <%# if params[:search].present? %>
-                                            <%#= text_field_tag :search,nil, class:"form-control", value:"#{params[:search]}" %>
-                                        <%# else %>
-                                            <%#= text_field_tag :search,nil, class:"form-control", placeholder:"Trouvez une commande ... " %>
-                                        <%# end %>
-                                        <!--<button type="submit" class="btn btn-warning waves-effect waves-light ml-1"><i class="mdi mdi-magnify mr-1"></i> Cherche!</button>-->
-                                    </div>
-                                <%# end %>
-                            </div> 
-
-                            <div class="col-lg-2">  
-                                <%= link_to '#new_absence_type', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_absence_type'  do %>
-                                    <i class="mdi mdi-plus mr-1"> Nouveau</i>
-                                <% end %>    
-                            </div>
-                        </div>
-
-                      <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
-                        <thead>
-                          <tr>
-                            <th data-sort-initial="true" data-toggle="true">Type d'absence </th>
-                            <th data-hide="phone, tablet">Code </th>
-                            <th data-hide="phone, tablet">Actions</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        <% @absence_types.each do |absence_type| %>
-                          <tr>
-                            <td><%= absence_type.name %></td>
-                            <td><%= absence_type.code %></td>
-                            <td>
-                              <%= link_to absence_type_path(absence_type), remote: true, title: "Voir", class: "action-icon" do %>
-                                <i class="mdi mdi-eye"></i>
-                              <% end %>
-                              <%= link_to edit_absence_type_path(absence_type), remote: true, title: "Modifier", class: "action-icon" do %>
-                                <i class="mdi mdi-border-color"></i>
-                              <% end %>
-                              <%= link_to absence_type, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
-                                <i class="mdi mdi-delete"></i>
-                              <% end %>
-                            </td>
-                          </tr>
+                <div class="card-box">
+                  <div class="bg-light d-flex justify-content-between mb-2">
+                    <div class="text-sm-center form-inline">
+                      <div class="form-group mr-2">
+                        <%= link_to '#new_absence_type', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_absence_type'  do %>
+                          <i class="mdi mdi-plus mr-1"> Nouveau</i>
                         <% end %>
-                        </tbody>
-                        <tfoot>
-                        <tr class="active">
-                          <td colspan="8">
-                            <div class="text-right">
-                              <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
-                            </div>
-                          </td>
-                        </tr>
-                        </tfoot>
-                      </table>
-                    </div> <!-- end card-body-->
+                      </div>
+                      <div class="form-group">
+                        <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
+                      </div>
+                    </div>
+                    <div>
+                      <div class="col-lg-6">
+                        <%#= form_tag import_furlough_types_path, multipart: true do %>
+                        <%#= file_field_tag :file, required: true %>
+                        <%#= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
+                        <%# end %>
+                      </div>
+                      <div class="col-lg-4">
+                        <%#= form_tag furlough_types_path, :method => 'get',  class: "form-inline" do %>
+                        <div class="form-group">
+                          <%# if params[:search].present? %>
+                          <%#= text_field_tag :search,nil, class:"form-control", value:"#{params[:search]}" %>
+                          <%# else %>
+                          <%#= text_field_tag :search,nil, class:"form-control", placeholder:"Trouvez une commande ... " %>
+                          <%# end %>
+                          <!--<button type="submit" class="btn btn-warning waves-effect waves-light ml-1"><i class="mdi mdi-magnify mr-1"></i> Cherche!</button>-->
+                        </div>
+                        <%# end %>
+                      </div>
+                    </div>
+                  </div>
+                  <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+                    <thead>
+                    <tr>
+                      <th data-sort-initial="true" data-toggle="true">Type d'absence </th>
+                      <th data-hide="phone, tablet">Code </th>
+                      <th data-hide="phone, tablet">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% @absence_types.each do |absence_type| %>
+                      <tr>
+                        <td><%= absence_type.name %></td>
+                        <td><%= absence_type.code %></td>
+                        <td>
+                          <%= link_to absence_type_path(absence_type), remote: true, title: "Voir", class: "action-icon" do %>
+                            <i class="mdi mdi-eye"></i>
+                          <% end %>
+                          <%= link_to edit_absence_type_path(absence_type), remote: true, title: "Modifier", class: "action-icon" do %>
+                            <i class="mdi mdi-border-color"></i>
+                          <% end %>
+                          <%= link_to absence_type, method: :delete, data: { confirm: 'Etes vous sur?' }, title: "Suprimer", class: "action-icon" do %>
+                            <i class="mdi mdi-delete"></i>
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                    </tbody>
+                    <tfoot>
+                    <tr class="active">
+                      <td colspan="8">
+                        <div class="text-right">
+                          <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                        </div>
+                      </td>
+                    </tr>
+                    </tfoot>
+                  </table>
                 </div> <!-- end card-->
             </div> <!-- end col -->
         </div>
         <!-- end row -->
     </div>
-
     <div id='remote-container'></div>
 </div> <!-- content -->
 
