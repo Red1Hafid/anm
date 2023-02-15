@@ -24,7 +24,7 @@ class AutorizationsController < ApplicationController
   end
 
   def authorizations_administration 
-    @autorizations = Autorization.where(user_id: current_user.id).where.not(status: 2)
+    @autorizations = Autorization.where(user_id: current_user.id)
      
     @setting = Setting.find(1)
   end
@@ -52,6 +52,7 @@ class AutorizationsController < ApplicationController
     @autorization.demand_date = DateTime.now.strftime("%d/%m/%Y %H:%M")
     if ["Super Admin", "Rh"].include? current_user.role.title 
       if @autorization.user_id == current_user.id
+        @autorization.encours!
         if @autorization.save
           redirect_to authorizations_administration_path, notice: "Autorisation was successfully created." 
         end

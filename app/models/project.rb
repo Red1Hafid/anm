@@ -17,12 +17,17 @@ class Project < ApplicationRecord
   }
 
   private
-
   def generate_reference
-    self.reference = SecureRandom.hex(2)
-    while Project.exists?(reference: self.reference)
-      self.reference = SecureRandom.hex(2)
+    return if self.reference != nil
+    project = Project.last
+    if project
+      reference = "PJ#" + (project.id + 1).to_s
+    else
+      reference = "PJ#1"
     end
+
+    self.reference = reference
+    set_reference if Project.find_by(reference: reference)
   end
 
 end
