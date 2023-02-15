@@ -1,0 +1,25 @@
+<!-- Modal -->
+<div class="modal fade" id="refus_autorization" role="dialog">
+    <%= simple_form_for(@autorization, as: :autorization, method: :post, url: refus_autorization_path) do |f| %>
+      <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                 <h4 class="modal-title" id="myLargeModalLabel">Traiter cette athorisation</h4>
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-12 legend">
+                        <%= f.input :refus_motif, label: "Motif de refus", required: true, hint: "Le motif de refus dois étre mentionné!" %>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <%= f.button :submit, "Traiter", data: { confirm: 'Etes vous sur?' }, class: 'btn btn-raised btn-success' %>
+                <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+      </div>
+    <% end %>
+</div>
+

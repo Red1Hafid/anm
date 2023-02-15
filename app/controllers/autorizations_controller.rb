@@ -1,5 +1,5 @@
 class AutorizationsController < ApplicationController
-  before_action :set_autorization, only: %i[ show edit update destroy soumettre_autorization validate_autorization refuse_autorization to_print_authorisation pre_recovered recovered ]
+  before_action :set_autorization, only: %i[ show edit update destroy soumettre_autorization validate_autorization pre_refus refus_autorization to_print_authorisation pre_recovered recovered ]
 
   # GET /autorizations or /autorizations.json
   def index
@@ -49,6 +49,7 @@ class AutorizationsController < ApplicationController
     authorization_duration = Autorization.get_hour_authorization_duration(@autorization.date, @autorization.start_hour, @autorization.end_hour).to_f
     @autorization.stay_hour = authorization_duration
     @autorization.time_taken = authorization_duration
+    @autorization.demand_date = DateTime.now.strftime("%d/%m/%Y %H:%M")
     if ["Super Admin", "Rh"].include? current_user.role.title 
       if @autorization.user_id == current_user.id
         if @autorization.save
@@ -115,6 +116,7 @@ class AutorizationsController < ApplicationController
   def soumettre_autorization
     @autorization.soumis!
     @autorization.signature_collab = "Approuvé par " + current_user.first_name + " " + current_user.last_name + " _" + " Le " + DateTime.now().strftime("%m/%d/%Y").to_s + DateTime.now().strftime(" à %I:%M%p").to_s
+    @autorization.submit_date = DateTime.now.strftime("%d/%m/%Y %H:%M")
     if @autorization.save
       redirect_to autorizations_path, notice: "Autorization was successfully submited." 
     end
@@ -123,6 +125,7 @@ class AutorizationsController < ApplicationController
   def validate_autorization
     authorization_duration = Autorization.get_hour_authorization_duration(@autorization.date, @autorization.start_hour, @autorization.end_hour).to_f
     @autorization.aprouved!
+    @autorization.validate_date = DateTime.now.strftime("%d/%m/%Y %H:%M")
     @autorization.is_ok = true if authorization_duration <= 2
     user_authorization = User.find(@autorization.user_id)
     if !user_authorization.line_manager_id.nil?
@@ -150,8 +153,13 @@ class AutorizationsController < ApplicationController
     end
   end
 
-  def refuse_autorization
+  def pre_refus
+  end
+
+  def refus_autorization
     @autorization.refuse!
+    @autorization.refus_date = DateTime.now.strftime("%d/%m/%Y %H:%M")
+    @autorization.refus_motif = refused_params[:refus_motif]
     @autorization.is_ok = true
     if @autorization.save
       redirect_to autorizations_path, notice: "Autorization was successfully refused." 
@@ -313,5 +321,9 @@ class AutorizationsController < ApplicationController
 
     def recorvred_params
       params.require(:autorization).permit(:volume, :history_date)
+    end
+
+    def refused_params
+      params.require(:autorization).permit(:refus_motif)
     end
 end

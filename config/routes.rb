@@ -151,7 +151,8 @@ Rails.application.routes.draw do
   resources :autorizations
   get 'soumettreAuthorization/:id' => 'autorizations#soumettre_autorization', as: 'soumettre_autorization'
   get 'validateAuthorization/:id' => 'autorizations#validate_autorization', as: 'validate_autorization'
-  get 'refuseAuthorization/:id' => 'autorizations#refuse_autorization', as: 'refuse_autorization'
+  get 'refuseAuthorization/:id' => 'autorizations#pre_refus', as: 'pre_refus'
+  post 'refuseAuthorization/:id' => 'autorizations#refus_autorization', as: 'refus_autorization'
   get 'mes-authorisations' => 'autorizations#authorizations_administration', as: 'authorizations_administration'
   get 'authorization_hour_taken/:user_id/:date/:start_hour/:end_hour' => 'autorizations#duration_hour_taken_of_authorization', as: 'duration_hour_taken_of_authorization'
   get 'printauthorisation/:id' => 'autorizations#to_print_authorisation', as: 'to_print_authorisation'

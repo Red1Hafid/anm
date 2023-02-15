@@ -109,7 +109,7 @@
                                                     <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
                                                 <% end %>
 
-                                                <%= link_to refuse_autorization_path(autorization), title: "Refuser", remote: true, class: "action-icon" do %>
+                                                <%= link_to pre_refus_path(autorization), title: "Refuser", remote: true, class: "action-icon" do %>
                                                     <i class="mdi mdi-close-octagon"></i>
                                                 <% end %> 
                                             <% elsif autorization.encours? %>
@@ -121,7 +121,7 @@
                                                     <i class="mdi mdi-border-color"></i>
                                                 <% end %>
 
-                                                <%= link_to refuse_autorization_path(autorization), title: "Refuser", remote: true, class: "action-icon" do %>
+                                                <%= link_to pre_refus_path(autorization), title: "Refuser", remote: true, class: "action-icon" do %>
                                                     <i class="mdi mdi-close-octagon"></i>
                                                 <% end %> 
 
