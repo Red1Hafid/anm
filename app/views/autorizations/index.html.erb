@@ -131,7 +131,9 @@
                                                 <% end %> 
 
                                             <% elsif autorization.aprouved? && autorization.is_ok == false %>
-                                                <% if autorization.time_taken > 2 %>
+
+
+                                                <% if  autorization.time_taken && autorization.time_taken > 2 %>
                                                     <%= link_to pre_recovered_path(autorization), remote: true, title: "Traiter", class: "action-icon" do %>
                                                             <i class="mdi mdi-checkbox-multiple-marked-outline"></i>
                                                     <% end %>
