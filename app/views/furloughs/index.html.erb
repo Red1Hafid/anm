@@ -374,7 +374,7 @@
 
 <!--  Modal content for the Large example -->
 <div class="modal fade" id="new_furlough" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+  <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myLargeModalLabel">Demande de congé</h4>
@@ -386,9 +386,9 @@
                 
                     <div class="form-group mb-3">
                         <%= f.association :furlough_type, :as => :collection_select, collection: FurloughType.where(is_actif: true).where.not(code: ['CSSR', 'CPAR']), label: 'Type de congé', label_method: :name, value_method: :id, input_html: { id: 'type_furlough', onchange: ['reloadFurloughType();', 'yesnoCheck();']}, class: 'form-control',  include_blank: false  %>
-                        <h4><span class="badge badge-soft-info badge-pill ml-1 fixed_duration"></span> <h4>
-                        <h4><span class="badge badge-soft-info badge-pill ml-1 informing_before"></span> <h4>
-                        <h4><span class="badge badge-soft-info badge-pill ml-1 is_payer"></span> <h4>
+                        <h4><span class="badge badge-soft-info badge-pill ml-1 fixed_duration"></span> </h4>
+                        <h4><span class="badge badge-soft-info badge-pill ml-1 informing_before"></span> </h4>
+                        <h4><span class="badge badge-soft-info badge-pill ml-1 is_payer"></span> </h4>
                     </div>
 
                     <div id="ifYes" class="form-group mb-3" style="display: none;">
@@ -405,7 +405,7 @@
                                 <%= f.input :hour_start, label: 'Heur de départ', as: :select, collection: (['8:00','14:00']), :selected => '8:00', input_html: { id: 'hour_start', onchange:'reloadDuration();'}, html5: true, placeholder: "Entrer la date de début de congé", class: 'form-control' %>
                             </div>
                              <div class="col-8">
-                                 <h4><span class="badge badge-soft-info badge-pill ml-1 start"></span> <h4>
+                                 <h4><span class="badge badge-soft-info badge-pill ml-1 start"></span> </h4>
                             </div>
                        </div>
                    </div>
@@ -419,7 +419,7 @@
                                 <%= f.input :hour_end, label: 'Heure de reprise', as: :select, collection: (['8:00','14:00']), :selected => '8:00', html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'hour_end', onchange:'reloadDuration();' }, class: 'form-control' %>
                             </div>
                             <div class="col-12">
-                                <h4><span class="badge badge-danger ml-1 dr"></span><h4>
+                                <h4><span class="badge badge-danger ml-1 dr"></span></h4>
                             </div>
                         </div>
                     </div>
@@ -447,6 +447,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+</div>
 
 <script>
     function set_user_id(){
