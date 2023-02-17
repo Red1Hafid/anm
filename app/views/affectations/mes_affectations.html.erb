@@ -27,13 +27,13 @@
                     <% end %>
                   <% end %>
                 </div>
-                <div class="form-group">
-                  <% if  params.has_key?(:status)%>
-                    <a class="btn btn-info" href="<%= mes_affectations_path %>"> <i class="mdi mdi-filter mr-1"></i> Affectations</a>
-                  <% else %>
-                    <a class="btn btn-info" href="<%= mes_affectations_path(status: 'disaffected') %>"> <i class="mdi mdi-filter mr-1"></i>Desaffectations</a>
-                  <% end %>
-                </div>
+              </div>
+              <div class="text-center">
+                <% if  params.has_key?(:status)%>
+                  <a class="btn btn-info" href="<%= mes_affectations_path %>"> <i class="mdi mdi-filter mr-1"></i> Affectations</a>
+                <% else %>
+                  <a class="btn btn-info" href="<%= mes_affectations_path(status: 'disaffected') %>"> <i class="mdi mdi-filter mr-1"></i>Desaffectations</a>
+                <% end %>
               </div>
             </div>
           </div>

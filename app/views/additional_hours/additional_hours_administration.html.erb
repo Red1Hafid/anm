@@ -22,29 +22,28 @@
         <!-- end page title --> 
 
         <div class="row">
-            <div class="col-12">
-                <div class="card">
+            <div class="col-sm-12">
+                <div class="card-box">
                     <div class="card-body">
-                        
-                        
-                        <div class="row mb-2">
-                            <div class="col-lg-4">
-                                <div class="btn-group dropright">
-                                    <button type="button" class="btn btn-info waves-effect waves-light dropdown-toggle mb-2 mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Filtrer par type des heures supplémentaires (HSJO/HSJFT)
-                                    </button>
-                                    <div class="dropdown-menu" style="">
-                                        <a class="dropdown-item" href="<%= additional_hours_administration_path() %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-green"></i>Tous</a>
-                                        <a class="dropdown-item" href="<%= additional_hours_administration_path(additional_hour_type: 'HSJO') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-green"></i>HSJO</a>
-                                        <a class="dropdown-item" href="<%= additional_hours_administration_path(additional_hour_type: 'HSJFT') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-danger"></i>HSJFT</a>
-                                    </div>
-                                </div> 
+                        <div class="bg-light d-flex justify-content-between mb-2">
+                            <div class="text-sm-center form-inline">
+                              <%= link_to '#new_recovery_furlough_of_additional_hour', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_recovery_furlough_of_additional_hour'  do %>
+                                <i class="mdi mdi-plus mr-1"> Récupération Heures sup.</i>
+                              <% end %>
+
                             </div>
 
-                            <div class="col-lg-4">     
-                                <%= link_to '#new_recovery_furlough_of_additional_hour', class: "btn btn-secondary waves-effect waves-light ml-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_recovery_furlough_of_additional_hour'  do %>
-                                    <i class="mdi mdi-plus mr-1"> Récupération Heures sup.</i>
-                                <% end %>
+                            <div class="text-sm-center">
+                              <div class="btn-group dropright">
+                                <button type="button" class="btn btn-info waves-effect waves-light dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Filtrer par type des heures supplémentaires
+                                </button>
+                                <div class="dropdown-menu" style="">
+                                  <a class="dropdown-item" href="<%= additional_hours_administration_path() %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-green"></i>Tous</a>
+                                  <a class="dropdown-item" href="<%= additional_hours_administration_path(additional_hour_type: 'HSJO') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-green"></i>HSJO</a>
+                                  <a class="dropdown-item" href="<%= additional_hours_administration_path(additional_hour_type: 'HSJFT') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-danger"></i>HSJFT</a>
+                                </div>
+                              </div>
                             </div>
 
                             <% if params[:additional_hour_type] == 'HSJFT' %>
@@ -58,95 +57,95 @@
                             <% end %>
                            
                         </div>
+                      <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7"respo>
+                        <thead>
+                        <tr>
+                          <th data-sort-initial="true" data-toggle="true">Heure supplémentaire</th>
+                          <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                            <th ddata-sort-initial="true" data-toggle="true">Collaborateurs</th>
+                          <% end %>
+                          <th data-hide="phone, tablet">Période</th>
+                          <th data-hide="phone, tablet">HS dans la période</th>
+                          <% if params[:additional_hour_type] == 'HSJFT' %>
+                            <th data-hide="phone, tablet">HS consomé</th>
+                            <th data-hide="phone, tablet">HS non consomé</th>
+                          <% end %>
+                          <th data-hide="phone, tablet">Statut</th>
+                          <% if params[:additional_hour_type] == 'HSJFT' %>
+                            <th data-hide="phone, tablet">À consommer avant le</th>
+                          <% end %>
+                          <th data-hide="phone, tablet">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                          <% @additional_hours.each do |additional_hour| %>
+                          <tr>
+                            <td><%= additional_hour.additional_hour_type.code %></td>
+                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                              <td><%= "#{additional_hour.user.last_name} #{additional_hour.user.first_name}" %></td>
+                            <% end %>
+                            <td><%= additional_hour.period %></td>
+                            <td><%= additional_hour.total_additional_hour_in_week %></td>
+                            <% if params[:additional_hour_type] == 'HSJFT' %>
+                              <td><%= additional_hour.consumed_hours.sum %></td>
+                              <td><%= additional_hour.stay_hours %></td>
+                            <% end %>
+                            <td>
+                              <% if additional_hour.created? %>
+                                <div class="badge font-14 badge badge-info p-1">Enregisté</div>
+                              <% elsif additional_hour.aprouved? %>
+                                <div class="badge font-14 badge badge-success p-1">Validé</div>
+                              <% elsif additional_hour.expired? %>
+                                <div class="badge font-14 badge badge-secondary p-1">Expiré</div>
+                              <% end %>
+                            </td>
+                            <% if params[:additional_hour_type] == 'HSJFT' %>
+                              <% if additional_hour.expired? %>
+                                <td>Expiré </td>
+                              <% else %>
+                                <td><%= check_period_validity(additional_hour.period)%></td>
+                              <% end %>
+                            <% end %>
+                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                              <td>
+                                <%= link_to additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
+                                  <i class="mdi mdi-eye"></i>
+                                <% end %>
 
-                        <div class="table-responsive">
-                            <table data-toggle="table"
-                                    data-show-columns="false"
-                                    data-page-list="[5, 10, 20]"
-                                    data-page-size=<%= (@setting.number_items_of_page).to_s %>
-                                    data-buttons-class="xs btn-light"
-                                    data-pagination="true" class="table-borderless">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th data-field="additional_type">Heure supplémentaire</th>
-                                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                            <th data-field="collaborator">Collaborateurs</th>
-                                        <% end %>
-                                        <th data-field="semaine">Période</th>
-                                        <th data-field="total_additional_hour_in_week">HS dans la période</th>
-                                        <% if params[:additional_hour_type] == 'HSJFT' %>
-                                            <th data-field="total_additional_hour_in_week_consumed">HS consomé</th>
-                                            <th data-field="total_additional_hour_in_week_stayed">HS non consomé</th>
-                                        <% end %>
-                                        <th data-field="status">Statut</th>
-                                        <% if params[:additional_hour_type] == 'HSJFT' %>
-                                            <th data-field="validity">À consommer avant le</th>
-                                        <% end %>
-                                        <th style="width: 125px;">Actions</th>
-                                    </tr>
-                                </thead>
+                                <% if additional_hour.created? %>
+                                  <%= link_to edit_additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
+                                    <i class="mdi mdi-border-color"></i>
+                                  <% end %>
 
-                                <tbody>
-                                    <% @additional_hours.each do |additional_hour| %>
-                                        <tr> 
-                                            <td><%= additional_hour.additional_hour_type.code %></td> 
-                                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                                <td><%= "#{additional_hour.user.last_name} #{additional_hour.user.first_name}" %></td>
-                                            <% end %>
-                                            <td><%= additional_hour.period %></td>
-                                            <td><%= additional_hour.total_additional_hour_in_week %></td>
-                                            <% if params[:additional_hour_type] == 'HSJFT' %>
-                                                <td><%= additional_hour.consumed_hours.sum %></td>
-                                                <td><%= additional_hour.stay_hours %></td>
-                                            <% end %>
-                                            <td>
-                                                <% if additional_hour.created? %>
-                                                  <div class="badge font-14 badge badge-info p-1">Enregisté</div>
-                                                <% elsif additional_hour.aprouved? %> 
-                                                    <div class="badge font-14 badge badge-success p-1">Validé</div>     
-                                                <% elsif additional_hour.expired? %> 
-                                                    <div class="badge font-14 badge badge-secondary p-1">Expiré</div> 
-                                                <% end %>
-                                            </td>
-                                            <% if params[:additional_hour_type] == 'HSJFT' %>
-                                                <% if additional_hour.expired? %>
-                                                  <td>Expiré </td>
-                                                <% else %>
-                                                  <td><%= check_period_validity(additional_hour.period)%></td>
-                                                <% end %>
-                                            <% end %>
-                                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                                <td>
-                                                    <%= link_to additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
-                                                        <i class="mdi mdi-eye"></i>
-                                                    <% end %>
+                                  <%= link_to soumettre_additional_hour_path(additional_hour), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Soumettre", class: "action-icon" do %>
+                                    <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                  <% end %>
 
-                                                    <% if additional_hour.created? %>
-                                                        <%= link_to edit_additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
-                                                            <i class="mdi mdi-border-color"></i>
-                                                        <% end %>
-
-                                                        <%= link_to soumettre_additional_hour_path(additional_hour), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Soumettre", class: "action-icon" do %>
-                                                            <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
-                                                        <% end %>
-
-                                                        <%= link_to additional_hour, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
-                                                                <i class="mdi mdi-delete"></i>
-                                                        <% end %> 
-                                                    <% end %>
-                                                </td> 
-                                            <% else %>
-                                                <td>
-                                                    <%= link_to additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
-                                                        <i class="mdi mdi-eye"></i>
-                                                    <% end %>
-                                                </td> 
-                                            <% end %>                                        
-                                        </tr> 
-                                    <% end %>
-                                </tbody>
-                            </table>
-                        </div>
+                                  <%= link_to additional_hour, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                                    <i class="mdi mdi-delete"></i>
+                                  <% end %>
+                                <% end %>
+                              </td>
+                            <% else %>
+                              <td>
+                                <%= link_to additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
+                                  <i class="mdi mdi-eye"></i>
+                                <% end %>
+                              </td>
+                            <% end %>
+                          </tr>
+                        <% end %>
+                        </tbody>
+                        <tfoot>
+                        <tr class="active">
+                          <td colspan="8">
+                            <div class="text-right">
+                              <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                            </div>
+                          </td>
+                        </tr>
+                        </tfoot>
+                      </table>
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->
