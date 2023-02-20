@@ -2,427 +2,430 @@
 
 <div class="content">
 
-    <!-- Start Content-->
-    <div class="container-fluid">
-        
-        <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
-                            <li class="breadcrumb-item active">Heures supplémentaires</li>
-                        </ol>
-                    </div>
-                    <h4 class="page-title">Gestion des heures sup.</h4>
-                </div>
-            </div>
-        </div>     
-        <!-- end page title --> 
+  <!-- Start Content-->
+  <div class="container-fluid">
 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card-box">
-                  <div class="mb-2">
-                    <div class="bg-light d-flex justify-content-between">
-                      <div class="text-sm-center form-inline">
-                        <div class="form-group mr-2">
-                          <%= link_to '#new_additional_hour', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_additional_hour'  do %>
-                            <i class="mdi mdi-plus mr-1"> Nouveau </i>
-                          <% end %>
-                        </div>
-                        <div class="form-group mr-2">
-                          <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
-                        </div>
-                      </div>
-                      <div class="text-sm-center">
-                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                          <%= link_to '#new_recovery_furlough_of_additional_hour', class: "btn btn-secondary waves-effect waves-light ml-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_recovery_furlough_of_additional_hour'  do %>
-                            <i class="mdi mdi-plus mr-1"> Récupération Heures sup.</i>
-                          <% end %>
-                        <% else %>
-                          <% if params[:additional_hour_type] == 'HSJFT' %>
-                            <%= link_to '#new_recovery_furlough_of_additional_hour', class: "btn btn-secondary waves-effect waves-light ml-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_recovery_furlough_of_additional_hour'  do %>
-                              <i class="mdi mdi-plus mr-1"> Récupération Heures sup.</i>
-                            <% end %>
-                          <% end %>
-                          <% if current_user.role.title == 'Collaborateur' && params[:additional_hour_type] == 'HSJFT' %>
-                            <% if @balance_open_additional_hour_off_days %>
-                              <% if params[:additional_hour_type] == 'HSJFT' %>
-                                <% if @balance_open_additional_hour_off_days %>
-                                  <div class="col-4">
-                                    <div class="text-right">
-                                      <h5 class="text-muted mb-1 text-truncate">Votre solde des heures sup des jours fériés: <span data-plugin="counterup"><%= @balance_open_additional_hour_off_days %></span></h5>
-                                    </div>
-                                  </div>
-                                <% end %>
-                              <% end %>
-                            <% end %>
-                          <% end %>
-                        <% end %>
-                        <div class="btn-group dropleft">
-                          <button type="button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Filtrer
-                          </button>
-                          <div class="dropdown-menu" style="">
-                            <a class="dropdown-item" href="<%= additional_hours_path() %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-green"></i>Tous</a>
-                            <a class="dropdown-item" href="<%= additional_hours_path(additional_hour_type: 'HSJO') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-green"></i>HSJO</a>
-                            <a class="dropdown-item" href="<%= additional_hours_path(additional_hour_type: 'HSJFT') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-danger"></i>HSJFT</a>
+    <!-- start page title -->
+    <div class="row">
+      <div class="col-12">
+        <div class="page-title-box">
+          <div class="page-title-right">
+            <ol class="breadcrumb m-0">
+              <li class="breadcrumb-item"><a href="<%= root_path %>">Accueil</a></li>
+              <li class="breadcrumb-item active">Heures supplémentaires</li>
+            </ol>
+          </div>
+          <h4 class="page-title">Gestion des heures sup.</h4>
+        </div>
+      </div>
+    </div>
+    <!-- end page title -->
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-2">
+
+              <div class="col-lg-4">
+                <div class="btn-group dropright">
+                  <button type="button" class="btn btn-info waves-effect waves-light dropdown-toggle mb-2 mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Filtrer  (HSJO/HSJFT)
+                  </button>
+                  <div class="dropdown-menu" style="">
+                    <a class="dropdown-item" href="<%= additional_hours_path() %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-green"></i>Tous</a>
+                    <a class="dropdown-item" href="<%= additional_hours_path(additional_hour_type: 'HSJO') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-green"></i>HSJO</a>
+                    <a class="dropdown-item" href="<%= additional_hours_path(additional_hour_type: 'HSJFT') %>"><i class="mdi mdi-checkbox-blank-circle-outline mr-1 text-danger"></i>HSJFT</a>
+                  </div>
+                </div>
+              </div>
+
+              <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                <div class="col-lg-2">
+                  <%= link_to '#new_additional_hour', class: "btn btn-secondary waves-effect waves-light mr-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_additional_hour'  do %>
+                    <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                  <% end %>
+                </div>
+
+                <div class="col-lg-4">
+                  <%= link_to '#new_recovery_furlough_of_additional_hour', class: "btn btn-secondary waves-effect waves-light ml-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_recovery_furlough_of_additional_hour'  do %>
+                    <i class="mdi mdi-plus mr-1"> Récupération Heures sup.</i>
+                  <% end %>
+                </div>
+
+                <div class="col-lg-2">
+                  <%= link_to pre_export_additional_hours_path(), remote: true, class: "btn btn-warning waves-effect waves-light mr-3" do %>
+                    <i class="mdi mdi-plus mr-1">Rapport</i>
+                  <% end %>
+                </div>
+              <% else %>
+                <div class="col-lg-4">
+                  <% if params[:additional_hour_type] == 'HSJFT' %>
+                    <%= link_to '#new_recovery_furlough_of_additional_hour', class: "btn btn-secondary waves-effect waves-light ml-3", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_recovery_furlough_of_additional_hour'  do %>
+                      <i class="mdi mdi-plus mr-1"> Récupération Heures sup.</i>
+                    <% end %>
+                  <% end %>
+                </div>
+                <% if current_user.role.title == 'Collaborateur' && params[:additional_hour_type] == 'HSJFT' %>
+                  <% if @balance_open_additional_hour_off_days %>
+                    <% if params[:additional_hour_type] == 'HSJFT' %>
+                      <% if @balance_open_additional_hour_off_days %>
+                        <div class="col-4">
+                          <div class="text-right">
+                            <h5 class="text-muted mb-1 text-truncate">Votre solde des heures sup des jours fériés: <span data-plugin="counterup"><%= @balance_open_additional_hour_off_days %></span></h5>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7"respo>
-                    <thead>
-                    <tr>
-                      <th data-sort-initial="true" data-toggle="true">Heure supplémentaire</th>
-                      <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                        <th ddata-sort-initial="true" data-toggle="true">Collaborateurs</th>
                       <% end %>
-                      <th data-hide="phone, tablet">Période</th>
-                      <th data-hide="phone, tablet">HS dans la période</th>
-                      <% if params[:additional_hour_type] == 'HSJFT' %>
-                        <th data-hide="phone, tablet">HS consomé</th>
-                        <th data-hide="phone, tablet">HS non consomé</th>
-                      <% end %>
-                      <th data-hide="phone, tablet">Statut</th>
-                      <% if params[:additional_hour_type] == 'HSJFT' %>
-                        <th data-hide="phone, tablet">À consommer avant le</th>
-                      <% end %>
-                      <th data-hide="phone, tablet">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% @additional_hours.each do |additional_hour| %>
-                      <tr>
-                        <td><%= additional_hour.additional_hour_type.code %></td>
-                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                          <td><%= "#{additional_hour.user.last_name} #{additional_hour.user.first_name}" %></td>
-                        <% end %>
-                        <td><%= additional_hour.period %></td>
-                        <td><%= additional_hour.total_additional_hour_in_week %></td>
-                        <% if params[:additional_hour_type] == 'HSJFT' %>
-                          <td><%= additional_hour.consumed_hours.sum if additional_hour.consumed_hours %></td>
-                          <td><%= additional_hour.stay_hours %></td>
-                        <% end %>
-                        <td>
-                          <% if additional_hour.created? %>
-                            <div class="badge font-14 badge badge-info p-1">Enregisté</div>
-                          <% elsif additional_hour.aprouved? %>
-                            <div class="badge font-14 badge badge-success p-1">Validé</div>
-                          <% elsif additional_hour.expired? %>
-                            <div class="badge font-14 badge badge-secondary p-1">Expiré</div>
-                          <% end %>
-                        </td>
-                        <% if params[:additional_hour_type] == 'HSJFT' %>
-                          <% if additional_hour.expired? %>
-                            <td>Expiré </td>
-                          <% else %>
-                            <td><%= check_period_validity(additional_hour.period)%></td>
-                          <% end %>
-                        <% end %>
-                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                          <td>
-                            <%= link_to additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
-                              <i class="mdi mdi-eye"></i>
-                            <% end %>
-
-                            <% if additional_hour.created? %>
-                              <%= link_to edit_additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
-                                <i class="mdi mdi-border-color"></i>
-                              <% end %>
-
-                              <%= link_to soumettre_additional_hour_path(additional_hour), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Soumettre", class: "action-icon" do %>
-                                <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
-                              <% end %>
-
-                              <%= link_to additional_hour, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
-                                <i class="mdi mdi-delete"></i>
-                              <% end %>
-                            <% end %>
-                          </td>
-                        <% else %>
-                          <td>
-                            <%= link_to additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
-                              <i class="mdi mdi-eye"></i>
-                            <% end %>
-                          </td>
-                        <% end %>
-                      </tr>
                     <% end %>
-                    </tbody>
-                    <tfoot>
-                    <tr class="active">
-                      <td colspan="8">
-                        <div class="text-right">
-                          <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
-                        </div>
-
-                        <div class="col-lg-2">
-                          <%= link_to pre_export_additional_hours_path(), remote: true, class: "btn btn-warning waves-effect waves-light mr-3" do %>
-                            Exporter
-                          <% end %>
-                        </div>
-                      </td>
-                    </tr>
-                    </tfoot>
-                  </table>
-                </div> <!-- end card-->
-            </div> <!-- end col -->
-        </div>
-    </div>
-    <!-- end row -->
-
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6">
-                    &copy; Copyright Alithya - <script>document.write(new Date().getFullYear())</script> 
-                </div>
+                  <% end %>
+                <% end %>
+              <% end %>
             </div>
+
+            <div class="table-responsive">
+              <table data-toggle="table"
+                     data-show-columns="false"
+                     data-page-list="[5, 10, 20]"
+                     data-page-size=<%= (@setting.number_items_of_page).to_s %>
+                       data-buttons-class="xs btn-light"
+              data-pagination="true" class="table-borderless">
+              <thead class="thead-light">
+              <tr>
+                <th data-field="additional_type">Heure supplémentaire</th>
+                <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                  <th data-field="collaborator">Collaborateurs</th>
+                <% end %>
+                <th data-field="semaine">Période</th>
+                <th data-field="total_additional_hour_in_week">HS dans la période</th>
+                <% if params[:additional_hour_type] == 'HSJFT' %>
+                  <th data-field="total_additional_hour_in_week_consumed">HS consomé</th>
+                  <th data-field="total_additional_hour_in_week_stayed">HS non consomé</th>
+                <% end %>
+                <th data-field="status">Statut</th>
+                <% if params[:additional_hour_type] == 'HSJFT' %>
+                  <th data-field="validity">À consommer avant le</th>
+                <% end %>
+                <th style="width: 125px;">Actions</th>
+              </tr>
+              </thead>
+
+              <tbody>
+              <% @additional_hours.each do |additional_hour| %>
+                <tr>
+                  <td><%= additional_hour.additional_hour_type.code %></td>
+                  <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                    <td><%= "#{additional_hour.user.last_name} #{additional_hour.user.first_name}" %></td>
+                  <% end %>
+                  <td><%= additional_hour.period %></td>
+                  <td><%= additional_hour.total_additional_hour_in_week %></td>
+                  <% if params[:additional_hour_type] == 'HSJFT' %>
+                    <td><%= additional_hour.consumed_hours.sum if additional_hour.consumed_hours %></td>
+                    <td><%= additional_hour.stay_hours %></td>
+                  <% end %>
+                  <td>
+                    <% if additional_hour.created? %>
+                      <div class="badge font-14 badge badge-info p-1">Enregisté</div>
+                    <% elsif additional_hour.aprouved? %>
+                      <div class="badge font-14 badge badge-success p-1">Validé</div>
+                    <% elsif additional_hour.expired? %>
+                      <div class="badge font-14 badge badge-secondary p-1">Expiré</div>
+                    <% end %>
+                  </td>
+                  <% if params[:additional_hour_type] == 'HSJFT' %>
+                    <% if additional_hour.expired? %>
+                      <td>Expiré </td>
+                    <% else %>
+                      <td><%= check_period_validity(additional_hour.period)%></td>
+                    <% end %>
+                  <% end %>
+                  <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                    <td>
+                      <%= link_to additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
+                        <i class="mdi mdi-eye"></i>
+                      <% end %>
+
+                      <% if additional_hour.created? %>
+                        <%= link_to edit_additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
+                          <i class="mdi mdi-border-color"></i>
+                        <% end %>
+
+                        <%= link_to soumettre_additional_hour_path(additional_hour), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Soumettre", class: "action-icon" do %>
+                          <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                        <% end %>
+
+                        <%= link_to additional_hour, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                          <i class="mdi mdi-delete"></i>
+                        <% end %>
+                      <% end %>
+                    </td>
+                  <% else %>
+                    <td>
+                      <%= link_to additional_hour_path(additional_hour), remote: true, class: "action-icon" do %>
+                        <i class="mdi mdi-eye"></i>
+                      <% end %>
+                    </td>
+                  <% end %>
+                </tr>
+              <% end %>
+              </tbody>
+              </table>
+            </div>
+          </div> <!-- end card-body-->
+        </div> <!-- end card-->
+      </div> <!-- end col -->
+    </div>
+  </div>
+  <!-- end row -->
+
+  <footer class="footer">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          &copy; Copyright Alithya - <script>document.write(new Date().getFullYear())</script>
         </div>
-    </footer> 
-    <div id='remote-container'></div>
+      </div>
+    </div>
+  </footer>
+  <div id='remote-container'></div>
 </div> <!-- content -->
 
 
 <!--  Modal content for the Large example -->
 <div class="modal fade" id="new_additional_hour" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myLargeModalLabel">Déclaration des heures sup.</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <%= simple_form_for(AdditionalHour.new, as: :additional_hour, method: :post, html: { class: "form-horizontal" }) do |f| %>
-                
-                <div class="modal-body">
-                    <div class="p-1 mb-2 bg-info text-dark">
-                        <h4><span class="badge badge-soft-secondaru badge-pill ml-1 period_hour_sup"><%= AdditionalHoursHelper.get_period %></span> </h4>
-                        <%= f.input :period, label: false, input_html: { id: 'period_hour_sup_selected', value: AdditionalHoursHelper.get_period_without_string, :style => "display:none;" } %>
-                    </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myLargeModalLabel">Déclaration des heures sup.</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <%= simple_form_for(AdditionalHour.new, as: :additional_hour, method: :post, html: { class: "form-horizontal" }) do |f| %>
 
-                    <div class="form-group">
-                        <%= f.association :additional_hour_type, label: "Choisisser le type d'Heure sup.", :as => :collection_select, collection: AdditionalHourType.all, label_method: :name, value_method: :id, class: 'form-control',  include_blank: false, input_html: { id: 'type_additional_hour', onchange: 'yesnoCheck();'} %>
-                    </div>
+        <div class="modal-body">
+          <div class="p-1 mb-2 bg-info text-dark">
+            <h4><span class="badge badge-soft-secondaru badge-pill ml-1 period_hour_sup"><%= AdditionalHoursHelper.get_period %></span> <h4>
+              <%= f.input :period, label: false, input_html: { id: 'period_hour_sup_selected', value: AdditionalHoursHelper.get_period_without_string, :style => "display:none;" } %>
+          </div>
 
-                    <div class="p-3 mb-2 bg-warning text-dark">
-                        <div class="container-fluid">
-                            <div id="monday" class="form-group" style="display: none;">
-                                <div class="row">
-                                    <div class="col-md-6 text-right">
-                                        <label id="monday_label"></label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <%= f.input :monday_quantity, label: false, class: 'form-control', input_html: { id: 'monday_quantity', onblur: 'get_total();'} %>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="tuesday" class="form-group mb-3" style="display: none;">  
-                                <div class="row">
-                                    <div class="col-md-6 text-right">
-                                        <label id="tuesday_label"></label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <%= f.input :tuesday_quantity, label: false, class: 'form-control', input_html: { id: 'tuesday_quantity', onblur: 'get_total();'} %>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="wednesday" class="form-group mb-3" style="display: none;">
-                                <div class="row">
-                                    <div class="col-md-6 text-right">
-                                        <label id="wednesday_label"></label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <%= f.input :wednesday_quantity, label: false, class: 'form-control', input_html: { id: 'wednesday_quantity', onblur: 'get_total();'} %>
-                                    </div>
-                                </div> 
-                            </div>
-                            <div id="thursday" class="form-group mb-3" style="display: none;">
-                                <div class="row">
-                                    <div class="col-md-6 text-right">
-                                        <label id="thursday_label"></label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <%= f.input :thursday_quantity, label: false, class: 'form-control col-md-2', input_html: { id: 'thursday_quantity', onblur: 'get_total();'} %>
-                                    </div>
-                                </div> 
-                            </div>
-                            <div id="friday" class="form-group mb-3" style="display: none;">
-                                <div class="row">
-                                    <div class="col-md-6 text-right">
-                                        <label id="friday_label"></label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <%= f.input :friday_quantity, label: false, class: 'form-control', input_html: { id: 'friday_quantity', onblur: 'get_total();'} %>
-                                    </div>
-                                </div> 
-                            </div>
-                            <div id="saturday" class="form-group mb-3" style="display: none;">
-                                <div class="row">
-                                    <div class="col-md-6 text-right">
-                                        <label id="saturday_label"></label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <%= f.input :saturday_quantity, label: false, class: 'form-control', input_html: { id: 'saturday_quantity', onblur: 'get_total();'} %>
-                                    </div>
-                                </div> 
-                            </div>
-                            <div id="sunday" class="form-group mb-3" style="display: none;">
-                                <div class="row">
-                                    <div class="col-md-6 text-right">
-                                        <label id="sunday_label"></label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <%= f.input :sunday_quantity, label: false, class: 'form-control', input_html: { id: 'sunday_quantity', onblur: 'get_total();'} %>
-                                    </div>
-                                </div> 
-                            </div>
+          <div class="form-group">
+            <%= f.association :additional_hour_type, label: "Choisisser le type d'Heure sup.", :as => :collection_select, collection: AdditionalHourType.all, label_method: :name, value_method: :id, class: 'form-control',  include_blank: false, input_html: { id: 'type_additional_hour', onchange: 'yesnoCheck();'} %>
+          </div>
 
-                            <div id="total" class="form-group mb-3" style="display: block;">
-                                <div class="row">
-                                    <div class="col-md-6 text-right">
-                                        <label id="to_label">Total des heures sup.</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <%= f.input :total_additional_hour_in_week, label: false, placeholder: "Total", class: 'form-control', input_html: { id: 'total_quantity' } %>
-                                    </div>
-                                </div> 
-                            </div>
-                        </div>
-
-                        <div id="offs" class="form-group mb-3 text-secondary" style="display: block;">
-
-                            <h5 style="font-style: italic;"><span class="badge badge-soft-secondary badge-pill ml-1"></span> Rappelle : les jours fériés sur cette période!</h5>
-                            <% @offs_of_form.each do |d| %>
-                                    <% if d.to_date.monday? %>
-                                        <h5><span class="badge badge-soft-danger badge-pill ml-1 monday_l"></span> Lundi : <%= d.to_s %> </h5>
-                                    <% elsif d.to_date.tuesday? %>
-                                        <h5><span class="badge badge-soft-danger badge-pill ml-1 tuesday_l"></span> Mardi : : <%= d.to_s %> </h5>
-                                    <% elsif d.to_date.wednesday? %>
-                                        <h5><span class="badge badge-soft-danger badge-pill ml-1 wednesday_l"></span> Mercredi : <%= d.to_s %></h5>
-                                    <% elsif d.to_date.thursday? %>
-                                        <h5><span class="badge badge-soft-danger badge-pill ml-1 thursday_l"></span> Jeudi : <%= d.to_s %></h5>
-                                    <% elsif d.to_date.friday? %>
-                                        <h5><span class="badge badge-soft-danger badge-pill ml-1 friday_l"></span> Vendredi : <%= d.to_s %></h5>
-                                    <% elsif d.to_date.saturday? %>
-                                        <h5><span class="badge badge-soft-danger badge-pill ml-1 saturday_l"></span>Samedi : <%= d.to_s %> </h5>
-                                    <% else d.to_date.sunday? %>
-                                        <h5><span class="badge badge-soft-danger badge-pill ml-1 sunday_l"></span> Dimanche : <%= d.to_s %></h5>
-                                    <% end %>
-                            <% end %>
-                        </div>
-                    </div>
-                    
-                    <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                        <div class="form-group mb-3">
-                            <%= f.input :user_id, label: "Collaborateurs", input_html: { id: 'user', :style => "display:none;" } %>
-                            <select data-toggle="select2" onchange='set_user_id();'>
-                                <option></option>
-                                <optgroup label="Collaborateurs">
-                                    <%= @users.each do |user| %>
-                                        <option><%= user.first_name %> <%= user.last_name %></option>
-                                    <% end %>
-                                </optgroup>
-                            </select>
-                        </div>
-                    <% end %>
-
-                    <div class="form-group">
-                        <%= f.input :comment, label: 'Commentaire', placeholder: "Entrer un commentaire", class: 'form-control' %>
-                    </div>
-                
-                    <div class="modal-footer">
-                        
-                           <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
-                      
-                        <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
-                    </div>
-                    
+          <div class="p-3 mb-2 bg-warning text-dark">
+            <div class="container-fluid">
+              <div id="monday" class="form-group" style="display: none;">
+                <div class="row">
+                  <div class="col-md-6 text-right">
+                    <label id="monday_label"></label>
+                  </div>
+                  <div class="col-md-3">
+                    <%= f.input :monday_quantity, label: false, class: 'form-control', input_html: { id: 'monday_quantity', onblur: 'get_total();'} %>
+                  </div>
                 </div>
-            <% end %>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+              </div>
+              <div id="tuesday" class="form-group mb-3" style="display: none;">
+                <div class="row">
+                  <div class="col-md-6 text-right">
+                    <label id="tuesday_label"></label>
+                  </div>
+                  <div class="col-md-3">
+                    <%= f.input :tuesday_quantity, label: false, class: 'form-control', input_html: { id: 'tuesday_quantity', onblur: 'get_total();'} %>
+                  </div>
+                </div>
+              </div>
+              <div id="wednesday" class="form-group mb-3" style="display: none;">
+                <div class="row">
+                  <div class="col-md-6 text-right">
+                    <label id="wednesday_label"></label>
+                  </div>
+                  <div class="col-md-3">
+                    <%= f.input :wednesday_quantity, label: false, class: 'form-control', input_html: { id: 'wednesday_quantity', onblur: 'get_total();'} %>
+                  </div>
+                </div>
+              </div>
+              <div id="thursday" class="form-group mb-3" style="display: none;">
+                <div class="row">
+                  <div class="col-md-6 text-right">
+                    <label id="thursday_label"></label>
+                  </div>
+                  <div class="col-md-3">
+                    <%= f.input :thursday_quantity, label: false, class: 'form-control col-md-2', input_html: { id: 'thursday_quantity', onblur: 'get_total();'} %>
+                  </div>
+                </div>
+              </div>
+              <div id="friday" class="form-group mb-3" style="display: none;">
+                <div class="row">
+                  <div class="col-md-6 text-right">
+                    <label id="friday_label"></label>
+                  </div>
+                  <div class="col-md-3">
+                    <%= f.input :friday_quantity, label: false, class: 'form-control', input_html: { id: 'friday_quantity', onblur: 'get_total();'} %>
+                  </div>
+                </div>
+              </div>
+              <div id="saturday" class="form-group mb-3" style="display: none;">
+                <div class="row">
+                  <div class="col-md-6 text-right">
+                    <label id="saturday_label"></label>
+                  </div>
+                  <div class="col-md-3">
+                    <%= f.input :saturday_quantity, label: false, class: 'form-control', input_html: { id: 'saturday_quantity', onblur: 'get_total();'} %>
+                  </div>
+                </div>
+              </div>
+              <div id="sunday" class="form-group mb-3" style="display: none;">
+                <div class="row">
+                  <div class="col-md-6 text-right">
+                    <label id="sunday_label"></label>
+                  </div>
+                  <div class="col-md-3">
+                    <%= f.input :sunday_quantity, label: false, class: 'form-control', input_html: { id: 'sunday_quantity', onblur: 'get_total();'} %>
+                  </div>
+                </div>
+              </div>
+
+              <div id="total" class="form-group mb-3" style="display: block;">
+                <div class="row">
+                  <div class="col-md-6 text-right">
+                    <label id="to_label">Total des heures sup.</label>
+                  </div>
+                  <div class="col-md-3">
+                    <%= f.input :total_additional_hour_in_week, label: false, placeholder: "Total", class: 'form-control', input_html: { id: 'total_quantity' } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="offs" class="form-group mb-3 text-secondary" style="display: block;">
+
+              <h5 style="font-style: italic;"><span class="badge badge-soft-secondary badge-pill ml-1"></span> Rappelle : les jours fériés sur cette période!<h5>
+                <% @offs_of_form.each do |d| %>
+                  <% if d.to_date.monday? %>
+                    <h5><span class="badge badge-soft-danger badge-pill ml-1 monday_l"></span> Lundi : <%= d.to_s %> <h5>
+                  <% elsif d.to_date.tuesday? %>
+                    <h5><span class="badge badge-soft-danger badge-pill ml-1 tuesday_l"></span> Mardi : : <%= d.to_s %> <h5>
+                  <% elsif d.to_date.wednesday? %>
+                    <h5><span class="badge badge-soft-danger badge-pill ml-1 wednesday_l"></span> Mercredi : <%= d.to_s %><h5>
+                  <% elsif d.to_date.thursday? %>
+                    <h5><span class="badge badge-soft-danger badge-pill ml-1 thursday_l"></span> Jeudi : <%= d.to_s %><h5>
+                  <% elsif d.to_date.friday? %>
+                    <h5><span class="badge badge-soft-danger badge-pill ml-1 friday_l"></span> Vendredi : <%= d.to_s %><h5>
+                  <% elsif d.to_date.saturday? %>
+                    <h5><span class="badge badge-soft-danger badge-pill ml-1 saturday_l"></span>Samedi : <%= d.to_s %> <h5>
+                  <% else d.to_date.sunday? %>
+                    <h5><span class="badge badge-soft-danger badge-pill ml-1 sunday_l"></span> Dimanche : <%= d.to_s %><h5>
+                  <% end %>
+                <% end %>
+            </div>
+          </div>
+
+          <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+            <div class="form-group mb-3">
+              <%= f.input :user_id, label: "Collaborateurs", input_html: { id: 'user', :style => "display:none;" } %>
+              <select data-toggle="select2" onchange='set_user_id();'>
+                <option></option>
+                <optgroup label="Collaborateurs">
+                  <%= @users.each do |user| %>
+                    <option><%= user.first_name %> <%= user.last_name %></option>
+                  <% end %>
+                </optgroup>
+              </select>
+            </div>
+          <% end %>
+
+          <div class="form-group">
+            <%= f.input :comment, label: 'Commentaire', placeholder: "Entrer un commentaire", class: 'form-control' %>
+          </div>
+
+
+
+          <div class="modal-footer">
+
+            <%= f.button :submit, 'Ajouter', class: 'btn btn-raised btn-success' %>
+
+            <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+          </div>
+
+        </div>
+      <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!--  Modal content for the Large example -->
 <div class="modal fade" id="new_recovery_furlough_of_additional_hour" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myLargeModalLabel">Demande la récupération des heurs sup.</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myLargeModalLabel">Demande la récupération des heurs sup.</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <%= simple_form_for(Furlough.new, as: :furlough, method: :post, html: { class: "form-horizontal" }) do |f| %>
+
+        <div class="modal-body">
+
+          <div class="form-group mb-3">
+            <%= f.association :furlough_type, :as => :collection_select, collection: FurloughType.where(is_actif: true, code: 'CRHS'), label: 'Type de congé', label_method: :name, value_method: :id, input_html: { id: 'type_furlough' }, class: 'form-control',  include_blank: false  %>
+          </div>
+
+          <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+            <div class="form-group mb-3">
+              <%= f.input :user_id, label: "Collaborateur", input_html: { id: 'user_id', :style => "display:none;" } %>
+              <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange="[set_user_id_of_furlough(), reloadHourDuration()]">
+
+                <optgroup label="Collaborateurs">
+                  <%= @users.each do |user| %>
+                    <option><%= user.first_name %> <%= user.last_name %></option>
+                  <% end %>
+                </optgroup>
+              </select>
             </div>
-            <%= simple_form_for(Furlough.new, as: :furlough, method: :post, html: { class: "form-horizontal" }) do |f| %>
-                
-                <div class="modal-body">
-                
-                    <div class="form-group mb-3">
-                        <%= f.association :furlough_type, :as => :collection_select, collection: FurloughType.where(is_actif: true, code: 'CRHS'), label: 'Type de congé', label_method: :name, value_method: :id, input_html: { id: 'type_furlough' }, class: 'form-control',  include_blank: false  %>
-                    </div>
+          <% else %>
+            <%= f.input :user_id, label: false, input_html: { id: 'user_id', value: current_user.id, :style => "display:none;" } %>
+          <% end %>
 
-                    <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                        <div class="form-group mb-3">
-                            <%= f.input :user_id, label: "Collaborateur", input_html: { id: 'user_id', :style => "display:none;" } %>
-                            <select class="form-control select2-multiple" data-toggle="select2" multiple="multiple" onchange="[set_user_id_of_furlough(), reloadHourDuration()]">
-                                
-                                <optgroup label="Collaborateurs">
-                                    <%= @users.each do |user| %>
-                                        <option><%= user.first_name %> <%= user.last_name %></option>
-                                    <% end %>
-                                </optgroup>
-                            </select>
-                        </div>
-                    <% else %>
-                        <%= f.input :user_id, label: false, input_html: { id: 'user_id', value: current_user.id, :style => "display:none;" } %>
-                    <% end %>
 
-                    
-                    <div class="form-group mb-3">
-                        <div class="row">
-                            <div class="col-8">
-                                <%= f.input :start, label: 'Date de début', value: DateTime.strptime("1448607600",'%s'), as: :date ,html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'start_date', onchange: 'reloadHourDuration();'}, class: 'form-control' %>
-                            </div>
-                            <div class="col-4">
-                                <%= f.input :hour_start, label: 'Heur de départ', as: :select, collection: (['8:00','9:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00']), :selected => '8:00', input_html: { id: 'hour_start', onchange:'reloadHourDuration();'}, html5: true, placeholder: "Entrer la date de début de congé", class: 'form-control' %>
-                            </div>
-                       </div>
-                   </div>
- 
-                    <div class="form-group mb-3">
-                        <div class="row">
-                            <div class="col-8">
-                                <%= f.input :end, label: 'Date de fin', value:  DateTime.strptime("1448607600",'%s'), as: :date, html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'end_date', onchange:'reloadHourDuration();' }, class: 'form-control' %>
-                            </div>
-                            <div class="col-4">
-                                <%= f.input :hour_end, label: 'Heure de reprise', as: :select, collection: (['8:00','9:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00']), :selected => '8:00', html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'hour_end', onchange:'reloadHourDuration();' }, class: 'form-control' %>
-                            </div>
-                            <div class="col-12">
-                                <h4><span class="badge badge-danger ml-1" id="dr"></span></h4>
-                            </div>
-                            <div class="col-12">
-                               <h4><span class="badge badge-danger ml-1 valid_hours"></span></h4>
-                            </div>
-                        </div>
-                    </div>
-   
-                    <%= f.file_field :documment %><br>
-                                       
-                </div>
+          <div class="form-group mb-3">
+            <div class="row">
+              <div class="col-8">
+                <%= f.input :start, label: 'Date de début', value: DateTime.strptime("1448607600",'%s'), as: :date ,html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'start_date', onchange: 'reloadHourDuration();'}, class: 'form-control' %>
+              </div>
+              <div class="col-4">
+                <%= f.input :hour_start, label: 'Heur de départ', as: :select, collection: (['8:00','9:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00']), :selected => '8:00', input_html: { id: 'hour_start', onchange:'reloadHourDuration();'}, html5: true, placeholder: "Entrer la date de début de congé", class: 'form-control' %>
+              </div>
+            </div>
+          </div>
 
-                <div class="modal-footer">
-                    <div id="submit_button">
-                       <%= f.button :submit, 'Confirmer', class: 'btn btn-raised btn-success' %>
-                    </div> 
-                    <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
-                </div>
-            <% end %>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal --> 
+          <div class="form-group mb-3">
+            <div class="row">
+              <div class="col-8">
+                <%= f.input :end, label: 'Date de fin', value:  DateTime.strptime("1448607600",'%s'), as: :date, html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'end_date', onchange:'reloadHourDuration();' }, class: 'form-control' %>
+              </div>
+              <div class="col-4">
+                <%= f.input :hour_end, label: 'Heure de reprise', as: :select, collection: (['8:00','9:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00']), :selected => '8:00', html5: true, placeholder: "Entrer la date de début de congé", input_html: { id: 'hour_end', onchange:'reloadHourDuration();' }, class: 'form-control' %>
+              </div>
+              <div class="col-12">
+                <h4><span class="badge badge-danger ml-1" id="dr"></span><h4>
+              </div>
+              <div class="col-12">
+                <h4><span class="badge badge-danger ml-1 valid_hours"></span><h4>
+              </div>
+            </div>
+          </div>
+
+          <%= f.file_field :documment %><br>
+
+        </div>
+
+        <div class="modal-footer">
+          <div id="submit_button">
+            <%= f.button :submit, 'Confirmer', class: 'btn btn-raised btn-success' %>
+          </div>
+          <button type="button" class="btn btn-raised btn-warning" data-dismiss="modal">Annuler</button>
+        </div>
+      <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <script>
     function set_user_id(){
@@ -437,8 +440,8 @@
         ).done( function(json) {
 
             $('#user').val(json);
-              
-        }); 
+
+        });
 
     }
 
@@ -446,18 +449,18 @@
 
         var user_name = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText;
         console.log(user_name);
-      
+
         var url = '<%= domainename + 'finduserid/' %>';
         $.when(
             $.getJSON(url+user_name.slice(1))
         ).done( function(json) {
 
             $('#user_id').val(json);
-             $('#dr').text("");
-              $('#valid_hours').text("");
-            
-        }); 
-            
+            $('#dr').text("");
+            $('#valid_hours').text("");
+
+        });
+
 
     }
 
@@ -472,43 +475,43 @@
         if (id_additional_hour_type == 2) {
             document.getElementById("offs").style.display = "none";
             var url = '<%= domainename + 'days_of_input_form/' %>';
-        
-                $.when(
-                    $.getJSON(url+period)
-                ).done( function(json) {
-                
-                    const weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
-                    
-                    json.forEach(d => {
-                       var myDate = new Date(d);
-                       let day = weekday[myDate.getDay()];
-                       
-                        if (day == "monday"){
-                            $('#monday_label').text("Lundi : " + d);
-                            document.getElementById("monday").style.display = "block";
-                        } else if (day == "tuesday"){
-                            $('#tuesday_label').text("Mardi : " + d);
-                            document.getElementById("tuesday").style.display = "block";
-                        } else if (day == "wednesday"){
-                            $('#wednesday_label').text("Mercredi : " + d);
-                            document.getElementById("wednesday").style.display = "block";
-                        } else if (day == "thursday"){
-                            $('#thursday_label').text("Jeudi : " + d);
-                            document.getElementById("thursday").style.display = "block";
-                        } else if (day == "friday"){
-                            $('#friday_label').text("Vendredi : " + d);
-                            document.getElementById("friday").style.display = "block";
-                        } else if (day == "saturday"){
-                            $('#saturday_label').text("Samedi : " + d);
-                            document.getElementById("saturday").style.display = "block";
-                        } else if (day == "sunday"){
-                            $('#sunday_label').text("Dimanche : " + d);
-                            document.getElementById("sunday").style.display = "block";
-                        }
 
-                    });
-                    
-                }); 
+            $.when(
+                $.getJSON(url+period)
+            ).done( function(json) {
+
+                const weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+
+                json.forEach(d => {
+                    var myDate = new Date(d);
+                    let day = weekday[myDate.getDay()];
+
+                    if (day == "monday"){
+                        $('#monday_label').text("Lundi : " + d);
+                        document.getElementById("monday").style.display = "block";
+                    } else if (day == "tuesday"){
+                        $('#tuesday_label').text("Mardi : " + d);
+                        document.getElementById("tuesday").style.display = "block";
+                    } else if (day == "wednesday"){
+                        $('#wednesday_label').text("Mercredi : " + d);
+                        document.getElementById("wednesday").style.display = "block";
+                    } else if (day == "thursday"){
+                        $('#thursday_label').text("Jeudi : " + d);
+                        document.getElementById("thursday").style.display = "block";
+                    } else if (day == "friday"){
+                        $('#friday_label').text("Vendredi : " + d);
+                        document.getElementById("friday").style.display = "block";
+                    } else if (day == "saturday"){
+                        $('#saturday_label').text("Samedi : " + d);
+                        document.getElementById("saturday").style.display = "block";
+                    } else if (day == "sunday"){
+                        $('#sunday_label').text("Dimanche : " + d);
+                        document.getElementById("sunday").style.display = "block";
+                    }
+
+                });
+
+            });
         } else {
             document.getElementById("monday").style.display = "none";
             document.getElementById("tuesday").style.display = "none";
@@ -518,8 +521,8 @@
             document.getElementById("saturday").style.display = "none";
             document.getElementById("sunday").style.display = "none";
             document.getElementById("offs").style.display = "block";
-        }   
-       
+        }
+
     }
 
     function yesnoCheckPeriod(that) {
@@ -527,16 +530,16 @@
         var date = document.getElementById("date").value;
 
         console.log(date)
-       
+
 
         if (date != "") {
             document.getElementById("fileds_none").style.display = "block";
             document.getElementById("submit_none").style.display = "block";
         } else {
             document.getElementById("fileds_none").style.display = "none";
-            document.getElementById("submit_none").style.display = "none";   
-        }   
-       
+            document.getElementById("submit_none").style.display = "none";
+        }
+
     }
 
     function get_total() {
@@ -548,7 +551,7 @@
         var friday_quantity = document.getElementById("friday_quantity").value;
         var saturday_quantity = document.getElementById("saturday_quantity").value;
         var sunday_quantity = document.getElementById("sunday_quantity").value;
-       
+
         if (monday_quantity == "") monday_quantity = 0;
         if (tuesday_quantity == "") tuesday_quantity = 0;
         if (wednesday_quantity == "") wednesday_quantity = 0;
@@ -561,7 +564,7 @@
         if (total == "") total = 0;
 
         document.getElementById("total_quantity").value = parseInt(monday_quantity) + parseInt(tuesday_quantity) + parseInt(wednesday_quantity) + parseInt(thursday_quantity) + parseInt(friday_quantity) + parseInt(saturday_quantity) + parseInt(sunday_quantity);
-       
+
     }
 
     function reloadHourDuration() {
@@ -578,7 +581,7 @@
         ).done( function(json) {
 
             if(json.furlough__hour_duration > 0) {
-                    $('#dr').text("Vous avez " + json.furlough__hour_duration + " heure(s) dans cette période de congé");
+                $('#dr').text("Vous avez " + json.furlough__hour_duration + " heure(s) dans cette période de congé");
             }else{
                 $('#dr').text("La date n'est pas valide!");
                 document.getElementById("submit_button").style.display = "none";
@@ -592,17 +595,16 @@
                     $('.valid_hours').text("Vous n'avez pas d'heures sup sur la période demmandé");
                 }
 
-                document.getElementById("submit_button").style.display = "none";   
+                document.getElementById("submit_button").style.display = "none";
             }else{
                 $('.valid_hours').text("");
-                document.getElementById("submit_button").style.display = "block";  
-                
+                document.getElementById("submit_button").style.display = "block";
+
             }
 
 
-        }); 
+        });
 
     }
 
 </script>
-
