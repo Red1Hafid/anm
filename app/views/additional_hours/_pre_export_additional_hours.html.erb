@@ -17,8 +17,15 @@
                 <br>
                 <div class="row">
                     <div class="col-12">
-                        <%= label_tag "Type d'absences" %>
+                        <%= label_tag "Type heures sup" %>
                         <%= select_tag :type_additional_hours, options_for_select(['Tous', 'HSJFT', 'HSJO']), class:"form-control" %>
+                    </div> 
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <%= label_tag "Collaborateurs" %>
+                        <%= select_tag :collaborateurs, options_for_select(["Tous"].concat(User.where.not(role_id: 1).pluck(:email))), class:"form-control" %>
                     </div> 
                 </div>
             </div>

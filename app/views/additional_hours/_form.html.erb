@@ -8,19 +8,141 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             </div>
             <div class="modal-body">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <%= f.input :additional_hour_date, label: 'Date', as: :date, html5: true, input_html: { id: 'date', onchange: 'week_number_in_month();'}, class: 'form-control' %>
+                <div class="p-1 mb-2 bg-info text-dark">
+                    <h4><span class="badge badge-soft-secondaru badge-pill ml-1 period_hour_sup"><%= AdditionalHoursHelper.get_period %></span> <h4>
+                    <%= f.input :period, label: false, input_html: { id: 'period_hour_sup_selected', value: AdditionalHoursHelper.get_period_without_string, :style => "display:none;" } %>
+                </div>
+
+                <div class="form-group">
+                    <%= f.association :additional_hour_type, label: "Choisisser le type d'Heure sup.", :as => :collection_select, collection: AdditionalHourType.all, label_method: :name, value_method: :id, class: 'form-control',  include_blank: false, input_html: { id: 'type_additional_hour', onchange: 'yesnoCheck();'} %>
+                </div>
+
+                <div class="p-3 mb-2 bg-warning text-dark">
+                    <div class="container-fluid">
+                        <div id="monday" class="form-group" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6 text-right">
+                                    <label id="monday_label"></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <%= f.input :monday_quantity, label: false, class: 'form-control', input_html: { id: 'monday_quantity', onblur: 'get_total();'} %>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tuesday" class="form-group mb-3" style="display: none;">  
+                            <div class="row">
+                                <div class="col-md-6 text-right">
+                                    <label id="tuesday_label"></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <%= f.input :tuesday_quantity, label: false, class: 'form-control', input_html: { id: 'tuesday_quantity', onblur: 'get_total();'} %>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="wednesday" class="form-group mb-3" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6 text-right">
+                                    <label id="wednesday_label"></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <%= f.input :wednesday_quantity, label: false, class: 'form-control', input_html: { id: 'wednesday_quantity', onblur: 'get_total();'} %>
+                                </div>
+                            </div> 
+                        </div>
+                        <div id="thursday" class="form-group mb-3" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6 text-right">
+                                    <label id="thursday_label"></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <%= f.input :thursday_quantity, label: false, class: 'form-control col-md-2', input_html: { id: 'thursday_quantity', onblur: 'get_total();'} %>
+                                </div>
+                            </div> 
+                        </div>
+                        <div id="friday" class="form-group mb-3" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6 text-right">
+                                    <label id="friday_label"></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <%= f.input :friday_quantity, label: false, class: 'form-control', input_html: { id: 'friday_quantity', onblur: 'get_total();'} %>
+                                </div>
+                            </div> 
+                        </div>
+                        <div id="saturday" class="form-group mb-3" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6 text-right">
+                                    <label id="saturday_label"></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <%= f.input :saturday_quantity, label: false, class: 'form-control', input_html: { id: 'saturday_quantity', onblur: 'get_total();'} %>
+                                </div>
+                            </div> 
+                        </div>
+                        <div id="sunday" class="form-group mb-3" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6 text-right">
+                                    <label id="sunday_label"></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <%= f.input :sunday_quantity, label: false, class: 'form-control', input_html: { id: 'sunday_quantity', onblur: 'get_total();'} %>
+                                </div>
+                            </div> 
+                        </div>
+
+                        <div id="total" class="form-group mb-3" style="display: block;">
+                            <div class="row">
+                                <div class="col-md-6 text-right">
+                                    <label id="to_label">Total des heures sup.</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <%= f.input :total_additional_hour_in_week, label: false, placeholder: "Total", class: 'form-control', input_html: { id: 'total_quantity' } %>
+                                </div>
+                            </div> 
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <%= f.input :period, label: 'Période', input_html: { class: 'week_number_in_month_selected', :style => "display:none;" } %>
-                        <h4><span class="badge badge-soft-info badge-pill ml-1 week_number"></span> <h4>
-                    </div>
-                    <div class="form-group">
-                        <%= f.input :total_additional_hour_in_week, label: 'Total des heures supplémentaire dans cette semaine', placeholder: "Entrer le Total des heures sup", class: 'form-control' %>
+
+                    <div id="offs" class="form-group mb-3 text-secondary" style="display: block;">
+
+                        <h5 style="font-style: italic;"><span class="badge badge-soft-secondary badge-pill ml-1"></span> Rappelle : les jours fériés sur cette période!<h5>
+                        <% @offs_of_form.each do |d| %>
+                                <% if d.to_date.monday? %>
+                                    <h5><span class="badge badge-soft-danger badge-pill ml-1 monday_l"></span> Lundi : <%= d.to_s %> <h5>
+                                <% elsif d.to_date.tuesday? %>
+                                    <h5><span class="badge badge-soft-danger badge-pill ml-1 tuesday_l"></span> Mardi : : <%= d.to_s %> <h5>
+                                <% elsif d.to_date.wednesday? %>
+                                    <h5><span class="badge badge-soft-danger badge-pill ml-1 wednesday_l"></span> Mercredi : <%= d.to_s %><h5>
+                                <% elsif d.to_date.thursday? %>
+                                    <h5><span class="badge badge-soft-danger badge-pill ml-1 thursday_l"></span> Jeudi : <%= d.to_s %><h5>
+                                <% elsif d.to_date.friday? %>
+                                    <h5><span class="badge badge-soft-danger badge-pill ml-1 friday_l"></span> Vendredi : <%= d.to_s %><h5>
+                                <% elsif d.to_date.saturday? %>
+                                    <h5><span class="badge badge-soft-danger badge-pill ml-1 saturday_l"></span>Samedi : <%= d.to_s %> <h5>
+                                <% else d.to_date.sunday? %>
+                                    <h5><span class="badge badge-soft-danger badge-pill ml-1 sunday_l"></span> Dimanche : <%= d.to_s %><h5>
+                                <% end %>
+                        <% end %>
                     </div>
                 </div>
+                
+                <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                    <div class="form-group mb-3">
+                        <%= f.input :user_id, label: "Collaborateurs", input_html: { id: 'user', :style => "display:none;" } %>
+                        <select data-toggle="select2" onchange='set_user_id();'>
+                            <option></option>
+                            <optgroup label="Collaborateurs">
+                                <%= @users.each do |user| %>
+                                    <option><%= user.first_name %> <%= user.last_name %></option>
+                                <% end %>
+                            </optgroup>
+                        </select>
+                    </div>
+                <% end %>
+
+                <div class="form-group">
+                    <%= f.input :comment, label: 'Commentaire', placeholder: "Entrer un commentaire", class: 'form-control' %>
+                </div>
+                
             </div>
             <div class="modal-footer">
                 <%= f.button :submit, 'Valider', class: 'btn btn-raised btn-success' %>
@@ -32,16 +154,183 @@
 </div>
 
 <script>
-     function week_number_in_month() {
+    function set_user_id(){
+
+        var user_name = document.getElementsByClassName("select2")[0].innerText;
+
+        console.log(user_name);
+
+        var url = '<%= domainename + 'finduserid/' %>';
+        $.when(
+            $.getJSON(url+user_name)
+        ).done( function(json) {
+
+            $('#user').val(json);
+              
+        }); 
+
+    }
+
+    function set_user_id_of_furlough(){
+
+        var user_name = document.getElementsByClassName("select2-selection select2-selection--multiple")[0].innerText;
+        console.log(user_name);
+      
+        var url = '<%= domainename + 'finduserid/' %>';
+        $.when(
+            $.getJSON(url+user_name.slice(1))
+        ).done( function(json) {
+
+            $('#user_id').val(json);
+             $('#dr').text("");
+              $('#valid_hours').text("");
+            
+        }); 
+            
+
+    }
+
+    function yesnoCheck(that) {
+
+        var period = document.getElementById("period_hour_sup_selected").value;
+        id_additional_hour_type = document.getElementById("type_additional_hour").value
+
+        console.log(period);
+        console.log(id_additional_hour_type);
+
+        if (id_additional_hour_type == 2) {
+            document.getElementById("offs").style.display = "none";
+            var url = '<%= domainename + 'days_of_input_form/' %>';
+        
+                $.when(
+                    $.getJSON(url+period)
+                ).done( function(json) {
+                
+                    const weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+                    
+                    json.forEach(d => {
+                       var myDate = new Date(d);
+                       let day = weekday[myDate.getDay()];
+                       
+                        if (day == "monday"){
+                            $('#monday_label').text("Lundi : " + d);
+                            document.getElementById("monday").style.display = "block";
+                        } else if (day == "tuesday"){
+                            $('#tuesday_label').text("Mardi : " + d);
+                            document.getElementById("tuesday").style.display = "block";
+                        } else if (day == "wednesday"){
+                            $('#wednesday_label').text("Mercredi : " + d);
+                            document.getElementById("wednesday").style.display = "block";
+                        } else if (day == "thursday"){
+                            $('#thursday_label').text("Jeudi : " + d);
+                            document.getElementById("thursday").style.display = "block";
+                        } else if (day == "friday"){
+                            $('#friday_label').text("Vendredi : " + d);
+                            document.getElementById("friday").style.display = "block";
+                        } else if (day == "saturday"){
+                            $('#saturday_label').text("Samedi : " + d);
+                            document.getElementById("saturday").style.display = "block";
+                        } else if (day == "sunday"){
+                            $('#sunday_label').text("Dimanche : " + d);
+                            document.getElementById("sunday").style.display = "block";
+                        }
+
+                    });
+                    
+                }); 
+        } else {
+            document.getElementById("monday").style.display = "none";
+            document.getElementById("tuesday").style.display = "none";
+            document.getElementById("wednesday").style.display = "none";
+            document.getElementById("thursday").style.display = "none";
+            document.getElementById("friday").style.display = "none";
+            document.getElementById("saturday").style.display = "none";
+            document.getElementById("sunday").style.display = "none";
+            document.getElementById("offs").style.display = "block";
+        }   
+       
+    }
+
+    function yesnoCheckPeriod(that) {
+
         var date = document.getElementById("date").value;
-        var url = '<%= domainename + 'week_number_in_month/' %>';
-    
-            $.when(
-                $.getJSON(url+date)
-            ).done( function(json) {
-                $('.week_number').text("Semaine " + json);
-                $('.week_number_in_month_selected').val(json);
-            });  
+
+        console.log(date)
+       
+
+        if (date != "") {
+            document.getElementById("fileds_none").style.display = "block";
+            document.getElementById("submit_none").style.display = "block";
+        } else {
+            document.getElementById("fileds_none").style.display = "none";
+            document.getElementById("submit_none").style.display = "none";   
+        }   
+       
+    }
+
+    function get_total() {
+
+        var monday_quantity = document.getElementById("monday_quantity").value;
+        var tuesday_quantity = document.getElementById("tuesday_quantity").value;
+        var wednesday_quantity = document.getElementById("wednesday_quantity").value;
+        var thursday_quantity = document.getElementById("thursday_quantity").value;
+        var friday_quantity = document.getElementById("friday_quantity").value;
+        var saturday_quantity = document.getElementById("saturday_quantity").value;
+        var sunday_quantity = document.getElementById("sunday_quantity").value;
+       
+        if (monday_quantity == "") monday_quantity = 0;
+        if (tuesday_quantity == "") tuesday_quantity = 0;
+        if (wednesday_quantity == "") wednesday_quantity = 0;
+        if (thursday_quantity == "") thursday_quantity = 0;
+        if (friday_quantity == "") friday_quantity = 0;
+        if (saturday_quantity == "") saturday_quantity = 0;
+        if (sunday_quantity == "") sunday_quantity = 0;
+
+        var total = document.getElementById("total_quantity").value;
+        if (total == "") total = 0;
+
+        document.getElementById("total_quantity").value = parseInt(monday_quantity) + parseInt(tuesday_quantity) + parseInt(wednesday_quantity) + parseInt(thursday_quantity) + parseInt(friday_quantity) + parseInt(saturday_quantity) + parseInt(sunday_quantity);
+       
+    }
+
+    function reloadHourDuration() {
+        var start_date = document.getElementById("start_date").value;
+        var end_date = document.getElementById("end_date").value;
+        var hour_start = document.getElementById("hour_start").value;
+        var hour_end = document.getElementById("hour_end").value;
+        var user_id = document.getElementById("user_id").value;
+        var url = '<%= domainename + 'duration_hour_taken/' %>';
+
+        console.log("user_id" + user_id);
+        $.when(
+            $.getJSON(url+user_id+'/'+start_date+'/'+hour_start+'/'+end_date+'/'+hour_end)
+        ).done( function(json) {
+
+            if(json.furlough__hour_duration > 0) {
+                    $('#dr').text("Vous avez " + json.furlough__hour_duration + " heure(s) dans cette période de congé");
+            }else{
+                $('#dr').text("La date n'est pas valide!");
+                document.getElementById("submit_button").style.display = "none";
+            }
+
+            if(json.furlough__hour_duration > json.results.hour_valide_in_period){
+                if(json.results.hour_valide_in_period >= 0){
+                    $('.valid_hours').text("Sur cette periode demmandé vous n'avez droit qu'à " + json.results.hour_valide_in_period + " h");
+                }
+                if(json.results.hour_valide_in_period == 0){
+                    $('.valid_hours').text("Vous n'avez pas d'heures sup sur la période demmandé");
+                }
+
+                document.getElementById("submit_button").style.display = "none";   
+            }else{
+                $('.valid_hours').text("");
+                document.getElementById("submit_button").style.display = "block";  
+                
+            }
+
+
+        }); 
+
     }
 
 </script>

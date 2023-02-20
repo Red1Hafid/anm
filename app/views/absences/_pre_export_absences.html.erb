@@ -11,11 +11,11 @@
                 <div class="row">
                     <div class="col-6">
                         <%= label_tag "Date d'absence" %>
-                        <%= date_field_tag :date_absence, class:"form-control" %>
+                        <%= date_field_tag :date_absence, "#{Date.today}", class:"form-control" %>
                     </div>
                     <div class="col-6">
                         <%= label_tag 'Opérateur Date' %>
-                        <%= select_tag :oppeateur_date, options_for_select(['Supérieure que','Inférieure que','Égale']), class:"form-control" %>
+                        <%= select_tag :opperateur_date, options_for_select(['Égale', 'Supérieure que', 'Supérieure ou égale','Inférieure que', 'Inférieure ou égale']), class:"form-control" %>
                     </div> 
                 </div>
                 <br>
@@ -23,6 +23,13 @@
                     <div class="col-12">
                         <%= label_tag "Type d'absences" %>
                         <%= select_tag :type_absences, options_for_select(['Tous', 'Absence Justifiée', 'Absence Injustifiée', 'Accident de travail']), class:"form-control" %>
+                    </div> 
+                </div>
+                 <br>
+                <div class="row">
+                    <div class="col-12">
+                        <%= label_tag "Type d'absences" %>
+                        <%= select_tag :collaborateurs, options_for_select(["Tous"].concat(User.where.not(role_id: 1).pluck(:email))), class:"form-control" %>
                     </div> 
                 </div>
             </div>

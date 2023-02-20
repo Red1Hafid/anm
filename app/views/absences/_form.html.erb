@@ -9,24 +9,24 @@
             </div>
             <div class="modal-body">
                 <div class="form-group mb-3">
-                    <%= f.association :absence_type, class: 'form-control',  include_blank: true  %>
+                    <%= f.association :absence_type,label: "Type d'absence", class: 'form-control' %>
                 </div>
                 <div class="form-group mb-3">
-                    <%= f.association :user, class: 'form-control',  include_blank: true  %>
+                    <%= f.association :user, label: "Collaborateur", label_method: :email, class: 'form-control' %>
                 </div>
                 <div class="form-group mb-3">
                     <div class="row">
                       <div class="col-6">
-                          <%= f.input :start_time, label: 'Date de début', value: DateTime.strptime("1448607600",'%s'), as: :datetime ,html5: true, placeholder: "Entrer la date de début d'absence", class: 'form-control' %>
+                          <%= f.input :start_time, label: 'Date de début', value: DateTime.strptime("1448607600",'%s'), as: :datetime ,html5: true, class: 'form-control' %>
                       </div>
                       <div class="col-6">
-                          <%= f.input :end_time, label: 'Date de fin', value: DateTime.strptime("1448607600",'%s'), as: :datetime ,html5: true, placeholder: "Entrer la date de fin d'absence", class: 'form-control' %>
+                          <%= f.input :end_time, label: 'Date de fin', value: DateTime.strptime("1448607600",'%s'), as: :datetime ,html5: true, class: 'form-control' %>
                       </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <%= f.button :submit, 'Valider', class: 'btn btn-raised btn-success' %>
+                <%= f.button :submit, 'Modifier', class: 'btn btn-raised btn-success' %>
                 <button type="button" class="btn btn-raised btn-danger" data-dismiss="modal">Annuler</button>
             </div>
         </div>

@@ -2,15 +2,32 @@ class AdditionalHour < ApplicationRecord
   belongs_to :user
   belongs_to :additional_hour_type
 
+  validates :total_additional_hour_in_week, presence: true
+
   enum status: {
     created: 1,
     aprouved: 2,
     expired: 3
   }
 
-  scope :filter_by_additional_hour_type_id, -> (type_additional_hour) { where('additional_hours.additional_hour_type_id = ?', type_additional_hour) }
-  scope :filter_by_additional_hours_type_ids, -> (type_additional_hours) { where additional_hour_type_id: type_additional_hours }
-  scope :filter_by_period, -> (period) { where("additional_hours.period like ?", period) }
+  def self.exported_data_filtred(additional_hours, params)
+    additional_hours = additional_hours.where(period: params[:period_additional_hour])
+    
+    if params[:type_additional_hours] == "Tous"
+      additional_hours_type = AdditionalHourType.where(code: ['HSJFT','HSJO'])
+      additional_hours = additional_hours.where(additional_hour_type_id: additional_hours_type)
+    else
+      additional_hours_type = AdditionalHourType.where(code: params[:type_additional_hours])
+      additional_hours = additional_hours.where(additional_hour_type_id: additional_hours_type)
+    end
+
+    if params[:collaborateurs] != 'Tous'
+      user = User.where(email: params[:collaborateurs]).first
+      additional_hours = additional_hours.where(user_id: user.id)
+    end
+      
+    return additional_hours
+  end
 
   def self.update_etat_additional_hours(specification, furlough)
     specification[:results][:additional_hours].each_with_index do |additional_hour_id, i|
