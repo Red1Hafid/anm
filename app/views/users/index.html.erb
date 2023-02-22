@@ -132,7 +132,7 @@
                                     </div>
                                     <div class="text-left"> 
                                         <%= form_tag users_path, :method => 'get',  class: "form-inline" do %>
-                                            <%= link_to 'Exporter', users_path(type: "#{params[:type]}", format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                                            <%= link_to 'Rapport des collaborateurs', users_path(type: "#{params[:type]}", format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
                                         <% end %>
                                     </div>
                                 </td>

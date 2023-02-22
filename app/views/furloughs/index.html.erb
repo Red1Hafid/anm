@@ -346,7 +346,7 @@
                                     <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
                                         <div class="text-left">
                                             <%= form_tag furloughs_path, :method => 'get',  class: "form-inline" do %>
-                                                <%= link_to 'Exporter', furloughs_path(status: "#{params[:status]}", format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                                                <%= link_to 'Rapport des congés', furloughs_path(status: "#{params[:status]}", format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
                                             <% end %>
                                         </div>
                                     <% end %>

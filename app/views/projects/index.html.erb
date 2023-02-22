@@ -123,7 +123,7 @@
                 <%= form_tag projects_path, :method => 'get',  class: "form-inline" do %>
                   <% if @projects.count > 0 %>
                     <div class="form-group">
-                      <%= link_to 'Expoter', projects_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
+                      <%= link_to 'Rapport Des Projets', projects_path( format: :xlsx), class:"btn btn-warning waves-effect waves-light ml-1" %>
                     </div>
                   <% end %>
                 <% end %>

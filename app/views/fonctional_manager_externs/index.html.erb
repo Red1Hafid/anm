@@ -40,7 +40,7 @@
                       <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
                         <%= form_tag import_fonctional_manager_externs_path, multipart: true do %>
                           <%= file_field_tag :file, required: true %>
-                          <%= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
+                          <%= submit_tag 'Importer', class: "btn btn-success" %>
                         <% end %>
                       <% end %>
                     </div>

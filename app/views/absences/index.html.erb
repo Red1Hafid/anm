@@ -222,7 +222,7 @@
                                       </div>
                                       <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
                                         <div class="text-left">
-                                          <%= link_to 'Exporter', pre_export_absences_path(), remote: true, class: "btn btn-warning waves-effect waves-light mr-3" %>
+                                          <%= link_to 'Rapport des Absences', pre_export_absences_path(), remote: true, class: "btn btn-warning waves-effect waves-light mr-3" %>
                                         </div>
                                       <% end %>
                                     </td>

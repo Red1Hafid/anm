@@ -202,7 +202,7 @@
                                     <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
                                 </div>
                                 <div class="text-left">
-                                    <%= link_to 'Exporter', pre_export_authorizations_path(), remote: true, class: "btn btn-warning waves-effect waves-light ml-1" %> 
+                                    <%= link_to 'Rapport Des Autorisations', pre_export_authorizations_path(), remote: true, class: "btn btn-warning waves-effect waves-light ml-1" %>
                                 </div>
                             </td>
                         </tr>
@@ -280,10 +280,10 @@
                                 <%= f.input :end_hour, label: 'Heure de reprise', as: :select, collection: (['8:00','9:00','10:00','11:00','12:00','14:00','15:00','16:00','17:00','18:00']), :selected => '8:00', html5: true, placeholder: "Entrer l'heur de fin", input_html: { id: 'hour_end', onchange:'reloadHourDuration();' }, class: 'form-control' %>
                             </div>
                             <div class="col-12">
-                                <h4><span class="badge badge-danger ml-1" id="dr"></span><h4>
+                                <h4><span class="badge badge-danger ml-1" id="dr"></span></h4>
                             </div>
                             <div class="col-12">
-                               <h4><span class="badge badge-danger ml-1 valid_hours"></span><h4>
+                               <h4><span class="badge badge-danger ml-1 valid_hours"></span></h4>
                             </div>
                             <div class="col-12" id="recovery_method" style="display:none;">
                                 <%= f.input :recovery_method, as: :radio_buttons, label: 'Méthode de récuperation', collection: [['0', 'Répartition des heures sur les autres jours travaillés de la semaine'], ['1', 'Retrancher de mon solde de congé']], label_method: :second, value_method: :first %>  

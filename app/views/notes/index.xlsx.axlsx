@@ -5,6 +5,8 @@ wb.add_worksheet(name: "Notes") do |sheet|
   sheet.add_row ["nom", "collaborateur", "Category" , "date de creation", "date de Facture", "total"]
   # Create entries for each item
   @notes.each do |note|
-    sheet.add_row [note.name, note.user.first_name + " " + note.user.last_name, note.cost.name, note.created_at, note.facture_date, note.total ]
+    if note
+     sheet.add_row [note.name, note.user.first_name + " " + note.user.last_name, note.cost.name, note.created_at, note.facture_date, note.total ]
+    end
   end
 end

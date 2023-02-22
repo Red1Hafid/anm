@@ -32,6 +32,9 @@
                           <%= link_to '#new_ground', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_ground'  do %>
                             <i class="mdi mdi-plus mr-1"> Nouveau</i>
                           <% end %>
+                          <div class="form-group ml-2">
+                            <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
+                          </div>
                         </div>
                       <% end %>
                     </div>
@@ -40,7 +43,7 @@
                       <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
                         <%= form_tag import_grounds_path, multipart: true do %>
                           <%= file_field_tag :file, required: true %>
-                          <%= submit_tag 'Importer', class: "btn btn-success waves-effect waves-light mr-3" %>
+                          <%= submit_tag 'Importer', class: "btn btn-success" %>
                         <% end %>
                       <% end %>
                     </div>

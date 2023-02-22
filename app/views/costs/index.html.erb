@@ -31,11 +31,11 @@
               </div>
             </div>
             <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-              <div class="col-lg-4 d-flex justify-content-end align-items-center">
+              <div class="d-flex justify-content-end align-items-center">
                 <% if  params.has_key?(:status)%>
-                  <a class="btn btn-info" href="<%= costs_path %>"> <i class="mdi mdi-filter mr-1"></i> Categories</a>
+                  <a class="btn btn-secondary" href="<%= costs_path %>"> <i class="mdi mdi-filter"></i> Categories</a>
                 <% else %>
-                  <a class="btn btn-info" href="<%= costs_path(status: 'deleted') %>"> <i class="mdi mdi-filter mr-1"></i>Categories Archivé</a>
+                  <a class="btn btn-secondary" href="<%= costs_path(status: 'deleted') %>"> <i class="mdi mdi-filter"></i>Categories Archivé</a>
                 <% end %>
               </div>
             <% end %>
