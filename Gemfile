@@ -34,7 +34,7 @@ gem "jbuilder"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
-gem 'devise', '~> 4.8', '>= 4.8.1'
+gem 'devise', '~> 4.9'
 gem 'cancancan', '~> 1.15'
 gem 'simple_form', '~> 5.1'
 gem 'sass-rails'
@@ -93,3 +93,5 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+gem "acts_as_tenant", "~> 0.6.1"

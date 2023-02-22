@@ -1,4 +1,5 @@
 class Journal < ApplicationRecord
+    acts_as_tenant :company
     belongs_to :user, optional: true
 
     def self.create_journal(user, furlough, status, content, model)

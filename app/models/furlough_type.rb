@@ -2,6 +2,8 @@ class FurloughType < ApplicationRecord
     validates :code, uniqueness: true
     validates :code, presence: true
     validates :name, presence: true
+
+    acts_as_tenant :company
     has_many :furloughs
 
     def self.import(file)

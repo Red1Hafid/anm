@@ -720,7 +720,7 @@ class UploadsManager
           @messages.push("L'autorisation n'est pas valide - heure de sortie > heure de reprise!")
         end
 
-        authorization__hour_duration = Autorization.get_hour_authorization_duration(date, start_hour, end_hour)
+        authorization__hour_duration = Autorization.get_hour_authorization_duration(date, start_hour, end_hour).to_f
 
         if authorization__hour_duration >= 3
           stay_hours = authorization__hour_duration
@@ -765,7 +765,8 @@ class UploadsManager
             comment: hash['Motif'],
             department: hash['Département'],
             function: hash['Fonction'],
-            recovery_method: hash['Type de récupération']
+            recovery_method: hash['Type de récupération'],
+            time_taken: authorization__hour_duration
           )
 
           if authorization.valid?

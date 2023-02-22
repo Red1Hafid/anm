@@ -4,6 +4,7 @@ class Furlough < ApplicationRecord
   #validates :reference_furlough, uniqueness: true
   #validates :reference_furlough, presence: true
   
+  acts_as_tenant :company
   belongs_to :user
   belongs_to :furlough_type
 

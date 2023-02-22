@@ -1,4 +1,5 @@
 class AdditionalHour < ApplicationRecord
+  acts_as_tenant :company
   belongs_to :user
   belongs_to :additional_hour_type
 

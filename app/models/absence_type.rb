@@ -1,4 +1,5 @@
 class AbsenceType < ApplicationRecord
+    acts_as_tenant :company
     has_many :absences
 
     validates :code, presence: true, uniqueness: true

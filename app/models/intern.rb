@@ -18,6 +18,8 @@ class Intern < ApplicationRecord
     validates :language_skills, presence: true
     validates :college_year, presence: true
 
+    acts_as_tenant :company
+
     LANGUAGES = ["Français", "Anglais"]
     SKILLS = ["Ruby On Rails", "Blender"]
 end

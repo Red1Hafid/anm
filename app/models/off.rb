@@ -4,13 +4,11 @@ class Off < ApplicationRecord
     validates :title, uniqueness: true
     validates :title, presence: true
 
+    acts_as_tenant :company
+
     scope :off_between, lambda {|start_date, end_date| where("offs.start <= ? AND offs.end >= ?", end_date, start_date )}
-
     scope :year, lambda{|year| where("EXTRACT(YEAR FROM start) = ? ", year ) if year.present? }
-
     scope :all_year, -> { where("EXTRACT(YEAR FROM start)") }
-
-
     scope :offs_by_year, lambda{|year| where('EXTRACT(YEAR from offs.start) = ?', year)}
 
     def self.import(file)

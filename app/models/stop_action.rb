@@ -4,6 +4,7 @@ class StopAction < ApplicationRecord
     validates :name, presence: true, format: {with: /[a-zA-Z]/}
     validates :name, uniqueness: true
 
+    acts_as_tenant :company
     has_many :grounds
 
     def self.import(file)

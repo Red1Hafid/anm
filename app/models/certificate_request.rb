@@ -1,4 +1,5 @@
 class CertificateRequest < ApplicationRecord
+  acts_as_tenant :company
   belongs_to :template_attestation
   belongs_to :user
 

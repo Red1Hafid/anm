@@ -1,4 +1,5 @@
 class Affectation < ApplicationRecord
+  acts_as_tenant :company
   validates :date_affectation, presence: true
 
   scope :mes_affectation,  -> (userId) { where(user_id: userId) }

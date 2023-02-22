@@ -1,6 +1,7 @@
 class Cost < ApplicationRecord
   validates :name, presence: true, format: {with: /[a-zA-Z]/}, uniqueness: true
 
+  acts_as_tenant :company
   has_many :notes
   has_many :users, through: :notes
 

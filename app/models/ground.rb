@@ -4,6 +4,7 @@ class Ground < ApplicationRecord
     validates :code, presence: true
     validates :code, uniqueness: true
 
+    acts_as_tenant :company
     belongs_to :stop_action
 
     def self.import(file)

@@ -19,9 +19,19 @@ class User < ApplicationRecord
   validates :family_status, presence: true
   validates :job_title, presence: true
 
+  acts_as_tenant :company
+  belongs_to :role
+  has_one :bank
   has_many :journals
   has_many :additional_hours
-  
+  has_many :furloughs
+  has_many :notes
+  has_many :affectations
+  has_many :projects , through: :affectations
+
+  has_one_attached :avatar
+  has_one_attached :document
+
   enum status: {
     created: 1,
     actif: 2,
@@ -31,16 +41,9 @@ class User < ApplicationRecord
 
   MANAGERS = ["Gestionnaire fonctionnel", "Gestionnaire hiérarchique"]
 
-  has_one_attached :avatar
-  has_one_attached :document
-  
-  belongs_to :role
-  has_many :furloughs
-  has_one :bank
-  has_many :notes
-
-  has_many :affectations
-  has_many :projects , through: :affectations
+  scope :users_by_role, ->(role_id) { where('role_id = ?', role_id) }
+  scope :get_name_of_line_manager, ->(id) { where('line_manager_id = ?', id) }
+  scope :get_name_of_fonctionnal_manager, ->(id) { where('fonctionnal_manager_id = ?', id) }
 
   def self.search(params)  
     p = params[:search]   
@@ -65,11 +68,6 @@ class User < ApplicationRecord
   def active_for_authentication?
     super and self.is_active?
   end
-
-  scope :users_by_role, ->(role_id) { where('role_id = ?', role_id) }
-  scope :get_name_of_line_manager, ->(id) { where('line_manager_id = ?', id) }
-  scope :get_name_of_fonctionnal_manager, ->(id) { where('fonctionnal_manager_id = ?', id) }
-
  
   def self.import(file)
     CSV.foreach(file.path, headers: true) do |row|

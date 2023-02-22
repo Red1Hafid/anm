@@ -1,6 +1,7 @@
 class Autorization < ApplicationRecord
   serialize :history, Array
-
+  
+  acts_as_tenant :company
   belongs_to :user
 
   enum status: {

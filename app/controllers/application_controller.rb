@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
-    before_action :authenticate_user!
+    set_current_tenant_by_subdomain_or_domain(:company, :subdomain, :domain)
+
+    #before_action :authenticate_user!
     before_action :configure_permitted_parameters, if: :devise_controller?
     add_flash_types :success, :danger, :warning, :info
 
@@ -49,8 +51,8 @@ class ApplicationController < ActionController::Base
             end
         end
    
-        first_user = User.find(1)
-        if resource.id != first_user.id && resource.is_started_at_confirmed == false
+        super_admin_users = User.where('roles.title = ?', "Super Admin").where(company_id: resource.company_id)
+        if !super_admin_users.include? resource && resource.is_started_at_confirmed == false
             if resource.sign_in_count < 10
                 flash[:warning] = "Confirmer la date de votre integration sur la section compte de ton profil "
                 edit_user_registration_path(current_user)

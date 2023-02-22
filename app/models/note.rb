@@ -2,6 +2,8 @@ class Note < ApplicationRecord
   validates :name, presence: true, format: {with: /[a-zA-Z]/}
   validates :total, numericality: { greater_than: 0}, presence: true
 
+  acts_as_tenant :company
+
   scope :mes_notes,  -> (userId) { where( user_id: userId) }
 
   belongs_to :user

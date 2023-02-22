@@ -1,6 +1,9 @@
 class Project < ApplicationRecord
-  validates :name, presence: true, format: {with: /[a-zA-Z]/}, uniqueness: true
   before_validation :generate_reference, on: :create
+  
+  validates :name, presence: true, format: {with: /[a-zA-Z]/}, uniqueness: true
+  
+  acts_as_tenant :company
 
   scope :filter_by_status, -> (status) { where('project.status = ?', status) }
 
