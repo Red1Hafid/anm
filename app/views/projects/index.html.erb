@@ -13,7 +13,7 @@
               <li class="breadcrumb-item active">Actions</li>
             </ol>
           </div>
-            <h4 class="page-title">Liste des Project</h4>
+            <h4 class="page-title">Liste des Projects</h4>
         </div>
       </div>
     </div>
@@ -26,7 +26,7 @@
               <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
                  <div class="form-group mr-2">
                     <%= link_to '#new_project', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_project'  do %>
-                      <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                      <i class="mdi mdi-plus mr-1"> Nouveau Projet</i>
                     <% end %>
                   </div>
                  <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">

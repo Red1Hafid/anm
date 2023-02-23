@@ -29,7 +29,7 @@
               <div class="text-sm-center form-inline">
                 <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
                   <%= link_to '#new_additional_hour', class: "btn btn-primary mr-2", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_additional_hour'  do %>
-                    <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                    <i class="mdi mdi-plus mr-1"> Nouvelle Entrée Heurs sup</i>
                   <% end %>
 
                   <%= link_to '#new_recovery_furlough_of_additional_hour', class: "btn btn-outline-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_recovery_furlough_of_additional_hour'  do %>
@@ -154,7 +154,7 @@
 
                     <div class="col-lg-2">
                       <%= link_to pre_export_additional_hours_path(), remote: true, class: "btn btn-warning waves-effect waves-light" do %>
-                       Rapport des Heurs Supp
+                       Rapport des Heurs Sup
                       <% end %>
                     </div>
                   </td>

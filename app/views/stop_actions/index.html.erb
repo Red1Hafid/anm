@@ -30,7 +30,7 @@
                       <div class="form-group mr-2">
                         <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
                           <%= link_to '#new_stop_action', class: "btn btn-primary", :id => 'login', "data-toggle" => "modal", 'data-target' => '#new_stop_action'  do %>
-                            <i class="mdi mdi-plus mr-1"> Nouveau</i>
+                            <i class="mdi mdi-plus mr-1"> Nouveau Action </i>
                           <% end %>
                         <% end %>
                       </div>
@@ -46,7 +46,7 @@
                         <% end %>
                       <% end %>
                       <div class="btn-group dropleft">
-                        <button type="button" class="btn btn-secondary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class="btn btn-secondary ml-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Filtrer par statut
                         </button>
                         <div class="dropdown-menu" style="">

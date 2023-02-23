@@ -213,77 +213,78 @@
                 <div class="card mb-3">
                         <br>
                         <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                            <div class="row col-lg-12">                               
-                                <div class="col-lg-10">
-                                    <div class="form-group">
-                                        <%= form_tag root_path, :method => 'get',  class: "form-inline" do %>
-                                            <div class="form-group">
-                                                <%= date_field_tag 'search[date_from]', @search.date_from, class:"form-control", id:"date_from" %>
-                                                <%= date_field_tag 'search[date_to]', @search.date_to, class:"form-control", id:"date_to" %>
-                                            
-                                                <div class="col-lg-2">
-                                                    <%= submit_tag 'Chercher',  class: "btn btn-warning waves-effect waves-light ml-1" %> 
-                                                </div>   
-                                            </div>
-                                        <% end %>
-                                    </div>
+                            <div class="bg-light d-flex justify-content-between mb-2">
+                                <div class="text-sm-center form-inline">
+                                  <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
                                 </div>
 
-                                <div class="col-lg-2">
-                                    <div class="text-lg-right mt-3 mt-lg-0">   
-                                        <%= form_tag export_path(format: :xlsx), :method => 'get' do %>
-                                            <div class="form-group"> 
-                                                <%= date_field_tag :date_from, nil, class:"form-control", id: "from", :style => "display:none;" %>
-                                                <%= date_field_tag :date_to, nil, class:"form-control", id: "to", :style => "display:none;" %>
-                                                <div class="col-lg-4">
-                                                    <button type="submit" class="btn btn-warning waves-effect waves-light ml-1"> Exporter</button>
-                                                </div>    
-                                            </div>
-                                        <% end %>            
-                                    </div>
+                                <div class="text-sm-center form-inline">
+                                   <div class="form-group ml-2">
+                                    <%= form_tag root_path, :method => 'get',  class: "form-inline" do %>
+                                      <div class="form-group">
+                                        <%= date_field_tag 'search[date_from]', @search.date_from, class:"form-control mr-1", id:"date_from" %>
+                                        <%= date_field_tag 'search[date_to]', @search.date_to, class:"form-control", id:"date_to" %>
+                                        <%= submit_tag 'Chercher',  class: "btn btn-outline-primary ml-2" %>
+                                      </div>
+                                    <% end %>
+                                  </div>
                                 </div>                              
                             </div>
                         <% end %>
 
-                        <div class="table-responsive">
-                            <table class="table table-centered table-nowrap mb-0">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                          <th>Collaborateur </th>
-                                        
-                                            <th>Jours travaillés <br> (Période séléctionnée)</th>
-                                        
-                                            <th>Jours fériés consommés <br> (Période séléctionnée)</th>
-                                            <th>Gains en solde / J <br> (Période séléctionnée)</th>
-                                            <th>Tous les jours fériés <br> consommé</th>
-                                            <th>Solde réel / J</th>
-                                        <% else %>
-                                            <th>Jours travaillés <br> (Mois courant)</th>
-                                        
-                                            <th>Jours fériés consommés <br> (Mois courant)</th>
-                                            <th>Gains en solde / J <br> (Mois courant)</th>
-                                            <th>Tous les jours fériés <br> consommé</th>
-                                            <th>Solde réel / J</th>
-                                        <% end %>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% @analysis.each do |analyse| %>
-                                        <tr>  
-                                            <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
-                                                <td><%= analyse[0] %> <%= analyse[1] %></td>
-                                            <% end %> 
-                                            <td><%= analyse[3] %></td>
-                                            <td><%= analyse[4] %></td> 
-                                            <td><%= analyse[5] %></td>  
-                                            <td><%= analyse[7] %></td> 
-                                            <td><%= analyse[8] %></td>                                   
-                                        </tr>   
-                                    <% end %>
-                                </tbody>
-                            </table>
+                  <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+                    <thead>
+                      <tr>
+                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                          <th data-sort-initial="true" data-toggle="true">Collaborateur </th>
+
+                          <th data-sort-initial="true" data-toggle="true" >Jours travaillés <br> (Période séléctionnée)</th>
+
+                          <th data-sort-initial="true" data-toggle="true" >Jours fériés consommés <br> (Période séléctionnée)</th>
+                          <th data-hide="phone, tablet" >Gains en solde / J <br> (Période séléctionnée)</th>
+                          <th data-hide="phone, tablet">Tous les jours fériés <br> consommé</th>
+                          <th data-hide="phone, tablet">Solde réel / J</th>
+                        <% else %>
+                          <th >Jours travaillés <br> (Mois courant)</th>
+
+                          <th data-sort-initial="true" data-toggle="true">Jours fériés consommés <br> (Mois courant)</th>
+                          <th data-sort-initial="true" data-toggle="true">Gains en solde / J <br> (Mois courant)</th>
+                          <th data-sort-initial="true" data-toggle="true">Tous les jours fériés <br> consommé</th>
+                          <th data-sort-initial="true" data-toggle="true" >Solde réel / J</th>
+                        <% end %>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @analysis.each do |analyse| %>
+                      <tr>
+                        <% if ['Super Admin', 'Rh'].include? current_user.role.title %>
+                          <td><%= analyse[0] %> <%= analyse[1] %></td>
+                        <% end %>
+                        <td><%= analyse[3] %></td>
+                        <td><%= analyse[4] %></td>
+                        <td><%= analyse[5] %></td>
+                        <td><%= analyse[7] %></td>
+                        <td><%= analyse[8] %></td>
+                      </tr>
+                    <% end %>
+                    </tbody>
+                    <tfoot>
+                    <tr class="active">
+                      <td colspan="8">
+                        <div class="text-right">
+                          <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
                         </div>
+                        <%= form_tag export_path(format: :xlsx), :method => 'get' do %>
+                          <div class="form-group">
+                            <%= date_field_tag :date_from, nil, class:"form-control", id: "from", :style => "display:none;" %>
+                            <%= date_field_tag :date_to, nil, class:"form-control", id: "to", :style => "display:none;" %>
+                          </div>
+                          <button type="submit" class="btn btn-warning waves-effect waves-light ml-1"> Rapport de Solde de Congé </button>
+                        <% end %>
+                      </td>
+                    </tr>
+                    </tfoot>
+                  </table>
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->
