@@ -79,18 +79,14 @@ Rails.application.routes.draw do
   get 'adjust/:id' => 'offs#pre_adjust', as: 'pre_adjust'
   post 'adjust/:id' => 'offs#adjust', as: 'adjust'
 
-  resources :additional_hours do 
-    collection {
-      get 'soumettreHeuresSup/:id' => 'additional_hours#soumettre_additional_hour', as: 'soumettre_additional_hour'
-      get 'mes-heures-sup' => 'additional_hours#additional_hours_administration', as: 'additional_hours_administration'
-      get 'period/:additional_hour_date' => 'additional_hours#get_period', as: 'get_period'
-      get 'days_of_input_form/:period' => 'additional_hours#get_days_of_input_form', as: 'get_days_of_input_form'
-      get 'valid_hours/:start/:hour_start/:end/:hour_end' => 'additional_hours#get_valid_hours', as: 'get_valid_hours'
-
-      get 'export-heures-sup' => 'additional_hours#pre_export_additional_hours', as: 'pre_export_additional_hours'
-      get 'export-heures-sup-lolo' => 'additional_hours#export_additional_hours', as: 'export_additional_hours'
-    }
-  end
+  resources :additional_hours  
+  get 'soumettreHeuresSup/:id' => 'additional_hours#soumettre_additional_hour', as: 'soumettre_additional_hour'
+  get 'mes-heures-sup' => 'additional_hours#additional_hours_administration', as: 'additional_hours_administration'
+  get 'period/:additional_hour_date' => 'additional_hours#get_period', as: 'get_period'
+  get 'days_of_input_form/:period' => 'additional_hours#get_days_of_input_form', as: 'get_days_of_input_form'
+  get 'valid_hours/:start/:hour_start/:end/:hour_end' => 'additional_hours#get_valid_hours', as: 'get_valid_hours'
+  get 'export-heures-sup' => 'additional_hours#pre_export_additional_hours', as: 'pre_export_additional_hours'
+  get 'export-heures-sup-lolo' => 'additional_hours#export_additional_hours', as: 'export_additional_hours'
 
   resources :autorizations 
   get 'soumettreAuthorization/:id' => 'autorizations#soumettre_autorization', as: 'soumettre_autorization'
