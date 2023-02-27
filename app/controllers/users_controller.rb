@@ -56,7 +56,7 @@ class UsersController < ApplicationController
     @current_year_furloughs.each { |tp| @type_furlough << tp.first }
 
     @balance_furlough_day = Bank.find_by(user_id: params[:id]).balance_furlough
-    @balance_furlough_day_réel = Furlough.get_balance_current_month(current_user.id)
+    @balance_furlough_day_réel = Furlough.get_balance_current_month(current_user)
     @balance_d = (@balance_furlough_day + @balance_furlough_day_réel).round(2)
   end
 

@@ -124,17 +124,10 @@ class CertificateRequestsController < ApplicationController
     @template_attestation = TemplateAttestation.find(@certificate_request.template_attestation_id)
     user = User.find(@certificate_request.user_id)
 
-    puts "----user"
-    puts user.cin
-    puts user.first_name
-
-    puts "------tem"
-    puts @template_attestation
-
-    rh = User.find(2)
+    rh = User.find(3)
     user_conf = UserConf.find_by(user_id: rh.id)
     respond_to do |format|
-      paragraphe_1 = @template_attestation.paragraphe_1.gsub("%first_name%", user.first_name).gsub("%last_name%", user.last_name).gsub("%date_birth%", user.date_birth.to_s).gsub("%cin%", user.cin).gsub("%cnss%", user.cnss).gsub("%job_title%", user.job_title).gsub("%date_integration%", user.started_at.to_s).gsub("%gross_salary%", user.gross_salary.to_s).gsub("%date_end%", Date.today.to_s)
+      paragraphe_1 = @template_attestation.paragraphe_1.gsub("%first_name%", user.first_name).gsub("%last_name%", user.last_name).gsub("%date_birth%", user.date_birth.to_s).gsub("%cin%", user.cin).gsub("%cnss%", user.cnss).gsub("%job_title%", user.job_title).gsub("%date_integration%", user.started_at.to_s).gsub("%gross_salary%", user.gross_salary.to_s)#.gsub("%date_end%", Date.today.to_s)
       doc = Loofah.fragment(paragraphe_1).scrub!(:strip)
       p1 = doc.text 
 

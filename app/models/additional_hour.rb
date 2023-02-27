@@ -42,7 +42,7 @@ class AdditionalHour < ApplicationRecord
     end
    
     bank = Bank.find_by(user_id: furlough.user_id)
-    furlough_duration = Furlough.get_hour_furlough_duration(furlough.start, furlough.hour_start, furlough.end, furlough.hour_end)
+    furlough_duration = Furlough.get_furlough_duration(furlough.start, furlough.hour_start, furlough.end, furlough.hour_end) * 8
     furlough_balance = bank.balance_open_additional_hour_off_days
     balance = furlough_balance - furlough_duration
     bank.update(balance_open_additional_hour_off_days: balance)

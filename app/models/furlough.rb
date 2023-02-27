@@ -1,9 +1,6 @@
 class Furlough < ApplicationRecord
   serialize :notes, Array
   
-  #validates :reference_furlough, uniqueness: true
-  #validates :reference_furlough, presence: true
-  
   acts_as_tenant :company
   belongs_to :user
   belongs_to :furlough_type
@@ -12,260 +9,67 @@ class Furlough < ApplicationRecord
 
   before_create :set_reference
 
-  ransacker :full do |parent|
-    Arel::Nodes::NamedFunction.new('CONCAT_WS', [
-      Arel::Nodes.build_quoted(' '), parent.table[:first_name], parent.table[:last_name]
-    ])
-  end
-
   scope :furloughs_of_adjust, lambda{|year_off_first_off| where('EXTRACT(YEAR from furloughs.end) = ?', year_off_first_off).or(where('EXTRACT(YEAR from furloughs.start) = ?', year_off_first_off))}
 
   def self.furlough_between(start_date, end_date, user_id)
     furlough_type_not_payed_ids = FurloughType.where(is_payer: false).pluck(:id)
     if start_date == end_date
-      furloughs = Furlough.where(user_id: user_id, status: ["Approuvé", "Régularisé", "Arrêté"]).where("furloughs.start >= ? AND furloughs.start <= ?", start_date, end_date.end_of_month).or(where("furloughs.end >= ? AND furloughs.end <= ?", start_date, end_date.end_of_month)).where(furlough_type_id: furlough_type_not_payed_ids).pluck(:start, :hour_start, :end, :hour_end, :status)
+      furloughs = Furlough.where(user_id: user_id, status: ["Approuvé", "Régularisé", "Arrêté"]).where("furloughs.start >= ? AND furloughs.start <= ?", start_date, end_date.end_of_month).or(where("furloughs.end >= ? AND furloughs.end <= ?", start_date, end_date.end_of_month)).or(where("furloughs.start <= ? AND furloughs.end >= ?", start_date, end_date)).where(furlough_type_id: furlough_type_not_payed_ids).pluck(:start, :hour_start, :end, :hour_end, :status)
     else
-      furloughs = Furlough.where("furloughs.start >= ? AND furloughs.start <= ? AND furloughs.user_id = ?", start_date, end_date, user_id).or(where("furloughs.end >= ? AND furloughs.end <= ? AND furloughs.user_id = ?", start_date, end_date, user_id)).where(furlough_type_id: furlough_type_not_payed_ids, status: ["Approuvé", "Régularisé"]).pluck(:start, :hour_start, :end, :hour_end, :status)
+      furloughs = Furlough.where("furloughs.start >= ? AND furloughs.start <= ? AND furloughs.user_id = ?", start_date, end_date, user_id).or(where("furloughs.end >= ? AND furloughs.end <= ? AND furloughs.user_id = ?", start_date, end_date, user_id)).or(where("furloughs.start <= ? AND furloughs.end >= ? AND furloughs.user_id = ?", start_date, end_date, user_id)).where(furlough_type_id: furlough_type_not_payed_ids, status: ["Approuvé", "Régularisé", "Arrêté"]).pluck(:start, :hour_start, :end, :hour_end, :status)
     end
     return furloughs
   end
 
-   # This method return number of day to exclude (Off_day, Sunday, Saturday)
   def self.get_furlough_duration(d1, h1, d2, h2)
-    off_days = Off.off_between(d1, d2)
+    array = []
+    Off.off_between(d1, d2).pluck(:start, :end).each { |off| array.concat((off[0].to_date..off[1].to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday) && (k >= d1) && (k <= d2)})}
+    result_week_day = (d1.to_date..d2.to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday)} - array.uniq
+
+    count_furlough = result_week_day.count
+    count_furlough -= 0.5 if (result_week_day.include? d1) && (h1 == "14:00")
+    count_furlough -= 0.5 if (result_week_day.include? d2) && (h2 == "14:00")
+    count_furlough -= 1 if (result_week_day.include? d2) && (h2 == "8:00")
     
-    count_furlough = 0.0
-    count_day_off = 0.0
-    if !off_days.empty?
-      off_days.each do |off|
-        day_off_duration = ((off.end - off.start) / 3600 / 24) + 1
-        if day_off_duration == 1 && Furlough.is_week_day(off.start) == false
-          count_day_off += 1
-        else
-          off_day_not_include_week_day = (off.start.to_date..off.end.to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday)}
-          array = off_day_not_include_week_day.select {|o| o <= d2 && o >= d1 }
-          count_day_off += array.count
-        end
-      end
-    end
-
-    result_week_day = (d1.to_date..d2.to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday)}
-
-    if h1 == "8:00" && h2 == "8:00"
-      if (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true) && (Furlough.is_week_day(d2) == true || Off.is_off(d2) == true)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24)) / 24).to_f
-        puts "------1"
-        puts "result_week_day.count"
-        puts result_week_day.count
-
-        puts "count_day_off"
-        puts count_day_off
-      elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false)  && (Furlough.is_week_day(d2) == true || Off.is_off(d2) == true)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24)) / 24).to_f
-        puts "------2"
-        puts "result_week_day.count"
-        puts result_week_day.count
-
-        puts "count_day_off"
-        puts count_day_off
-      elsif (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true)  && (Furlough.is_week_day(d2) == false || Off.is_off(d2) == false)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24) - 24) / 24).to_f
-        puts "------3"
-        puts "result_week_day.count"
-        puts result_week_day.count
-
-        puts "count_day_off"
-        puts count_day_off
-      elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false)  && (Furlough.is_week_day(d2) == false || Off.is_off(d2) == false)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24) - 24) / 24).to_f
-        puts "------4"
-        puts "result_week_day.count"
-        puts result_week_day.count
-
-        puts "count_day_off"
-        puts count_day_off
-      end
-    end 
-
-    if h1 == "14:00" && h2 == "8:00"
-      if (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true) && (Furlough.is_week_day(d2) == true || Off.is_off(d2) == true)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24)) / 24).to_f
-      elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false)  && (Furlough.is_week_day(d2) == true || Off.is_off(d2) == true)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24) - 12) / 24).to_f
-      elsif (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true)  && (Furlough.is_week_day(d2) == false || Off.is_off(d2) == false)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24) - 24) / 24).to_f
-      elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false)  && (Furlough.is_week_day(d2) == false || Off.is_off(d2) == false)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24) - 36) / 24).to_f
-      end
-    end 
-
-    if h1 == "8:00" && h2 == "14:00" 
-      if (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true) && (Furlough.is_week_day(d2) == true || Off.is_off(d2) == true)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24)) / 24).to_f
-      elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false)  && (Furlough.is_week_day(d2) == true || Off.is_off(d2) == true)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24)) / 24).to_f
-      elsif (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true)  && (Furlough.is_week_day(d2) == false || Off.is_off(d2) == false)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24) - 12) / 24).to_f
-      elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false)  && (Furlough.is_week_day(d2) == false || Off.is_off(d2) == false)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24) - 12) / 24).to_f
-      end
-    end
-
-    if h1 == "14:00" && h2 == "14:00"
-      if (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true) && (Furlough.is_week_day(d2) == true || Off.is_off(d2) == true)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24)) / 24).to_f
-      elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false)  && (Furlough.is_week_day(d2) == true || Off.is_off(d2) == true)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24) - 12) / 24).to_f
-      elsif (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true)  && (Furlough.is_week_day(d2) == false || Off.is_off(d2) == false)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24) - 12) / 24).to_f
-      elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false)  && (Furlough.is_week_day(d2) == false || Off.is_off(d2) == false)
-        count_furlough = ((((result_week_day.count - count_day_off) * 24) - 24) / 24).to_f
-      end
-    end
-   
     return count_furlough
   end
 
-  def self.get_hour_furlough_duration(d1, h1, d2, h2)
-    off_days = Off.off_between(d1, d2)
-    
-    count_furlough = 0.0
-    count_day_off = 0.0
-    if !off_days.empty?
-      off_days.each do |off|
-        day_off_duration = ((off.end - off.start) / 3600 / 24) + 1
-        if day_off_duration == 1 && Furlough.is_week_day(off.start) == false
-          count_day_off += 1
-        else
-          off_day_not_include_week_day = (off.start.to_date..off.end.to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday)}
-          array = off_day_not_include_week_day.select {|o| o <= d2 && o >= d1 }
-          count_day_off += array.count
-        end
-      end
-    end
+  #Not including offs and week days
+  def self.days_before_demand(d1, d2)
+    array = []
+    Off.off_between(d1, d2).pluck(:start, :end).each { |off| array.concat((off[0].to_date..off[1].to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday)})}
+    result_day = (d1.to_date..d2.to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday)} - array
 
-    result_week_day = (d1.to_date..d2.to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday)}
-
-    if (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true) && (Furlough.is_week_day(d2) == true || Off.is_off(d2) == true)
-      count_hour_furlough = (result_week_day.count - count_day_off) * 8
-    elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false)  && (Furlough.is_week_day(d2) == true || Off.is_off(d2) == true)
-      if h1.split(/: */).first.to_i > 13
-        first_day_hour_duration = 18 - (h1.split(/: */).first.to_i)
-        count_hour_furlough = ((result_week_day.count - count_day_off - 1) * 8) + first_day_hour_duration
-      else
-        first_day_hour_duration = 12 - (h1.split(/: */).first.to_i) + 4
-        count_hour_furlough = ((result_week_day.count - count_day_off - 1) * 8) + first_day_hour_duration
-      end
-    elsif (Furlough.is_week_day(d1) == true || Off.is_off(d1) == true)  && (Furlough.is_week_day(d2) == false || Off.is_off(d2) == false)
-      if h2.split(/: */).first.to_i > 13
-        last_day_hour_duration = ((h2.split(/: */).first.to_i) - 14) + 4
-        count_hour_furlough = ((result_week_day.count - count_day_off - 1) * 8) + last_day_hour_duration
-      else
-        last_day_hour_duration = (h2.split(/: */).first.to_i) - 8
-        count_hour_furlough = ((result_week_day.count - count_day_off - 1) * 8) + last_day_hour_duration
-      end
-    elsif (Furlough.is_week_day(d1) == false || Off.is_off(d1) == false)  && (Furlough.is_week_day(d2) == false || Off.is_off(d2) == false)
-      if h1.split(/: */).first.to_i > 13
-        first_day_hour_duration = 18 - (h1.split(/: */).first.to_i)
-      else
-        first_day_hour_duration = 12 - (h1.split(/: */).first.to_i) + 4
-      end
-
-      if h2.split(/: */).first.to_i > 13
-        last_day_hour_duration = ((h2.split(/: */).first.to_i) - 14) + 4
-      else
-        last_day_hour_duration = (h2.split(/: */).first.to_i) - 8
-      end
-
-      count_hour_furlough = ((result_week_day.count - count_day_off - 2) * 8) + first_day_hour_duration + last_day_hour_duration
-    end
-   
-    return count_hour_furlough
+    return result_day
   end
 
-  #This method return table of days not worked not calcul days offs because the furlough in not payed!
-  def self.get_furlough_date(d1, d2)
-
-    off_days = Off.off_between(d1, d2)
-    result_week_day = (d1.to_date..d2.to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday)}
-
-    off_days_not_include_week_day = []
-    if !off_days.empty?
-      off_days.each do |off|
-        off_days_not_include_week_day << (off.start.to_date..off.end.to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday)} 
-      end
-    end
-
-    day_off_array = []
-    off_days_not_include_week_day.each do |off|
-      off.each do |o|
-        day_off_array.push(o)
-      end
-    end
-
-   d = result_week_day - day_off_array
-
-   return d
-  end
-
-  def self.get_balance_current_month(user_id)
-    user = User.where(id: user_id).includes(:bank).first
+  def self.get_balance_current_month(user)
     setting = Setting.find(1)
-
-    traitement_date = Date.today.strftime('%Y-%m-%d %l:%M %p').split.first.gsub("-", "")
-    started_at_user = user.started_at.strftime('%Y-%m-%d %l:%M %p').split.first.gsub("-", "")
-    beginning_of_month_date = Date.today.beginning_of_month.strftime('%Y-%m-%d %l:%M %p').split.first.gsub("-", "")
-
-    if started_at_user.to_i <= traitement_date.to_i
-      if started_at_user.to_i >= beginning_of_month_date.to_i 
+    if user.started_at <= Date.today
+      if user.started_at >= Date.today.beginning_of_month
         days_worked = Furlough.get_days_worked_between_two_date(user, user.started_at, Date.today)
       else
         days_worked = Furlough.get_days_worked_between_two_date(user, Date.today.beginning_of_month, Date.today)
       end
-
-      last_balance_furlough = user.bank.balance_furlough
-      if days_worked >= 26
-         balance_furlough_current_month = setting.month_balance
-      else
-         balance_furlough_current_month = (setting.month_balance / 26.to_f ) * days_worked
-      end
+      balance_current_month = days_worked >= 26 ? setting.month_balance : (setting.month_balance / 26.to_f ) * days_worked
     end
 
-    return balance_furlough_current_month
+    return balance_current_month
   end
 
   def self.get_days_worked_between_two_date(user, date_start, date_end)
-    user_started_at_date = user.started_at.strftime('%Y%m%d')
-    start_date = date_start.strftime('%Y%m%d')
-    end_date = date_end.strftime('%Y%m%d')
-    
-    if user_started_at_date.to_i >= end_date.to_i
-      days_worked = 0.0
-    else
-      if user_started_at_date.to_i < start_date.to_i
-        days_worked_between_two_date = (date_start..date_end).to_a.select {|k| [1,2,3,4,5,6].include?(k.wday)}  
-        furloughs = Furlough.furlough_between(date_start, date_end, user.id)
-      else
-        days_worked_between_two_date = (user.started_at..date_end).to_a.select {|k| [1,2,3,4,5,6].include?(k.wday)}   
-        furloughs = Furlough.furlough_between(user.started_at, date_end, user.id)
-      end
+    counter = 0.0
+    days_furloughs = []
 
-      furloughs_duration = 0.0
-      furloughs.each do |furlough|  
-        furlough_end = furlough[2].to_date.strftime('%Y-%m-%d %l:%M %p').split.first.gsub("-", "")
-       
-        if furlough_end.to_i < end_date.to_i
-          furloughs_duration += Furlough.get_furlough_duration(furlough[0], furlough[1], furlough[2], furlough[3]) if furlough
-        else
-          excluded_duration = Furlough.get_furlough_duration(date_end.to_date, "8:00", furlough[2], furlough[3]) 
-          furlough_duration = Furlough.get_furlough_duration(furlough[0], furlough[1], furlough[2], furlough[3])
-          included_duration = furlough_duration - excluded_duration
-          furloughs_duration += included_duration
-        end  
-      end
-    
-      days_worked = days_worked_between_two_date.count - furloughs_duration
-    end
+    days_worked_between_two_date = (date_start..date_end).to_a.select {|k| [1,2,3,4,5,6].include?(k.wday)}  
+    Furlough.furlough_between(date_start, date_end, user.id).each { |furlough| days_furloughs.concat((furlough[0].to_date..furlough[2].to_date).to_a.select {|k| [1,2,3,4,5].include?(k.wday) && (k >= date_start) && (k <= date_end)})
+      counter += 0.5 if (days_furloughs.include? furlough[0]) && (furlough[1] == "14:00") 
+      counter += 0.5 if (days_furloughs.include? furlough[2]) && (furlough[3] == "14:00")
+      counter -= 1 if (days_furloughs.include? furlough[2]) && (furlough[3] == "8:00")
+    }
+
+    days_worked = (days_worked_between_two_date.count - days_furloughs.uniq.count) - counter
+
     return days_worked   
   end
 
@@ -280,28 +84,6 @@ class Furlough < ApplicationRecord
     
     self.reference_furlough = thereference
     set_reference if Furlough.find_by(reference_furlough: thereference)
-  end
-
-  def self.search(params)  
-    furlough_type_id = FurloughType.find_by(name: params[:search]).id
-    where("status lIKE ?", "%#{params[:search]}%").or(where("furlough_type_id = ?", furlough_type_id)) if params[:search].present? 
-  end
-
-  def self.take_start(dayToCheck) 
-    newDay1 = nil
-    if dayToCheck.saturday?
-      newDay1 = dayToCheck.send(:+, 2.day)
-    elsif dayToCheck.sunday?
-      newDay1 = dayToCheck.send(:+, 1.day)
-    else
-      object = Off.find_by(start: dayToCheck)
-      newDay1 = object.start.send(:+, 1.day) if object.present?
-    end
-    if newDay1 != nil
-      take_start(newDay1)
-    else
-      return dayToCheck
-    end
   end
 
   def self.rh_create_collab_furlough(specification, furlough, furlough_type, current_user, user_furlough)
@@ -620,7 +402,7 @@ class Furlough < ApplicationRecord
     is_furlough = true
 
     if furlough_type.code == 'CRHS'
-      furlough_hour_duration = get_hour_furlough_duration(furlough.start, furlough.hour_start, furlough.end, furlough.hour_end)
+      furlough_hour_duration = get_furlough_duration(furlough.start, furlough.hour_start, furlough.end, furlough.hour_end) * 8
 
       if furlough.start.to_datetime.mjd < Date.current.mjd
         danger << "La date de début de congé ne doit pas être inferieur à la date du jour"
@@ -674,7 +456,7 @@ class Furlough < ApplicationRecord
           end
         end
         if furlough_type.informing_before
-          days = get_furlough_date(Date.today, furlough.start)
+          days = days_before_demand(Date.today, furlough.start)
           if days.count * 24 < (setting.informing_before_duration + 1)
             danger << "Ce type de congé demande une duré de déclaration de 48h"
           end  
@@ -730,7 +512,7 @@ class Furlough < ApplicationRecord
           end
         end
         if furlough_type.informing_before
-          days = get_furlough_date(Date.today, furlough_params[:start])
+          days = days_before_demand(Date.today, furlough_params[:start])
           if days.count * 24 < (setting.informing_before_duration + 1)
             danger << "Ce type de congé demande une duré de déclaration de 48h"
           end  

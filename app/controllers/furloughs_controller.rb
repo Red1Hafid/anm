@@ -30,7 +30,7 @@ class FurloughsController < ApplicationController
         @furloughs = @q.result(distinct: true).where(user_id: current_user).order(reference_furlough: :desc)
       end
       @balance_furlough_day = Bank.find_by(user_id: current_user).balance_furlough
-      @balance_furlough_day_réel = Furlough.get_balance_current_month(current_user.id)
+      @balance_furlough_day_réel = Furlough.get_balance_current_month(current_user)
       @balance_d = (@balance_furlough_day + @balance_furlough_day_réel).round(2)
       @balance_h = (@balance_d * @setting.day_work_hour).round(2)
       @date_now = DateTime.now.to_date.send(:-, 1.day).strftime('%d/%m/%Y')
@@ -51,7 +51,7 @@ class FurloughsController < ApplicationController
  
     @balance_furlough_day = bank.balance_furlough
     @balance_furlough_h = bank.balance_furlough * setting.day_work_hour
-    @balance_furlough_day_réel = Furlough.get_balance_current_month(current_user.id)
+    @balance_furlough_day_réel = Furlough.get_balance_current_month(current_user)
     @balance_d = (@balance_furlough_day + @balance_furlough_day_réel).round(2)
     @balance_h = (@balance_d * setting.day_work_hour).round(2)
     @date_now = DateTime.now.to_date.send(:-, 1.day).strftime('%d/%m/%Y')
@@ -73,17 +73,13 @@ class FurloughsController < ApplicationController
     end
 
     @childs_discontinuity = Furlough.where(parent_id: @furlough.id)
-   
-
-   
     @furlough_regular = Furlough.find(@furlough.furlough_regular_id) if !@furlough.furlough_regular_id.nil?
   end
 
   def new
     @furlough = Furlough.new 
     @balance_furlough_day = Bank.find_by(user_id: current_user).balance_furlough
-
-    @balance_furlough_day_réel = Furlough.get_balance_current_month(current_user.id)
+    @balance_furlough_day_réel = Furlough.get_balance_current_month(current_user)
     @balance_d = (@balance_furlough_day + @balance_furlough_day_réel).round(2)
     @balance_h = (@balance_d * 8).round(2)
     @date_now = DateTime.now.to_date.send(:-, 1.day).strftime('%d/%m/%Y')
@@ -468,7 +464,7 @@ class FurloughsController < ApplicationController
 
   def pre_regularized
     @balance_furlough_day = Bank.find_by(user_id: @furlough.user_id).balance_furlough
-    @balance_furlough_day_réel = Furlough.get_balance_current_month(current_user.id)
+    @balance_furlough_day_réel = Furlough.get_balance_current_month(current_user)
     @balance_d = (@balance_furlough_day + @balance_furlough_day_réel).round(2)
     @furlough_duration = Furlough.get_furlough_duration(@furlough.start, @furlough.hour_start, @furlough.end, @furlough.hour_end) 
    # if @furlough.start < DateTime.now()
@@ -545,27 +541,15 @@ class FurloughsController < ApplicationController
   
   end
 
-  # When the current user is a collaborator
-  # This method return number of days taken in this furlough
   def durations_taken
-    start_date = DateTime.parse(params[:start])
-    end_date = DateTime.parse(params[:end])
-    hour_start = params[:hour_start]
-    hour_end = params[:hour_end]
-    furlough_duration = Furlough.get_furlough_duration(start_date, hour_start, end_date, hour_end)
+    furlough_duration = Furlough.get_furlough_duration(DateTime.parse(params[:start]), params[:hour_start], DateTime.parse(params[:end]), params[:hour_end])
     render :json => furlough_duration
   end
 
   def duration_hour_taken
-    start_date = DateTime.parse(params[:start])
-    end_date = DateTime.parse(params[:end])
-    hour_start = params[:hour_start]
-    hour_end = params[:hour_end]
-    user_id = params[:user_id]
-   
-    results = HoursValidity.get_valid_hours_2(user_id, start_date, hour_start, end_date, hour_end)
-  
-    furlough__hour_duration = Furlough.get_hour_furlough_duration(start_date, hour_start, end_date, hour_end)
+    results = HoursValidity.get_valid_hours_2(params[:user_id], DateTime.parse(params[:start]), params[:hour_start], DateTime.parse(params[:end]), params[:hour_end])
+    furlough__hour_duration = Furlough.get_furlough_duration(DateTime.parse(params[:start]), params[:hour_start], DateTime.parse(params[:end]), params[:hour_end]) * 8
+    
     render :json => {
       :furlough__hour_duration => furlough__hour_duration,
       :results => results
@@ -578,25 +562,21 @@ class FurloughsController < ApplicationController
   end
 
   def find_fonctional_manager_id
-    first_name = params[:name].split.first
-    last_name = params[:name].split.last
-    fonctional_manager = FonctionalManager.find_by(first_name: first_name, last_name: last_name)
+    fonctional_manager = FonctionalManager.find_by(first_name: params[:name].split.first, last_name: params[:name].split.last)
     render :json => fonctional_manager.id
   end
 
+  #---------------------
   def find_user_id
-    first_name = params[:name].split.first
-    last_name = params[:name].split.last
-    user = User.find_by(first_name: first_name, last_name: last_name)
+    user = User.find_by(first_name: params[:name].split.first, last_name: params[:name].split.last)
     render :json => user.id
   end
 
   def find_line_manager_id
-    first_name = params[:name].split.first
-    last_name = params[:name].split.last
-    user = User.find_by(first_name: first_name, last_name: last_name)
+    user = User.find_by(first_name: params[:name].split.first, last_name: params[:name].split.last)
     render :json => user.id
   end
+  #----------------------
 
   def full_name_fonctional
     fonctional_manager = FonctionalManager.find(current_user.fonctionnal_manager_id)
@@ -618,26 +598,6 @@ class FurloughsController < ApplicationController
         send_data pdf.render, filename: 'Demande_de_congé.pdf', type: 'application/pdf', disposition: "inline"
       end
     end
-  end
-
-  #Not used
-  def take_start_date()
-    @furlough_type = FurloughType.find(params[:type_furlough])
-    setting = Setting.find(1)
-
-    if @furlough_type.informing_before
-      days = Furlough.get_furlough_date(Date.today, params[:start_date].to_date)
-
-        if days.count * 24 < setting.informing_before_duration
-          start_d = Furlough.take_start(dayToCheck)
-        else
-          start_d = params[:start_date].to_date
-        end
-    else
-      start_d = params[:start_date].to_date
-    end
-
-    render :json => start_d
   end
 
   private

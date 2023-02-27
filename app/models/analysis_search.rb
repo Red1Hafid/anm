@@ -84,7 +84,7 @@ class AnalysisSearch
         balance_d = balance_furlough.round(2)
         balance_h = (balance_d * setting.day_work_hour).round(2)
         b_furlough_day = Bank.find_by(user_id: user.id).balance_furlough
-        balance_furlough_day_réel = Furlough.get_balance_current_month(user.id)
+        balance_furlough_day_réel = Furlough.get_balance_current_month(user)
         balance_furlough_reel = (b_furlough_day + balance_furlough_day_réel).round(2)
 
         analysis << [user.first_name, user.last_name, user.email, days_worked_between_two_date, day_off_consumed.uniq.count, balance_d.to_s, balance_h.to_s, all_day_off_consumed.uniq.count, balance_furlough_reel.round(2).to_s] 
