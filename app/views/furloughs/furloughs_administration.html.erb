@@ -45,117 +45,123 @@
                               <input id="demo-input-search2" type="text" placeholder="Search" class="form-control" autocomplete="off">
                             </div>
                         </div>
+                      <table id="demo-foo-addrow" class="table table-centered table-striped table-bordered mb-0 toggle-circle" data-page-size="7">
+                        <thead>
+                          <tr>
+                            <th data-sort-initial="true" data-toggle="true" >Référence</th>
+                            <th data-sort-initial="true" data-toggle="true">Type de congé </th>
+                            <th data-sort-initial="true" data-toggle="true">Date de début </th>
+                            <th data-sort-initial="true" data-toggle="true" >Date de fin </th>
+                            <th data-hide="phone, tablet">Statut de congé </th>
+                            <th data-hide="phone, tablet">Piéce jointe</th>
+                            <th data-hide="phone, tablet">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% @furloughs_admin.each do |furlough| %>
+                          <tr>
+                            <td><%= furlough.reference_furlough %></td>
+                            <td><%= furlough.furlough_type.name %></td>
+                            <td><%= furlough.start.strftime('%d/%m/%Y') %></td>
+                            <td><%= furlough.end.strftime('%d/%m/%Y') %></td>
+                            <td>
+                              <div class="text-center mt-3 mt-sm-0">
+                                <% if furlough.status == "Nouveau" %>
+                                  <div class="badge font-14 badge badge-info p-1"><%= furlough.status %></div>
+                                <% elsif furlough.status == "Approuvé" %>
+                                  <div class="badge font-14 badge badge-success p-1"><%= furlough.status %></div>
+                                <% elsif furlough.status == "Refusé" %>
+                                  <div class="badge font-14 badge badge-danger p-1"><%= furlough.status %></div>
+                                <% elsif furlough.status == "Soumis" %>
+                                  <div class="badge font-14 badge badge-warning p-1"><%= furlough.status %></div>
+                                <% elsif furlough.status == "Annulé" %>
+                                  <div class="badge font-14 badge badge-dark p-1"><%= furlough.status %></div>
+                                <% elsif furlough.status == 'Arrêté' %>
+                                  <div class="badge font-14 badge badge-success p-1"><%= furlough.status %></div>
+                                <% elsif furlough.status == 'Régularisé' %>
+                                  <div class="badge font-14 badge badge-secondary p-1"><%= furlough.status %></div>
+                                <% elsif furlough.status == 'Traité' %>
+                                  <div class="badge font-14 badge badge-primary p-1"><%= furlough.status %></div>
+                                <% elsif furlough.status == 'Récupéré' %>
+                                  <div class="badge font-14 badge badge-success p-1"><%= furlough.status %></div>
+                                <% end %>
+                              </div>
+                            </td>
+                            <td>
+                              <% if furlough.documment.attached? %>
+                                <%= link_to 'Voir pdf', rails_blob_path(furlough.documment, disposition: "attachment") %>
+                              <% end %>
+                            </td>
+                            <td>
+                              <% if furlough.status == 'Nouveau' %>
 
-                        <div class="table-responsive">
-                            <table class="table table-centered table-nowrap mb-0">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Référence</th>
-                                        <th>Type de congé </th>
-                                        <th>Date de début </th>
-                                        <th>Date de fin </th>
-                                        <th>Statut de congé </th>
-                                        <th data-field="">Piéce jointe</th>
-                                        <th style="width: 125px;">Actions</th>
-                                        </tr>
-                                </thead>
-                                <tbody>
-                                    <% @furloughs_admin.each do |furlough| %>
-                                        <tr>   
-                                            <td><%= furlough.reference_furlough %></td>                                                 
-                                            <td><%= furlough.furlough_type.name %></td>
-                                            <td><%= furlough.start.strftime('%d/%m/%Y') %></td>
-                                            <td><%= furlough.end.strftime('%d/%m/%Y') %></td>
-                                            <td>
-                                                <div class="text-center mt-3 mt-sm-0">
-                                                    <% if furlough.status == "Nouveau" %>
-                                                        <div class="badge font-14 badge badge-info p-1"><%= furlough.status %></div>
-                                                    <% elsif furlough.status == "Approuvé" %>
-                                                        <div class="badge font-14 badge badge-success p-1"><%= furlough.status %></div>
-                                                    <% elsif furlough.status == "Refusé" %>
-                                                        <div class="badge font-14 badge badge-danger p-1"><%= furlough.status %></div>
-                                                    <% elsif furlough.status == "Soumis" %>
-                                                        <div class="badge font-14 badge badge-warning p-1"><%= furlough.status %></div>
-                                                    <% elsif furlough.status == "Annulé" %>
-                                                        <div class="badge font-14 badge badge-dark p-1"><%= furlough.status %></div>
-                                                    <% elsif furlough.status == 'Arrêté' %>
-                                                        <div class="badge font-14 badge badge-success p-1"><%= furlough.status %></div>
-                                                    <% elsif furlough.status == 'Régularisé' %>
-                                                        <div class="badge font-14 badge badge-secondary p-1"><%= furlough.status %></div>
-                                                    <% elsif furlough.status == 'Traité' %>
-                                                        <div class="badge font-14 badge badge-primary p-1"><%= furlough.status %></div>
-                                                    <% elsif furlough.status == 'Récupéré' %>
-                                                        <div class="badge font-14 badge badge-success p-1"><%= furlough.status %></div>
-                                                    <% end %>
-                                                </div>
-                                            </td>
-                                             <td>
-                                                <% if furlough.documment.attached? %>
-                                                    <%= link_to 'Voir pdf', rails_blob_path(furlough.documment, disposition: "attachment") %>
-                                                <% end %>
-                                            </td>
-                                            <td>       
-                                                 <% if furlough.status == 'Nouveau' %>
+                                <%= link_to show_administration_path(furlough.id), remote: true, title: "Voir", class: "action-icon" do %>
+                                  <i class="mdi mdi-eye"></i>
+                                <% end %>
 
-                                                    <%= link_to show_administration_path(furlough.id), remote: true, title: "Voir", class: "action-icon" do %>
-                                                        <i class="mdi mdi-eye"></i>
-                                                    <% end %>
+                                <% if furlough.furlough_type.code != "CRHS" %>
 
-                                                    <% if furlough.furlough_type.code != "CRHS" %>
+                                  <%= link_to edit_furlough_path(furlough), remote: true, title: "Modifier", class: "action-icon" do %>
+                                    <i class="mdi mdi-border-color"></i>
+                                  <% end %>
 
-                                                        <%= link_to edit_furlough_path(furlough), remote: true, title: "Modifier", class: "action-icon" do %>
-                                                            <i class="mdi mdi-border-color"></i>
-                                                        <% end %>
+                                <% end %>
 
-                                                    <% end %>
+                                <%= link_to soumettre_path(furlough), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Soumettre", class: "action-icon" do %>
+                                  <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
+                                <% end %>
 
-                                                    <%= link_to soumettre_path(furlough), data: { confirm: 'Etes vous sur?',  title: 'Confirme la soumission?' }, title: "Soumettre", class: "action-icon" do %>
-                                                        <i class="mdi mdi-checkbox-multiple-marked-circle-outline"></i>
-                                                    <% end %>
+                                <%= link_to furlough, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
+                                  <i class="mdi mdi-delete"></i>
+                                <% end %>
 
-                                                    <%= link_to furlough, method: :delete, data: { confirm: 'Etes vous sur?', title: 'Confirme la suppression?' }, title: "Suprimer", class: "action-icon" do %>
-                                                        <i class="mdi mdi-delete"></i>
-                                                    <% end %>  
+                              <% elsif furlough.status == "Approuvé" %>
 
-                                                <% elsif furlough.status == "Approuvé" %>
+                                <%= link_to show_administration_path(furlough.id), remote: true, title: "Voir", class: "action-icon" do %>
+                                  <i class="mdi mdi-eye"></i>
+                                <% end %>
 
-                                                    <%= link_to show_administration_path(furlough.id), remote: true, title: "Voir", class: "action-icon" do %>
-                                                        <i class="mdi mdi-eye"></i>
-                                                    <% end %>
+                                <% if furlough.parent_id.nil? && furlough.documment.attached? %>
+                                  <% if furlough.furlough_type.discontinuity == true && is_max_period(furlough) == false %>
+                                    <% if furlough.furlough_type.code == "CEFNE" && is_max_duration(furlough.id, furlough.start, furlough.hour_start, furlough.end, furlough.hour_end, furlough.furlough_type_id) == false %>
+                                      <%= link_to pre_discontinuity_path(furlough), remote: true, title: "Nouvelle période", class: "action-icon" do %>
+                                        <i class="mdi mdi-arrow-right"></i>
+                                      <% end %>
+                                    <% end %>
+                                  <% end %>
+                                <% end %>
 
-                                                    <% if furlough.parent_id.nil? && furlough.documment.attached? %>
-                                                        <% if furlough.furlough_type.discontinuity == true && is_max_period(furlough) == false %>
-                                                            <% if furlough.furlough_type.code == "CEFNE" && is_max_duration(furlough.id, furlough.start, furlough.hour_start, furlough.end, furlough.hour_end, furlough.furlough_type_id) == false %>
-                                                                    <%= link_to pre_discontinuity_path(furlough), remote: true, title: "Nouvelle période", class: "action-icon" do %>
-                                                                        <i class="mdi mdi-arrow-right"></i>
-                                                                    <% end %>
-                                                            <% end %>
-                                                        <% end %>
-                                                    <% end %>
-                                                
-                                                <% elsif furlough.status == "Récupéré" %>
+                              <% elsif furlough.status == "Récupéré" %>
 
-                                                        <%= link_to furlough_path(furlough), remote: true, title: "Voir", class: "action-icon" do %>
-                                                            <i class="mdi mdi-eye"></i>
-                                                        <% end %>
+                                <%= link_to furlough_path(furlough), remote: true, title: "Voir", class: "action-icon" do %>
+                                  <i class="mdi mdi-eye"></i>
+                                <% end %>
 
-                                                        <%= link_to print_path(furlough, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
-                                                            <i class="mdi mdi-printer"></i>
-                                                        <% end %>
+                                <%= link_to print_path(furlough, format: 'pdf'), title: "Imprimer", class: "action-icon" do %>
+                                  <i class="mdi mdi-printer"></i>
+                                <% end %>
 
-                                                <% else %>
+                              <% else %>
 
-                                                    <%= link_to show_administration_path(furlough.id), remote: true, title: "Voir", class: "action-icon" do %>
-                                                        <i class="mdi mdi-eye"></i>
-                                                    <% end %>
+                                <%= link_to show_administration_path(furlough.id), remote: true, title: "Voir", class: "action-icon" do %>
+                                  <i class="mdi mdi-eye"></i>
+                                <% end %>
 
-                                                <% end %>
-                                            </td>                                            
-                                        </tr> 
-                                    <% end %>  
-                                </tbody>
-                            </table>
-                        </div>
+                              <% end %>
+                            </td>
+                          </tr>
+                        <% end %>
+                        </tbody>
+                        <tfoot>
+                        <tr class="active">
+                          <td colspan="8">
+                            <div class="text-right">
+                              <ul class="pagination pagination-split justify-content-end footable-pagination m-t-10"></ul>
+                            </div>
+                          </td>
+                        </tr>
+                        </tfoot>
+                      </table>
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->
