@@ -4,11 +4,9 @@ class CostsController < ApplicationController
   def index
     @setting = Setting.find(1)
     if params[:status].present?
-      @q = Cost.ransack(params[:q])
-      @costs = @q.result(distinct: true).filter_by_status(2)
+      @costs = Cost.filter_by_status(2)
     else
-      @q = Cost.ransack(params[:q])
-      @costs = @q.result(distinct: true).filter_by_status(1)
+      @costs = Cost.filter_by_status(1)
     end
   end
 
@@ -25,10 +23,9 @@ class CostsController < ApplicationController
     @cost.is_active = true
     @cost.enabled_date = Date.today
     if @cost.save
-      flash[:notice] = "Le coût est créé avec succès."
       redirect_to costs_path,  success: "Le coût est créé avec succès."
     else
-      #render 'new'
+      redirect_to costs_path, danger: "#{@cost.errors.full_messages}"
     end
   end
 
@@ -45,7 +42,6 @@ class CostsController < ApplicationController
   def update
      @cost = Cost.find(params[:id])
      if @cost.update(cost_params)
-         puts("updated")
          redirect_to costs_path,  success: "Le Frais est édité avec succès"
      end
   end
@@ -63,12 +59,6 @@ class CostsController < ApplicationController
     @cost.created!
     if @cost.save
       redirect_to costs_path, notice: "Le cout est désarchivé avec succès."
-    end
-  end
-
-  def destroy
-    if @cost.destroy
-        redirect_to costs_path, success: "Le Frais est supprimé avec succès"
     end
   end
 
