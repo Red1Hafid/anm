@@ -4,15 +4,13 @@ class AffectationsController < ApplicationController
   # GET /affectations or /affectations.json
   def index
     @setting = Setting.find(1)
-    if params[:status].present?
-      @q = Affectation.includes(:project, :user).ransack(params[:q])
-      @affectations = @q.result(distinct: true).filter_by_status(2)
-    else
-      @q = Affectation.includes(:project, :user).ransack(params[:q])
-      @affectations = @q.result(distinct: true).filter_by_status(1)
-    end
-    @users = User.all
+    @users = User.all.where.not(role_id: 1)
     @projects = Project.where(is_active: true).where(status: 'created')
+    if params[:status].present?
+      @affectations = Affectation.filter_by_status(2)
+    else
+      @affectations = Affectation.filter_by_status(1)
+    end
   end
 
   # GET /affectations/1 or /affectations/1.json
@@ -22,7 +20,6 @@ class AffectationsController < ApplicationController
   # GET /affectations/new
   def new
     @affectation = Affectation.new
-    @projects = Project.where(is_active: true).where(status: 'created')
   end
 
   def pre_mes_affectations_new
@@ -65,10 +62,8 @@ class AffectationsController < ApplicationController
     @projects = Project.where(is_active: true).where(status: 'created')
     @setting = Setting.find(1)
     if params[:status].present?
-      @q = Affectation.ransack(params[:q])
       @affectations = Affectation.mes_affectation(current_user.id).filter_by_status(2)
     else
-      @q = Affectation.ransack(params[:q])
       @affectations = Affectation.mes_affectation(current_user.id).filter_by_status(1)
     end
   end
@@ -108,8 +103,6 @@ class AffectationsController < ApplicationController
     @affectation.is_active = false
     @affectation.date_disacffectation = Date.today
     @affectation.disaffected!
-    puts @affectation.status
-    puts @affectation.is_active
     if @affectation.save
       redirect_to projects_path,  success: "Le Collaborateur  est désaffecté avec succès."
     end
