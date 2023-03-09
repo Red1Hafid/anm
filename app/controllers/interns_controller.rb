@@ -34,6 +34,20 @@ class InternsController < ApplicationController
     end
   end
 
+  def pre_export_additional_hours
+    @additional_hours_periods = AdditionalHour.all.pluck(:period).uniq
+  end
+
+  def export_additional_hours
+    @additional_hours = AdditionalHour.where(nil)
+    @additional_hours = AdditionalHour.exported_data_filtred(@additional_hours, params)
+    filename = "Rapport-heures-sup-" + Date.today.to_s + ".xlsx"
+
+    respond_to do |format|
+      format.xlsx { headers["Content-Disposition"] = "attachment; filename=\"#{filename}\"" }
+    end
+  end
+
   # PATCH/PUT /interns/1 or /interns/1.json
   def update
     respond_to do |format|
@@ -55,14 +69,15 @@ class InternsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_intern
-      @intern = Intern.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def intern_params
-      params.require(:intern).permit(:matricule, :first_name, :last_name, :email, :gsm, :college_year, :past_interview, :opinion_interview, :is_passable, :desired_internship, :potential_internship, :opinion_internship, language_skills: [])
-    end
-   
+  # Use callbacks to share common setup or constraints between actions.
+  def set_intern
+    @intern = Intern.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def intern_params
+    params.require(:intern).permit(:matricule, :first_name, :last_name, :email, :gsm, :college_year, :past_interview, :opinion_interview, :is_passable, :desired_internship, :potential_internship, :opinion_internship, language_skills: [])
+  end
+
 end

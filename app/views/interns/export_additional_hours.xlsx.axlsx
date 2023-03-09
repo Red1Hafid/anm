@@ -1,0 +1,10 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Rapport des absences") do |sheet|
+  # Create the header row
+  sheet.add_row ["Prénom", "Nom", "Période", "type d'heures sup"]
+  # Create entries for each item
+  @additional_hours.each do |a|
+    sheet.add_row [a.user.first_name, a.user.last_name, a.period, a.additional_hour_type.name]
+  end
+end
