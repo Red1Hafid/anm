@@ -4,10 +4,11 @@ class NotesController < ApplicationController
   def index
     @setting = Setting.find(1)
     if ["Super Admin", "Rh"].include? current_user.role.title
-      @q = Note.includes(:user, :cost).ransack(params[:q])
+      @notes = Note.includes(:user, :cost)
+
     else
       @user_projects = User.find_by(id: current_user.id).projects
-      @q = Note.includes(:user, :cost).where(user_id: current_user).ransack(params[:q])
+      @notes = Note.includes(:user, :cost).where(user_id: current_user)
     end
     @costs = Cost.filter_by_active.filter_by_status(1)
     @users = User.where.not(role_id: 1)
@@ -15,7 +16,6 @@ class NotesController < ApplicationController
     if params[:user_id]
       @projects = Project.where(user_id: params[:user_id])
     end
-    @notes =  @q.result(distinct: true)
   end
 
   def mes_notes
