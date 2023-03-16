@@ -47,23 +47,14 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   
   # SMTP settings for gmail
-  #config.action_mailer.smtp_settings = {
-   # :address              => "smtp.gmail.com",
-   # :domaine              => "gmail.com",
-   # :port                 => 587,
-   # :user_name            => "gitrepositoryprojects",
-   # :password             => "~~RedouaaneHAFID~~",
-   # :authentication       => "plain",
-   # :enable_starttls_auto => true
-  #}
-
   config.action_mailer.smtp_settings = {
-    :address => "in.mailjet.com",
-    :enable_starttls_auto => true,
-    :port => 587,
-    :authentication => 'plain',
-    :user_name => "0c971fcd007b5dec77c098c51bd38a17",
-    :password => "b8574fddae306a3a10c19423a39c2ca5"
+    :address              => "smtp.gmail.com",
+    :domaine              => "gmail.com",
+    :port                 => 587,
+    :user_name            => "redouaanehafid",
+    :password             => "yopjrogomardcdzf",
+    :authentication       => "plain",
+    :enable_starttls_auto => true
   }
 
   # Print deprecation notices to the Rails logger.

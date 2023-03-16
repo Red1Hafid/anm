@@ -96,6 +96,8 @@ Rails.application.routes.draw do
   get 'export-authorizations-lolo' => 'autorizations#export_authorizations', as: 'export_authorizations'
   get 'recovered/:id' => 'autorizations#pre_recovered', as: 'pre_recovered'
   post 'recovered/:id' => 'autorizations#recovered', as: 'recovered'
+  post 'create_for_a_collaborator' => 'autorizations#create_for_a_collaborator', as: 'create_for_a_collaborator'
+  post 'create_for_himself' => 'autorizations#create_for_him_self', as: 'create_for_him_self'
   get 'printauthorisation/:id' => 'autorizations#to_print_authorisation', as: 'to_print_authorisation'
   get 'validateAuthorization/:id' => 'autorizations#validate_autorization', as: 'validate_autorization'
   get 'refuseAuthorization/:id' => 'autorizations#pre_refus', as: 'pre_refus'

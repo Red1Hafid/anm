@@ -1,6 +1,7 @@
 class AdditionalHoursController < ApplicationController
     before_action :authenticate_user!
     before_action :set_additional_hour, only: [:show, :edit, :update, :destroy, :soumettre_additional_hour]
+    before_action :set_role, only: %i[ create update destroy soumettre_additional_hour import ]
     load_and_authorize_resource
   
     def index
@@ -31,9 +32,7 @@ class AdditionalHoursController < ApplicationController
       if params[:additional_hour_type].present?
         additional_hour_type = AdditionalHourType.find_by(code: params[:additional_hour_type])
         @additional_hours = current_user.additional_hours.where(additional_hour_type_id: additional_hour_type).where.not(status: 1).order(created_at: :desc)
-        if params[:additional_hour_type] == 'HSJFT'
-          @balance_open_additional_hour_off_days = current_user.bank.balance_open_additional_hour_off_days
-        end
+        @balance_open_additional_hour_off_days = current_user.bank.balance_open_additional_hour_off_days if params[:additional_hour_type] == 'HSJFT' 
       else
         @additional_hours = current_user.additional_hours.where.not(status: 1).order(created_at: :desc)
       end  
@@ -57,7 +56,8 @@ class AdditionalHoursController < ApplicationController
       if !exist_additional_hour.present?
         @additional_hour = AdditionalHour.new(additional_hour_params.merge(additional_hour_date: Date.today, stay_hours: additional_hour_params[:total_additional_hour_in_week])) 
         if @additional_hour.save
-          redirect_to additional_hours_path, success: "la demmande a été bien créer."
+          Journal.create_journal(@role.title, current_user, "ajouté", "AdditionalHour", "une nouvelle entrée des h'eures sup de", @additional_hour.user.email, @additional_hour.id, "Created")
+          redirect_to additional_hours_path, success: "la demande a été créer avec succés."
         else
           redirect_to additional_hours_path, danger: "#{@additional_hour.errors.full_messages}"
         end 
@@ -68,8 +68,18 @@ class AdditionalHoursController < ApplicationController
   
     def update 
      if @additional_hour.update(additional_hour_params.merge(additional_hour_date: Date.today, stay_hours: additional_hour_params[:total_additional_hour_in_week]))
-      redirect_to additional_hours_path, success: "les heures sip de cette semaine sont bien été modifer!"
+        Journal.create_journal(@role.title, current_user, "modifié", "AdditionalHour", "une entrée des h'eures sup de", @additional_hour.user.email, @additional_hour.id, "Updated")
+        redirect_to additional_hours_path, success: "La demande a été modifer avec succés."
+     else
+        redirect_to additional_hours_path, danger:  "#{@additional_hour.errors.full_messages}"
      end
+    end
+
+    def destroy
+      if @additional_hour.destroy
+        Journal.create_journal(@role.title, current_user, "supprimé", "AdditionalHour", "une entrée des h'eures sup de", @additional_hour.user.email, @additional_hour.id, "Deleted")
+        redirect_to additional_hours_path, success: "La demande a été supprimer avec succés."
+      end 
     end
 
     def soumettre_additional_hour
@@ -82,24 +92,19 @@ class AdditionalHoursController < ApplicationController
       else
         bank.increment('balance_open_additional_hour_off_days', @additional_hour.total_additional_hour_in_week).save
       end
-      redirect_to additional_hours_path, success: "les heures heures de cette semaine sont bien été valider!"
-    end
-  
-    def destroy
-      if @additional_hour.destroy
-        redirect_to additional_hours_path, success: "les heures heures de cette semaine sont bien été supprimer!"
-      end 
+      Journal.create_journal(@role.title, current_user, "validé", "AdditionalHour", "une entrée des heures sup de", @additional_hour.user.email, @additional_hour.id, "Validated")
+      redirect_to additional_hours_path, success: "la demande a été valider avec succés"
     end
 
     def import
       AdditionalHour.import(params[:file])
-      redirect_to additional_hours_path, notice: "la list des heures sup a été bien importé."
+      Journal.create_journal(@role.title, current_user, "importé", "AdditionalHour", "une list des h'eures sup", nil, nil, "Imported")
+      redirect_to additional_hours_path, notice: "la list des heures sup a été importer avec succés."
     end
 
     def get_days_of_input_form
-      period = params[:period]
-      start_period = period.split(/ - */).first.to_date
-      end_period = period.split(/ - */).last.to_date
+      start_period = params[:period].split(/ - */).first.to_date
+      end_period = params[:period].split(/ - */).last.to_date
 
       off_days = Off.off_between(start_period, end_period)
 
@@ -136,6 +141,10 @@ class AdditionalHoursController < ApplicationController
 
     def set_additional_hour
       @additional_hour = AdditionalHour.find(params[:id])
+    end
+
+    def set_role
+      @role = Role.find(current_user.role_id)
     end
 
     def additional_hour_params

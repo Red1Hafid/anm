@@ -1,11 +1,12 @@
 class FurloughTypesController < ApplicationController
     before_action :authenticate_user!
     before_action :set_furlough_type, only: [:show, :edit, :update, :destroy, :enable_furlough_type, :disable_furlough_type]
+    before_action :set_role, only: %i[ create update destroy import enable_furlough_type disable_furlough_type]
     load_and_authorize_resource
   
     def index
-        @furlough_types = FurloughType.all
-        @setting = Setting.find(1)
+      @setting = Setting.find(1)
+      @furlough_types = FurloughType.all
     end
   
     def show
@@ -21,83 +22,51 @@ class FurloughTypesController < ApplicationController
   
     def create
       @furlough_type = FurloughType.new(furlough_type_params)
-      @furlough_type.save
-      role = Role.find(current_user.role_id)
-      @journal = Journal.new
-      @journal.content = "le #{role.title} (#{current_user.first_name} #{current_user.last_name}) à crée un #{@furlough_type.name} - loger le : #{Time.now}"
-      @journal.the_model = 'type_furlough'
-      @journal.the_model_id = @furlough_type.id
-      @journal.user_id = current_user.id
-      @journal.status = "Created"
-      @journal.save
-      redirect_to furlough_types_path
+      if @furlough_type.save
+        Journal.create_journal(@role.title, current_user, "ajouté", "FurloughType", "un type de congé", @furlough_type.name, @furlough_type.id, "Created")
+        redirect_to furlough_types_path, success: "Furlough type was successfully created." 
+      else
+        redirect_to furlough_types_path, danger: "#{@furlough_type.errors.full_messages}"
+      end
     end
   
     def update
-      @furlough_type.update(furlough_type_params)
-      role = Role.find(current_user.role_id)
-      @journal = Journal.new
-      @journal.content = "le #{role.title} (#{current_user.first_name} #{current_user.last_name}) à modifer le type de #{@furlough_type.name} - loger le : #{Time.now}"
-      @journal.the_model = 'type_furlough'
-      @journal.the_model_id = @furlough_type.id
-      @journal.user_id = current_user.id
-      @journal.status = "Updated"
-      @journal.save
-      redirect_to furlough_types_path
+      if @furlough_type.update(furlough_type_params)
+        Journal.create_journal(@role.title, current_user, "modifié", "FurloughType", "le type de congé", @furlough_type.name, @furlough_type.id, "Updated")
+        redirect_to furlough_types_path, success: "Furlough type was successfully created." 
+      else
+        redirect_to furlough_types_path, danger: "#{@furlough_type.errors.full_messages}"
+      end
     end
   
     def destroy
-      @furlough_type.destroy
-      role = Role.find(current_user.role_id)
-      @journal = Journal.new
-      @journal.content = "le #{role.title} (#{current_user.first_name} #{current_user.last_name}) à supprimé un #{@furlough_type.name} - loger le : #{Time.now}"
-      @journal.the_model = 'type_furlough'
-      @journal.the_model_id = @furlough_type.id
-      @journal.user_id = current_user.id
-      @journal.status = "Deleted"
-      @journal.save
-      redirect_to furlough_types_path
+      result = @furlough_type.destroy_furlough_type
+      if result[:flash_type] == "success"
+        Journal.create_journal(@role.title, current_user, "supprimé", "FurloughType", "le type de congé", @furlough_type.name, @furlough_type.id, "Deleted")
+        redirect_to furlough_types_path, success: "#{result[:message]}."
+      else
+        redirect_to furlough_types_path, danger: "#{result[:message]}."
+      end
     end
   
     def import
-      FurloughType.import(params[:file])
-      role = Role.find(current_user.role_id)
-      @journal = Journal.new
-      @journal.content = "le #{role.title} (#{current_user.first_name} #{current_user.last_name}) à impoté des type de congés - loger le : #{Time.now}"
-      @journal.the_model = 'type_furlough'
-      @journal.user_id = current_user.id
-      @journal.status = "Imported"
-      @journal.save
+      if FurloughType.import(params[:file])
+        Journal.create_journal(@role.title, current_user, "importé", "FurloughType", "une list des type de congés", nil, nil, "Imported")
+      end
       redirect_to furlough_types_path, notice: "types de congés importé."
     end
 
     def enable_furlough_type
       @furlough_type.is_actif = true
-
-      puts @furlough_type.is_actif
       @furlough_type.save
-      role = Role.find(current_user.role_id)
-      @journal = Journal.new
-      @journal.content = "le #{role.title} (#{current_user.first_name} #{current_user.last_name}) à activé le #{@furlough_type.name} - le :  #{Time.now}"
-      @journal.the_model = 'type_furlough'
-      @journal.the_model_id = @furlough_type.id
-      @journal.user_id = current_user.id
-      @journal.status = "Enable"
-      @journal.save
+      Journal.create_journal(@role.title, current_user, "activé", "FurloughType", "le type de congé", @furlough_type.name, @furlough_type.id, "Enabled")
       redirect_to furlough_types_path, notice: "Le #{@furlough_type.name} a été activé avec succès."   
     end
 
     def disable_furlough_type
       @furlough_type.is_actif = false
       @furlough_type.save
-      role = Role.find(current_user.role_id)
-      @journal = Journal.new
-      @journal.content = "le #{role.title} (#{current_user.first_name} #{current_user.last_name}) à désactivé le #{@furlough_type.name} - le :  #{Time.now}"
-      @journal.the_model = 'type_furlough'
-      @journal.the_model_id = @furlough_type.id
-      @journal.user_id = current_user.id
-      @journal.status = "Disable"
-      @journal.save
+      Journal.create_journal(@role.title, current_user, "désactivé", "FurloughType", "le type de congé", @furlough_type.name, @furlough_type.id, "Disabled")
       redirect_to furlough_types_path, notice: "Le #{@furlough_type.name} a été désactivé avec succès."   
     end
 
@@ -105,6 +74,10 @@ class FurloughTypesController < ApplicationController
 
     def set_furlough_type
       @furlough_type = FurloughType.find(params[:id])
+    end
+
+    def set_role
+      @role = Role.find(current_user.role_id)
     end
 
     def furlough_type_params

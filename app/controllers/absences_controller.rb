@@ -1,5 +1,7 @@
 class AbsencesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_absence, only: %i[ show edit update destroy ]
+  before_action :set_role, only: %i[ create update destroy export_absences ]
 
   # GET /absences
   def index
@@ -28,7 +30,8 @@ class AbsencesController < ApplicationController
   def create
     @absence = Absence.new(absence_params)
     if @absence.save
-      redirect_to absences_path, success: "Absence was successfully created." 
+      Journal.create_journal(@role.title, current_user, "ajouté", "Absence", "une nouvelle entrée absence de", @absence.user.email, @absence.id, "Created")
+      redirect_to absences_path, success: "L'absence a été créée avec succès." 
     else
       redirect_to absences_path, danger: "#{@absence.errors.full_messages}"
     end
@@ -37,7 +40,8 @@ class AbsencesController < ApplicationController
   # PATCH/PUT /absences/1
   def update
     if @absence.update(absence_params)
-      redirect_to absences_path, success: "Absence was successfully updated." 
+      Journal.create_journal(@role.title, current_user, "modifé", "Absence", "une entrée d'absence de", @absence.user.email, @absence.id, "Updated")
+      redirect_to absences_path, success: "L'absence a été mis à jour avec succès." 
     else
       redirect_to absences_path, danger: "#{@absence.errors.full_messages}"
     end
@@ -46,7 +50,8 @@ class AbsencesController < ApplicationController
   # DELETE /absences/1
   def destroy
     @absence.destroy
-    redirect_to absences_url, success: "Absence was successfully destroyed." 
+    Journal.create_journal(@role.title, current_user, "supprimé", "Absence", "une entrée d'absence de", @absence.user.email, @absence.id, "Deleted")
+    redirect_to absences_url, success: "L'absence a été supprimer avec succès." 
   end
 
   def pre_export_absences
@@ -56,6 +61,7 @@ class AbsencesController < ApplicationController
     @absences = Absence.where(nil)
     @absences = Absence.exported_data_filtred(@absences, params)
     filename = "Rapport-absences-" + Date.today.to_s + ".xlsx" 
+    Journal.create_journal(@role.title, current_user, "exporté", "Absence", "une list d'absences", nil, nil, "Exported")
 
     respond_to do |format|
       format.xlsx { headers["Content-Disposition"] = "attachment; filename=\"#{filename}\"" }
@@ -66,6 +72,10 @@ class AbsencesController < ApplicationController
 
     def set_absence
       @absence = Absence.find(params[:id])
+    end
+
+    def set_role
+      @role = Role.find(current_user.role_id)
     end
 
     def absence_params

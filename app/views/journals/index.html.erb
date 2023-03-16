@@ -31,19 +31,28 @@
                                         <% if journal.the_model == 'user' %>
                                             <% the_fa = 'user' %>
                                             <% the_class = 'info' %>
-                                        <% elsif journal.the_model == 'furlough'  %>
+                                        <% elsif journal.the_model == 'Furlough'  %>
                                             <% the_fa = 'calendar' %>
                                             <% the_class = 'danger' %>
-                                        <% elsif journal.the_model == 'off'  %>                                         
+                                        <% elsif journal.the_model == 'Off'  %>                                         
                                             <% the_fa = 'calendar-day' %>
                                             <% the_class = 'dark' %>
-                                        <% elsif journal.the_model == 'type_furlough' %>                                          
+                                        <% elsif journal.the_model == 'FurloughType' %>                                          
                                             <% the_fa = 'calendar-week' %>
                                             <% the_class = 'purple' %>
-                                        <% elsif journal.the_model == 'fonctionalManagerExtern' %>
+                                        <% elsif journal.the_model == 'AdditionalHour' %>                                          
+                                            <% the_fa = 'calendar-week' %>
+                                            <% the_class = 'primary' %>
+                                        <% elsif journal.the_model == 'AbsenceType' %>
+                                            <% the_fa = 'fa fa-ban' %>
+                                            <% the_class = 'warning' %>
+                                        <% elsif journal.the_model == 'Absence'  %>
+                                            <% the_fa = 'calendar' %>
+                                            <% the_class = 'danger' %>
+                                        <% elsif journal.the_model == 'FonctionalManagerExtern' %>
                                             <% the_fa = 'user' %>
                                             <% the_class = 'pink' %>
-                                        <% elsif journal.the_model == 'setting' %>
+                                        <% elsif journal.the_model == 'Setting' %>
                                             <% the_fa = 'book' %>
                                             <% the_class = 'warning' %>
                                         <% end %>

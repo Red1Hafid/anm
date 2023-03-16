@@ -37,7 +37,7 @@
             <% end %>
           <% end %>
 
-          <% if ['Rh'].include? current_user.role.title %>
+          <% if (['Rh'].include? current_user.role.title) || (current_user.manager_titles.include? "Gestionnaire hiérarchique") %>
             <%= link_to authorizations_administration_path, class: "dropdown-item notify-item" do %>
               <i class="fe-watch"></i>
               <span>Mes autorisations</span>
@@ -273,31 +273,17 @@
           </li>
         <% else %>
           <li>
-            <% if['Collaborateur'].include? current_user.role.title %>
-              <% if !current_user.manager_titles.nil? %>
-                <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
-                  <%= link_to autorizations_path, class: "dropdown-item notify-item" do %>
-                    <i class="fe-watch"></i>
-                    <span>Gestion des autorisations</span>
-                  <% end %>
-
-                  <%= link_to authorizations_administration_path, class: "dropdown-item notify-item" do %>
-                    <i data-feather="watch"></i>
-                    <span>Mes autorisations</span>
-                  <% end %>
-                <% else %>
-                  <%= link_to autorizations_path, class: "dropdown-item notify-item" do %>
-                    <i data-feather="watch"></i>
-                    <span>Mes autorisations</span>
-                  <% end %>
+              <% if current_user.manager_titles.include? "Gestionnaire hiérarchique" %>
+                <%= link_to autorizations_path, class: "dropdown-item notify-item" do %>
+                  <i class="fe-watch"></i>
+                  <span>Gestion des autorisations</span>
                 <% end %>
               <% else %>
                 <%= link_to autorizations_path, class: "dropdown-item notify-item" do %>
-                    <i data-feather="watch"></i>
-                    <span>Mes autorisations</span>
+                  <i data-feather="watch"></i>
+                  <span>Mes autorisations</span>
                 <% end %>
               <% end %>
-            <% end %>
           </li>
           <li>
             <%= link_to furloughs_path, class: "dropdown-item notify-item" do %>

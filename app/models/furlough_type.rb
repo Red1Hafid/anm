@@ -86,4 +86,13 @@ class FurloughType < ApplicationRecord
           return false
         end
     end
+
+    def destroy_furlough_type
+        begin
+            self.destroy
+            result = {flash_type: "success", message: "Furlough type was successfully destroyed."}
+        rescue Exception 
+            result = {flash_type: "danger", message: "Can't delete this Furlough type!, by what it contains #{self.furloughs.count} instance of furloughs"}
+        end
+    end
 end

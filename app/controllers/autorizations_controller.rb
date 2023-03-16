@@ -6,26 +6,21 @@ class AutorizationsController < ApplicationController
     if ["Super Admin", "Rh"].include? current_user.role.title 
       @autorizations = Autorization.where.not(status: 1)
     else
-      if !current_user.manager_titles.nil?
-        if current_user.manager_titles.include? "Gestionnaire hiérarchique"
-          user_ids = User.where(line_manager_id: current_user.id).pluck(:id)
-          @autorizations = Autorization.where(user_id: user_ids)
-        else
-          @autorizations = Autorization.where(user_id: current_user.id)
-        end 
+      if current_user.manager_titles.include? "Gestionnaire hiérarchique"
+        user_ids = User.where(line_manager_id: current_user.id).pluck(:id)
+        @autorizations = Autorization.where(user_id: user_ids).where.not(status: 1)
       else
         @autorizations = Autorization.where(user_id: current_user.id)
-      end
+      end  
     end
 
-      @setting = Setting.find(1)
-      users_not_actif_ids = User.where(is_active: false).pluck(:id)
-      @users = User.where.not(id: users_not_actif_ids)
+    @setting = Setting.find(1)
+    user_ids = User.where(line_manager_id: current_user.id).pluck(:id)
+    @users = User.where(is_active: true, id: user_ids)
   end
 
   def authorizations_administration 
-    @autorizations = Autorization.where(user_id: current_user.id)
-     
+    @autorizations = Autorization.where(user_id: current_user.id) 
     @setting = Setting.find(1)
   end
 
@@ -40,44 +35,29 @@ class AutorizationsController < ApplicationController
 
   # GET /autorizations/1/edit
   def edit
-
   end
 
   # POST /autorizations or /autorizations.json
-  def create
-    @autorization = Autorization.new(autorization_params) 
-    authorization_duration = Autorization.get_hour_authorization_duration(@autorization.date, @autorization.start_hour, @autorization.end_hour).to_f
-    @autorization.stay_hour = authorization_duration
-    @autorization.time_taken = authorization_duration
-    @autorization.demand_date = DateTime.now.strftime("%d/%m/%Y %H:%M")
-    if ["Super Admin", "Rh"].include? current_user.role.title 
-      if @autorization.user_id == current_user.id
-        @autorization.encours!
-        if @autorization.save
-          redirect_to authorizations_administration_path, notice: "Autorisation was successfully created." 
-        end
-      else
-        @autorization.encours!
-        if @autorization.save
-          redirect_to autorizations_path, notice: "Autorisation was successfully created." 
-        end
-      end
+  # Used by rh and collaborator
+  def create_for_a_collaborator
+    authorization_duration = Autorization.get_hour_authorization_duration(autorization_params[:date], autorization_params[:start_hour], autorization_params[:end_hour]).to_f
+    @autorization = Autorization.new(autorization_params.merge(stay_hour: authorization_duration, time_taken: authorization_duration, demand_date: DateTime.now.strftime("%d/%m/%Y %H:%M"))) 
+    @autorization.encours! if (["Super Admin", "Rh"].include? current_user.role.title) || (current_user.manager_titles.include? "Gestionnaire hiérarchique")
+    if @autorization.save
+      redirect_to autorizations_path, notice: "L'autorisation a été créée avec succès." 
     else
-      if !current_user.manager_titles.nil?
-        if current_user.manager_titles.include? "Gestionnaire hiérarchique"
-          if @autorization.save
-            redirect_to authorizations_administration_path, notice: "Autorisation was successfully created." 
-          end
-        else
-          if @autorization.save
-            redirect_to autorizations_path, notice: "Autorisation was successfully created." 
-          end
-        end
-      else
-        if @autorization.save
-          redirect_to autorizations_path, notice: "Autorisation was successfully created." 
-        end
-      end
+      redirect_to autorizations_path, danger: "#{@autorization.errors.full_messages}"
+    end
+  end
+
+  #Used in authorizations_administration
+  def create_for_him_self
+    authorization_duration = Autorization.get_hour_authorization_duration(autorization_params[:date], autorization_params[:start_hour], autorization_params[:end_hour]).to_f
+    @autorization = Autorization.new(autorization_params.merge(stay_hour: authorization_duration, time_taken: authorization_duration, demand_date: DateTime.now.strftime("%d/%m/%Y %H:%M"))) 
+    if @autorization.save
+      redirect_to authorizations_administration_path, notice: "L'autorisation a été créée avec succès." 
+    else
+      redirect_to authorizations_administration_path, danger: "#{@autorization.errors.full_messages}"
     end
   end
 
@@ -119,7 +99,11 @@ class AutorizationsController < ApplicationController
     @autorization.signature_collab = "Approuvé par " + current_user.first_name + " " + current_user.last_name + " _" + " Le " + DateTime.now().strftime("%m/%d/%Y").to_s + DateTime.now().strftime(" à %I:%M%p").to_s
     @autorization.submit_date = DateTime.now.strftime("%d/%m/%Y %H:%M")
     if @autorization.save
-      redirect_to autorizations_path, notice: "Autorization was successfully submited." 
+      if ((["Super Admin", "Rh"].include? current_user.role.title) || ((current_user.manager_titles.include? "Gestionnaire hiérarchique") && (@autorization.user_id == current_user.id)))
+        redirect_to authorizations_administration_path, notice: "Autorization was successfully submited." 
+      else
+        redirect_to authorizations_path, notice: "Autorization was successfully submited."
+      end
     end
   end
 
