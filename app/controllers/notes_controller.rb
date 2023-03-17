@@ -7,14 +7,16 @@ class NotesController < ApplicationController
       @notes = Note.includes(:user, :cost)
 
     else
-      @user_projects = User.find_by(id: current_user.id).projects
-      @notes = Note.includes(:user, :cost).where(user_id: current_user)
+      @user_projects = current_user.projects
+      #@notes = Note.includes(:user, :cost).where(user_id: current_user)
+      @notes = current_user.notes.includes(:cost)
     end
     @costs = Cost.filter_by_active.filter_by_status(1)
     @users = User.where.not(role_id: 1)
-    @projects = Project.filter_by_status(1)
     if params[:user_id]
       @projects = Project.where(user_id: params[:user_id])
+    else
+      @projects = Project.filter_by_status(1)
     end
   end
 
