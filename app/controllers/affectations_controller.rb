@@ -32,30 +32,24 @@ class AffectationsController < ApplicationController
   # POST /affectations or /affectations.json
   def create
     @affectation = Affectation.new(affectation_params)
-    if @affectation.user_id.present? && @affectation.user_id != current_user.id
-      present = Affectation.custom_finder(@affectation.user_id, @affectation.project_id)
-      is_administration = false
+    present = Affectation.custom_finder(@affectation.user_id, @affectation.project_id)
+    if @affectation.user_id.present?
+      path = "/affectations"
     else
       @affectation.user_id = current_user.id
-      present = Affectation.custom_finder(current_user.id, @affectation.project_id)
-      is_administration = true
+      path = "/mes-affectations"
     end
-    if  present
-      if is_administration
-        redirect_to mes_affectations_path,  warning: "Affectation est déja crèes"
-      else
-        redirect_to affectations_path,  warning: "Affectation est déja crèes"
-      end
+
+    if present
+      redirect_to "#{path}",  warning: "Affectation est déja crèes"
     else
       if @affectation.save
-        if is_administration
-          redirect_to mes_affectations_path,  success: "Affectation est créé avec succès"
-        else
-          redirect_to affectations_path,  success: "Affectation est créé avec succès"
-        end
-
+        redirect_to "#{path}", success: "Affectation est créé avec succès"
+      else
+        redirect_to "#{path}", danger: "#{@affectation.errors.full_messages}"
       end
     end
+
   end
 
   def mes_affectations
