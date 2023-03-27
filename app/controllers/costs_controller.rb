@@ -42,7 +42,9 @@ class CostsController < ApplicationController
   def update
      @cost = Cost.find(params[:id])
      if @cost.update(cost_params)
-         redirect_to costs_path,  success: "Le Frais est édité avec succès"
+       redirect_to costs_path,  success: "Le Frais est édité avec succès"
+     else
+       redirect_to costs_path ,danger: "#{@cost.errors.full_messages}"
      end
   end
 
@@ -52,6 +54,8 @@ class CostsController < ApplicationController
     @cost.deleted!
     if @cost.save
       redirect_to costs_path, notice: "Le Frais est supprimé avec succès."
+    else
+      redirect_to costs_path ,danger: "#{@cost.errors.full_messages}"
     end
   end
 
@@ -67,6 +71,8 @@ class CostsController < ApplicationController
     @cost.disabled_date = Date.today
     if @cost.save
       redirect_to costs_path, success: "Le Frais est désactivé avec succès"
+    else
+      redirect_to costs_path, danger: "#{@cost.errors.full_messages}"
     end
   end
 
@@ -75,6 +81,8 @@ class CostsController < ApplicationController
     @cost.enabled_date = Date.today
     if @cost.save
       redirect_to costs_path, success: "Le Frais est activé avec succès"
+    else
+      redirect_to costs_path, danger: "#{@cost.errors.full_messages}"
     end
   end
 
