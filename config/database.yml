@@ -1,5 +1,5 @@
 default: &default
-  adapter: mysql2
+  adapter: postgresql
   #host: db
   host: localhost
   timeout: 5000
@@ -11,5 +11,5 @@ development:
   database: anm_furloughs_development
   #username: Alithya
   #password: alithya_maroc
-  username: root
-  password:
+  username: postgres
+  password: admin
