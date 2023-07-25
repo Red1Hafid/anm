@@ -22,3 +22,14 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+after clonning project on path:
+/anm
+gem install bundler
+bundle install
+rails db:create
+rails db:migrate
+enter to localhost:3000/companies
+create new company
+rails db:seed
+
