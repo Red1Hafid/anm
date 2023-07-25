@@ -23,6 +23,7 @@ Things you may want to cover:
 
 * ...
 
+project ruby version is : ruby 3.0.3
 after clonning project on path:
 /anm
 gem install bundler
