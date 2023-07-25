@@ -29,6 +29,7 @@ gem install bundler
 bundle install
 rails db:create
 rails db:migrate
+rails s
 enter to localhost:3000/companies
 create new company
 rails db:seed
