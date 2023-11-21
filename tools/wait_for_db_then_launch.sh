@@ -1,5 +1,3 @@
-#!/bin/bash
-
 while ! mysql --host=$DATABASE_HOST --port=$DATABASE_PORT --user=$DATABASE_USERNAME --password=$DATABASE_PASSWORD -e "USE $DATABASE_NAME; SELECT 1 LIMIT 1"; do
     sleep 5
 done
